@@ -98,6 +98,13 @@ def test_davis_crawl_and_resume():
         n = len(calls)
         D.davis(delay=0)  # second run: everything is on disk, nothing fetched again
         assert len(calls) == n, "resume should not re-download"
+        import json
+        prog = json.loads((tmp / "progress_davis.json").read_text())
+        assert prog["finished"] and prog["done"] == 4 and prog["known"] == 4, prog
+        import tracker as T
+        T.RAW = tmp
+        board = T.text(T.rows())
+        assert "Davis" in board and "100.0%" in board
     finally:
         D.fetch = real
 
@@ -131,6 +138,9 @@ def test_espn_crawl_saves_only_match_files():
         n = len(calls)
         D.espn(["1998-99"], "test", delay=0)
         assert len(calls) == n, "resume should not re-download"
+        import json
+        prog = json.loads((tmp / "progress_espn.json").read_text())
+        assert prog["finished"] and prog["done"] == 3 and prog["known"] == 3, prog
     finally:
         D.fetch = real
 

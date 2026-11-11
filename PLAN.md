@@ -36,14 +36,21 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
 4. **Research**: estimate 1971-98 ODI head-to-heads from scorecards (IPF, Bayesian/MCMC, Markov + multinomial), tested on hidden modern matches; paper with a professor.
 
 ## Storage
-- Raw downloads: `data/raw/` in the Codespace only (gitignored: too big for GitHub). Re-downloadable any time.
-- Finished database: in this private repo (files under 100 MB each).
+- Raw downloads: `data/raw/` in the Codespace (gitignored, never in the code history).
+- **Safe copy of the raw downloads: automatic, every 20 min, to this private repo's Releases -> `raw-data`**
+  (`scripts/backup.py`). A stopped Codespace loses nothing; a deleted one is restored by `bash scripts/start.sh`.
+  Laptop copy: `python scripts/backup.py laptop` when everything is done, then one click on the Releases page.
+- Finished database: in this private repo (compressed, split into files under 100 MB each; a Release if bigger).
+- Render (the website, later) stores nothing: its free disk is wiped on every restart. It reads the finished
+  database that comes with the code from GitHub.
 - Keys (later): `.env` only, never on GitHub.
 
 ## Progress
 - [x] **Step 1**: private repo `Everyball`, Codespace, folders, .gitignore (Anadi, 11 Nov 2026)
 - [x] **Step 2**: downloader `scripts/download.py` + tests (Claude, 11 Nov 2026)
-- [ ] **Step 3**: run the downloader in the Codespace (Anadi). See README.
+- [x] Step 2b: live tracker `scripts/tracker.py` (+ phone page), progress files, retry of failed files (Claude, 11 Nov 2026)
+- [x] Step 2c: automatic backup to GitHub Releases (`scripts/backup.py`) + one-command start/resume (`scripts/start.sh`) (Claude, 11 Nov 2026)
+- [ ] **Step 3**: run the downloader in the Codespace (Anadi): `bash scripts/start.sh`. Started 11 Nov 2026: Cricsheet + Kaggle done; Davis found 24 archive links in contents.pdf, then about 11,400 PDFs in all (about 9-10 hours at 1.5 s each); ESPN ball-by-ball about 480+ files. Then `python scripts/download.py retry` and `python scripts/backup.py now`.
 - [ ] **Step 4**: send Claude 6 sample files (listed below) + the output of `python scripts/download.py status`
 - [ ] **Step 5**: readers + database builder (Claude)
 - [ ] **Step 6**: build the database (Anadi, one command)
