@@ -437,7 +437,7 @@ def is_match_file(name):
     return bool(MATCH_RE.search(name)) and not any(x in up for x in NOT_MATCH)
 
 
-def espn(seasons, label, delay=1.0, max_pages=60000, follow_pages=True, name="espn"):
+def espn(seasons, label, delay=0.3, max_pages=60000, follow_pages=True, name="espn"):
     """Crawl the old Cricinfo archive for the given season folders and save every match file.
     'Not found' = dead link (asked once, listed in dead_<name>.txt). ESPN's file store also answers 403 for a file
     that isn't there, so a 403 is asked again once later: if the site kept answering other requests in between, it is
