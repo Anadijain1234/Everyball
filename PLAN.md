@@ -51,10 +51,13 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
 - [x] Step 2b: live tracker `scripts/tracker.py` (+ phone page), progress files, retry of failed files (Claude, 11 Nov 2026)
 - [x] Step 2c: automatic backup to GitHub Releases (`scripts/backup.py`) + one-command start/resume (`scripts/start.sh`) (Claude, 11 Nov 2026)
 - [x] Step 2d: Davis dead links handled fast (asked once, listed, never retried), pause 0.75 s, automatic slow-down on refusals, folder-typo and capital-letter fixes; ESPN one-year folders (`espn-years`), ESPN pause 1 s; tracker in India time with dead links shown (Claude, 11 Nov 2026)
-- [ ] **Step 3**: run the downloader in the Codespace (Anadi): `bash scripts/start.sh`. Started 11 Nov 2026: Cricsheet + Kaggle done; Davis found 24 archive links in contents.pdf, then about 11,400 PDFs in all (about 9-10 hours at 1.5 s each); ESPN ball-by-ball about 480+ files. Then `python scripts/download.py retry` and `python scripts/backup.py now`.
-- [ ] **Step 4**: send Claude 6 sample files (listed below) + the output of `python scripts/download.py status`
-- [ ] **Step 5**: readers + database builder (Claude)
-- [ ] **Step 6**: build the database (Anadi, one command)
+- [x] **Step 3**: run the downloader in the Codespace (Anadi): `bash scripts/start.sh`. Started 11 Nov 2026: Cricsheet + Kaggle done; Davis found 24 archive links in contents.pdf, then about 11,400 PDFs in all (about 9-10 hours at 1.5 s each); ESPN ball-by-ball about 480+ files. Then `python scripts/download.py retry` and `python scripts/backup.py now`.
+- [x] **Step 3**: everything downloaded and backed up (68,229 files; Davis 10,719 files, ESPN about 7,000, Cricsheet, Kaggle) (11 Nov 2026)
+- [x] **Step 4**: samples studied (11 Nov 2026)
+- [x] **Step 5, part 1 (Tests)**: `scripts/build_db.py` + readers for Davis (Test pages, ball-by-ball with batter-by-batter checks, covers, player lists), Cricsheet, the Wisden book data; `scripts/checks.py` (ESPN year lists, Test-number gaps, cricket maths, Davis vs Cricsheet/book, famous facts); `scripts/ask.py` (Claude, 11 Nov 2026)
+- [x] **Step 5, part 2 (ODIs)**: `read_kaggle.py` (every ODI 1971-2024, numbered; players joined to Davis/Cricsheet names by cricinfo id, full name, then surname + first name/initial) and `read_espn.py` (scorecards used only when every innings adds up; ball-by-ball commentary + the commentary text; player-v-player tables); report checks ESPN commentary against ESPN's player-v-player tables (Claude, 11 Nov 2026)
+- [ ] Stage 2a: the website + Ask box (Claude)
+- [ ] **Step 6**: build the database (Anadi): `python scripts/build_db.py all`, then send Claude data/build_report.txt
 - [ ] Anadi's side task: 100 test questions with correct answers from ESPN (Tests + ODIs, old + new)
 
 ### What we learned while downloading (11 Nov 2026)

@@ -1,3 +1,7 @@
 data/raw/
 __pycache__/
 .env
+
+# the built database (rebuild any time with: python scripts/build_db.py all)
+data/everyball.db*
+data/build_report.txt

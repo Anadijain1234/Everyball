@@ -78,9 +78,34 @@ python scripts/download.py retry
 
 If the Codespace stops (idle timeout), just open it again and run `bash scripts/start.sh`.
 
+## Build the database (Step 5)
+
+One-time setup (the PDF reader): `sudo apt-get update && sudo apt-get install -y poppler-utils`
+
+```
+python scripts/build_db.py all
+```
+Reads everything in `data/raw/` into one database file, `data/everyball.db` (never sent to GitHub; it can always be
+rebuilt). Steps can also run one at a time, in this order: `davis`, `cricsheet`, `book`, `kaggle`, `espn`, `checks`
+(Kaggle gives every ODI its number; ESPN's files are then matched to those numbers by date and teams, so ESPN's
+domestic, tour and women's games are left out).
+Your Wisden book data goes in `data/raw/book/` (the CSV files from cricket-project/data/).
+
+The last step writes `data/build_report.txt`: what was read, what didn't add up, which Tests/ODIs are missing
+compared with ESPN's own year-by-year lists, and famous facts the database must get exactly right.
+
+## Ask the database
+```
+python scripts/ask.py duel Tendulkar McGrath          # every ball between them
+python scripts/ask.py duel Tendulkar McGrath Test
+python scripts/ask.py player Dravid
+python scripts/ask.py sql "SELECT player, SUM(runs) FROM bat WHERE format='Test' GROUP BY 1 ORDER BY 2 DESC LIMIT 10"
+```
+Easy tables: `bat`, `bowl`, `ball` (every ball, with names), `matches`, `players`.
+
 ## Tests
 ```
-python tests/test_download.py && python tests/test_backup.py
+python tests/test_download.py && python tests/test_backup.py && python tests/test_build.py
 ```
 
 ## Credits
