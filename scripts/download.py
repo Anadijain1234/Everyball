@@ -6,7 +6,8 @@ Everyball downloader: fetches the raw data into data/raw/ (never pushed to GitHu
   python scripts/download.py davis         # 2-5 h    Charles Davis's Test Match Database (1877 on), with his permission
   python scripts/download.py espn-bbb      # ~1 h     Cricinfo ball-by-ball + player-v-player files, Oct 1998-2002, with ESPN's permission
   python scripts/download.py espn-cards    # 2-4 h    Cricinfo scorecards 1970-71 to 1997-98 (who took each wicket)
-  python scripts/download.py all           # everything above, in that order
+  python scripts/download.py retry         # try once more every file that failed earlier
+  python scripts/download.py all           # everything above, in that order (then retry)
   python scripts/download.py status        # what is downloaded so far
 
 Safe to stop any time (Ctrl+C) and run again: finished files are skipped, half-finished ones are redone.
@@ -15,6 +16,7 @@ Everything is logged to data/raw/download_log.txt.
 """
 import argparse
 import io
+import json
 import re
 import sys
 import time
@@ -84,6 +86,20 @@ def fetch_big(url, path):
 
 def mb(n):
     return f"{n / 1e6:.1f} MB"
+
+
+def progress(name, **info):
+    """A small JSON file the live tracker (scripts/tracker.py) reads: how much is found, done, failed."""
+    info["updated"] = time.time()
+    try:
+        save(RAW / f"progress_{name}.json", json.dumps(info).encode())
+    except Exception:
+        pass
+
+
+def note_failed(name, url):
+    with (RAW / f"failed_{name}.txt").open("a", encoding="utf-8") as f:
+        f.write(url + "\n")
 
 
 # ---------------------------------------------------------------- 1. Cricsheet
@@ -201,23 +217,34 @@ def davis_key(url):
 def davis(delay=1.5, max_files=40000):
     log("== Charles Davis: Test Match Database (1877 onwards), crawling from contents.pdf")
     root = RAW / "davis"
-    queue, seen, new, have = deque(), set(), 0, 0
+    queue, seen, queued, new, have, failed = deque(), set(), set(), 0, 0, 0
+    order = ["https", "http"]  # switches to http first if the secure address keeps failing
     for s in DAVIS_START:
         queue.append(s)
+    started = time.time()
     while queue and len(seen) < max_files:
         url = queue.popleft()
         key = davis_key(url)
         if not key or key.lower() in seen:
             continue
+        queued.discard(key.lower())
         seen.add(key.lower())
         p = root / key
         if p.exists():
             data = p.read_bytes()
             have += 1
         else:
-            data = fetch(url.replace("http://", "https://", 1)) or fetch(url.replace("https://", "http://", 1))
+            plain = url.split("://", 1)[1]
+            data = fetch(f"{order[0]}://{plain}", tries=2)
+            if data is None:
+                data = fetch(f"{order[1]}://{plain}", tries=3)
+                if data is not None:
+                    order.reverse()
+                    log(f"   switching to {order[0]}:// first (works better for this site)")
             time.sleep(delay)
             if data is None:
+                failed += 1
+                note_failed("davis", url)
                 continue
             save(p, data)
             new += 1
@@ -226,14 +253,20 @@ def davis(delay=1.5, max_files=40000):
         links = pdf_links(data, url) if key.lower().endswith(".pdf") else html_links(data, url)
         for link in links:
             k = davis_key(link)
-            if k and k.lower() not in seen:
+            if k and k.lower() not in seen and k.lower() not in queued:
+                queued.add(k.lower())
                 queue.append(link)
         if key.lower().endswith("contents.pdf"):
             ok = sum(1 for x in links if davis_key(x))
             log(f"   contents.pdf: {len(links)} links found, {ok} of them inside the Test archive")
             if not ok:
                 log("   WARNING: nothing to follow. Send data/raw/davis/zArchive/contents.pdf to Claude.")
-    log(f"   Davis done: {new} new files, {have} already had, {len(seen)} looked at")
+        if len(seen) % 10 == 0:
+            progress("davis", label="Davis (Tests, 1877 on)", done=new + have, new=new, had=have, failed=failed,
+                     known=len(seen) + len(queue), queue=len(queue), started=started, finished=False)
+    progress("davis", label="Davis (Tests, 1877 on)", done=new + have, new=new, had=have, failed=failed,
+             known=len(seen), queue=0, started=started, finished=True)
+    log(f"   Davis done: {new} new files, {have} already had, {failed} failed, {len(seen)} looked at")
 
 
 # ---------------------------------------------------------------- 4. ESPNcricinfo's old archive (i.imgci.com)
@@ -284,14 +317,22 @@ def is_match_file(name):
     return bool(MATCH_RE.search(name)) and not any(x in up for x in NOT_MATCH)
 
 
-def espn(seasons, label, delay=2.0, max_pages=60000, follow_pages=True):
+def espn(seasons, label, delay=2.0, max_pages=60000, follow_pages=True, name="espn"):
     log(f"== ESPNcricinfo archive: {label}")
     root = RAW / "espn"
     prefixes = tuple(f"ARCHIVE/{s}/" for s in seasons)
-    queue, seen = deque(), set()
+    queue, seen, queued, files_known = deque(), set(), set(), set()
     for s in seasons:
         queue.append(f"{ESPN}/link_to_database/ARCHIVE/{s}/")
-    counts = {"dir": 0, "file_new": 0, "file_had": 0, "page": 0}
+    counts = {"dir": 0, "file_new": 0, "file_had": 0, "page": 0, "failed": 0}
+    started = time.time()
+
+    def report(finished=False):
+        progress(name, label=label, done=counts["file_new"] + counts["file_had"], new=counts["file_new"],
+                 had=counts["file_had"], failed=counts["failed"], known=len(files_known),
+                 pages_read=counts["dir"] + counts["page"], queue=0 if finished else len(queue),
+                 started=started, finished=finished)
+
     while queue and len(seen) < max_pages:
         url = queue.popleft()
         k = espn_key(url)
@@ -300,8 +341,10 @@ def espn(seasons, label, delay=2.0, max_pages=60000, follow_pages=True):
         kind, key = k
         if key.lower() in seen or not key.startswith(prefixes):
             continue
+        queued.discard(key.lower())
         seen.add(key.lower())
         if kind == "file":
+            files_known.add(key.lower())
             p = root / key
             if p.exists():
                 counts["file_had"] += 1
@@ -310,6 +353,8 @@ def espn(seasons, label, delay=2.0, max_pages=60000, follow_pages=True):
                 data = fetch(f"{ESPN}/link_to_database/{key}")
                 time.sleep(delay)
                 if data is None:
+                    counts["failed"] += 1
+                    note_failed(name, url)
                     continue
                 save(p, data)
                 counts["file_new"] += 1
@@ -329,23 +374,62 @@ def espn(seasons, label, delay=2.0, max_pages=60000, follow_pages=True):
             counts["dir" if kind == "dir" else "page"] += 1
         for link in html_links(data, url):
             k2 = espn_key(link)
-            if not k2 or k2[1].lower() in seen or not k2[1].startswith(prefixes):
+            if not k2 or k2[1].lower() in seen or k2[1].lower() in queued or not k2[1].startswith(prefixes):
                 continue
             if k2[0] == "page" and not follow_pages:
                 continue
+            queued.add(k2[1].lower())
+            if k2[0] == "file":
+                files_known.add(k2[1].lower())
             queue.append(link)
+        if len(seen) % 10 == 0:
+            report()
+    report(finished=True)
     log(f"   {label} done: {counts['file_new']} new match files, {counts['file_had']} already had, "
-        f"{counts['dir']} folders + {counts['page']} pages read")
+        f"{counts['failed']} failed, {counts['dir']} folders + {counts['page']} pages read")
 
 
 def espn_bbb():
     seasons = [season_name(y) for y in range(1997, 2003)] + ["WORLD_CUPS/WC99"]
-    espn(seasons, "ball-by-ball and player-v-player, 1997-98 to 2002-03 (+ World Cup 1999)")
+    espn(seasons, "ESPN ball-by-ball 1998-2002", name="espn_bbb")
 
 
 def espn_cards():
     seasons = [season_name(y) for y in range(1970, 1997)] + [f"WORLD_CUPS/WC{x}" for x in ("75", "79", "83", "87", "92", "96")]
-    espn(seasons, "scorecards 1970-71 to 1996-97 (+ World Cups 1975-1996)")
+    espn(seasons, "ESPN scorecards 1970-1997", name="espn_cards")
+
+
+# ---------------------------------------------------------------- retry what failed
+def retry():
+    """Try every file listed in data/raw/failed_*.txt once more (slowly)."""
+    log("== Retrying files that failed earlier")
+    for f in sorted(RAW.glob("failed_*.txt")):
+        urls = list(dict.fromkeys(x.strip() for x in f.read_text(encoding="utf-8").splitlines() if x.strip()))
+        still = []
+        for url in urls:
+            if davis_key(url):
+                p = RAW / "davis" / davis_key(url)
+                tries = [url.replace("https://", "http://", 1), url.replace("http://", "https://", 1)]
+            elif espn_key(url) and espn_key(url)[0] == "file":
+                p = RAW / "espn" / espn_key(url)[1]
+                tries = [f"{ESPN}/link_to_database/{espn_key(url)[1]}"]
+            else:
+                continue
+            if p.exists():
+                continue
+            data = None
+            for u in tries:
+                data = fetch(u, tries=3)
+                if data:
+                    break
+            time.sleep(2)
+            if data:
+                save(p, data)
+                log(f"   got it this time: {p.name}")
+            else:
+                still.append(url)
+        f.write_text("".join(u + "\n" for u in still), encoding="utf-8")
+        log(f"   {f.name}: {len(urls) - len(still)} recovered, {len(still)} still missing")
 
 
 # ---------------------------------------------------------------- status
@@ -370,7 +454,7 @@ def status():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Everyball downloader")
-    ap.add_argument("what", choices=["cricsheet", "kaggle", "davis", "espn-bbb", "espn-cards", "all", "status"])
+    ap.add_argument("what", choices=["cricsheet", "kaggle", "davis", "espn-bbb", "espn-cards", "all", "retry", "status"])
     ap.add_argument("--force", action="store_true", help="re-download Cricsheet even if present")
     a = ap.parse_args(argv)
     try:
@@ -384,6 +468,8 @@ def main(argv=None):
             espn_bbb()
         if a.what in ("espn-cards", "all"):
             espn_cards()
+        if a.what in ("retry", "all"):
+            retry()
         if a.what == "status":
             status()
     except KeyboardInterrupt:
