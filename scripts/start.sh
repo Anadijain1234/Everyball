@@ -10,7 +10,7 @@ mkdir -p data/raw
 
 python scripts/backup.py restore || echo "(Could not check GitHub for saved files right now; carrying on.)"
 
-for job in davis espn-bbb espn-cards; do
+for job in davis espn-bbb espn-cards espn-years; do
   if pgrep -f "[d]ownload.py $job" >/dev/null; then
     echo "already running: $job"
   else

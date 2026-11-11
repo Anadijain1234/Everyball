@@ -39,8 +39,9 @@ About 2 minutes.
 ```
 nohup python scripts/download.py davis > data/raw/davis.out 2>&1 &
 ```
-Charles Davis's Test archive: about 11,400 PDFs, one every 1.5 seconds (his site is small, so we go slowly):
-about 9-10 hours in the background.
+Charles Davis's Test archive (1877 to Nov 2020): about 16,600 links, of which about 6,000 are dead links on his
+own pages (e.g. Tests 3-6 of a 2-Test series). Every link is asked for once; "not found" goes to
+`data/raw/dead_davis.txt` and is never retried. One request at a time with a 0.75 s pause: about 6-7 hours.
 
 ```
 nohup python scripts/download.py espn-bbb > data/raw/espn-bbb.out 2>&1 &
@@ -50,7 +51,15 @@ Cricinfo ball-by-ball, 1998-2002 (can run at the same time as Davis).
 ```
 nohup python scripts/download.py espn-cards > data/raw/espn-cards.out 2>&1 &
 ```
-Old scorecards, 1970-71 to 1996-97 (2-4 hours).
+Old scorecards, two-year seasons 1970-71 to 1996-97 (1-2 hours).
+
+```
+nohup python scripts/download.py espn-years > data/raw/espn-years.out 2>&1 &
+```
+The one-year folders 1971-2002, where the archive keeps matches played in England (1-2 hours).
+
+If a site ever refuses us, the downloaders slow down by themselves and ask again later (the tracker says so).
+A refusal is never counted as a dead link.
 
 ## Live tracker
 ```

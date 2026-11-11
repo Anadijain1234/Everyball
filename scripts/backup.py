@@ -18,7 +18,7 @@ import subprocess
 import sys
 import time
 import zipfile
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -26,6 +26,7 @@ RAW = ROOT / "data" / "raw"
 TAG = "raw-data"
 FOLDERS = ["cricsheet", "kaggle", "davis", "espn"]
 EVERY_MIN = 20
+IST = timezone(timedelta(hours=5, minutes=30))  # India time (the Codespace clock is UTC)
 MAX_PART = 1_500_000_000  # bytes per zip (GitHub allows up to 2 GB per file)
 NOTES = ("Automatic backup of data/raw (Everyball downloads). Restore with: python scripts/backup.py restore. "
          "Data from Charles Davis's Test Match Database, Cricsheet, ESPNcricinfo and the Kaggle ODI dataset, "
@@ -41,7 +42,7 @@ def work_dir():
 
 
 def say(msg):
-    line = f"{datetime.now():%H:%M:%S} {msg}"
+    line = f"{datetime.now(IST):%H:%M:%S} {msg}"
     print(line, flush=True)
 
 
@@ -184,7 +185,10 @@ def backup_round():
     unknown = [p for p in remote if p not in m["parts"]]
     if unknown:  # GitHub has parts this Codespace doesn't know about (new Codespace): bring them back first
         say(f"backup: GitHub has {len(unknown)} saved part(s) this Codespace doesn't know about; restoring them first")
-        restore()
+        try:
+            restore()
+        except RuntimeError as e:  # e.g. a part whose upload was cut off: don't let it stop new backups
+            say(f"backup: couldn't bring back every saved part ({e}); carrying on with new files")
         m = load()
     have = saved_files(m)
     new = [f for f in data_files() if f not in have]
@@ -300,7 +304,7 @@ def status():
     m = load()
     have, files = saved_files(m), data_files()
     missing = len([f for f in files if f not in have])
-    last = datetime.fromtimestamp(m["last"]).strftime("%d %b %H:%M") if m.get("last") else "never"
+    last = datetime.fromtimestamp(m["last"], IST).strftime("%d %b %H:%M") if m.get("last") else "never"
     print(f"Saved on GitHub: {len(have):,} files in {len(m['parts'])} part(s). Last backup: {last}.")
     print(f"Downloaded here but not saved yet: {missing:,} (the next round saves them).")
 

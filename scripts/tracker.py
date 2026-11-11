@@ -12,17 +12,23 @@ It also writes data/raw/status.html (auto-refreshing) so you can watch from your
 import json
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
+IST = timezone(timedelta(hours=5, minutes=30))  # India time (the Codespace clock is UTC)
 
-SOURCES = [  # name, label, folder to measure speed, file pattern
-    ("davis", "Davis: Tests 1877 on, ball by ball", "davis", "*.pdf"),
+SOURCES = [  # name, label, folder to measure speed (only for old progress files), file pattern
+    ("davis", "Davis: Tests 1877-2020, ball by ball", "davis", "*.pdf"),
     ("espn_bbb", "ESPN: ball-by-ball 1998-2002", "espn", "*.htm*"),
     ("espn_cards", "ESPN: scorecards 1970-1997", "espn", "*.htm*"),
+    ("espn_years", "ESPN: England etc. 1971-2002", "espn", "*.htm*"),
 ]
+
+
+def ist(ts=None):
+    return datetime.fromtimestamp(ts if ts is not None else time.time(), IST)
 
 
 def count(sub, pat):
@@ -72,12 +78,17 @@ def rows():
         except Exception:
             continue
         stale = time.time() - p.get("updated", 0) > 600
-        sp = speed(sub, pat)
+        # each downloader measures its own requests per minute (dead links included, they are in the queue too)
+        sp = p["rate"] if "rate" in p else speed(sub, pat)
         left = (p.get("queue", 0) / sp) if sp > 0 and not p.get("finished") else None
-        state = "done" if p.get("finished") else ("stopped? (no update for 10 min)" if stale else "running")
-        out.append({"label": label, "done": p.get("done", 0), "known": p.get("known", 0), "state": state,
-                    "speed": sp, "left": left, "failed": p.get("failed", 0), "final": p.get("finished", False),
-                    "pages": p.get("pages_read")})
+        state = "done" if p.get("finished") else ("stopped? run  bash scripts/start.sh" if stale else "running")
+        note = None
+        if p.get("slowed"):
+            note = f"the site asked us to slow down: pause now {p.get('pause', 0):.0f} s (it comes back by itself)"
+        done, dead, failed = p.get("done", 0), p.get("dead", 0), p.get("failed", 0)
+        out.append({"label": label, "done": done, "checked": done + dead + failed, "known": p.get("known", 0),
+                    "state": state, "speed": sp, "left": left, "failed": failed, "final": p.get("finished", False),
+                    "pages": p.get("pages_read"), "dead": dead, "note": note})
     out.append(backup_row())
     return out
 
@@ -101,7 +112,7 @@ def backup_row():
         row["state"] = "NOT RUNNING: run  bash scripts/start.sh"
         return row
     row["done"] = min(b.get("saved", 0), total) if total else b.get("saved", 0)
-    last = datetime.fromtimestamp(b["last"]).strftime("%H:%M") if b.get("last") else "not yet"
+    last = ist(b["last"]).strftime("%H:%M") if b.get("last") else "not yet"
     if time.time() - b.get("updated", 0) > 25 * 60:
         row["state"] = "STOPPED? run  bash scripts/start.sh"
     elif b.get("working"):
@@ -115,54 +126,77 @@ def backup_row():
     return row
 
 
+def details(r):
+    """The small facts under each bar."""
+    extra = []
+    if "checked" in r:
+        extra.append(f"{r['done']:,} files saved")
+    if r.get("dead"):
+        extra.append(f"{r['dead']:,} dead links (not on the site)")
+    if r.get("failed"):
+        extra.append(f"{r['failed']} failed (retried later)")
+    if r.get("speed"):
+        extra.append(f"{r['speed']:.0f}/min")
+    if r.get("left") is not None:
+        extra.append(("~" if r["final"] else "at least ") + hm(r["left"]) + " left")
+    if r.get("pages"):
+        extra.append(f"{r['pages']:,} index pages read")
+    if r.get("note"):
+        extra.append(r["note"])
+    return extra
+
+
+def wrap(items, width=60, indent="  "):
+    lines, cur = [], ""
+    for it in items:
+        joined = it if not cur else cur + " · " + it
+        if cur and len(indent + joined) > width:
+            lines.append(indent + cur)
+            cur = it
+        else:
+            cur = joined
+    if cur:
+        lines.append(indent + cur)
+    return lines
+
+
+def figures(r):
+    known, checked = r["known"], r.get("checked", r["done"])
+    frac = (checked / known) if known else 0
+    target = (f"{checked:,} / {known:,}" + ("" if r["final"] else "+")) if known else f"{checked:,} / ?"
+    return frac, target
+
+
 def text(rs):
-    now = datetime.now().strftime("%H:%M:%S")
-    lines = [f"EVERYBALL DOWNLOAD TRACKER     {now}  (refreshes every 30 s; Ctrl+C closes the board only)", ""]
+    """Narrow layout (fits a half-width terminal): name line, bar line, details."""
+    lines = [f"EVERYBALL DOWNLOADS   {ist():%H:%M:%S} India time",
+             "(refreshes every 30 s · Ctrl+C closes the board only)", ""]
     for r in rs:
-        known = r["known"]
-        frac = (r["done"] / known) if known else 0
-        target = f"{r['done']:,} / {known:,}" + ("" if r["final"] else "+") if known else f"{r['done']:,} / ?"
-        extra = []
-        if r.get("speed"):
-            extra.append(f"{r['speed']:.0f}/min")
-        if r.get("left") is not None:
-            extra.append(("~" if r["final"] else "at least ") + hm(r["left"]) + " left")
-        if r.get("pages"):
-            extra.append(f"{r['pages']:,} index pages read")
-        if r.get("failed"):
-            extra.append(f"{r['failed']} failed (retried later)")
-        if r.get("note"):
-            extra.append(r["note"])
-        lines.append(f"{r['label']:36} {bar(frac)} {frac * 100:5.1f}%  {target:>15}  {r['state']}")
-        if extra:
-            lines.append(f"{'':36} " + " · ".join(extra))
-    lines += ["", "'+' = still discovering files, so the target can grow. Time left is for what is known so far.",
-              "Safe copy: your Everyball repo on GitHub -> Releases -> raw-data. Stopped? Run: bash scripts/start.sh"]
+        frac, target = figures(r)
+        lines.append(f"{r['label']}   [{r['state']}]")
+        lines.append(f"  {bar(frac)} {frac * 100:5.1f}%  {target}")
+        lines += wrap(details(r))
+        lines.append("")
+    lines += ["'+' = still finding links, so the total can grow.",
+              "Safe copy: GitHub -> your Everyball repo -> Releases -> raw-data.",
+              "Stopped? Run: bash scripts/start.sh"]
     return "\n".join(lines)
 
 
 def html(rs):
     cards = []
     for r in rs:
-        known = r["known"] or 0
-        pct = (r["done"] / known * 100) if known else 0
-        info = []
-        if r.get("speed"):
-            info.append(f"{r['speed']:.0f} files/min")
-        if r.get("left") is not None:
-            info.append(("about " if r["final"] else "at least ") + hm(r["left"]) + " left")
-        if r.get("failed"):
-            info.append(f"{r['failed']} failed (retried later)")
-        if r.get("note"):
-            info.append(r["note"])
+        frac, target = figures(r)
+        pct = frac * 100
+        info = details(r)
         cards.append(f"""<div class="c"><b>{r['label']}</b><div class="b"><i style="width:{pct:.1f}%"></i></div>
-<div>{r['done']:,} / {known if known else '?'}{'' if r['final'] else '+'} · {pct:.1f}% · {r['state']}</div>
+<div>{target} · {pct:.1f}% · {r['state']}</div>
 <small>{' · '.join(info)}</small></div>""")
     return f"""<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="30">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Everyball downloads</title>
 <style>body{{font:15px system-ui;margin:16px;background:#0f172a;color:#e2e8f0}}.c{{background:#1e293b;padding:12px;border-radius:10px;margin:10px 0}}
 .b{{height:10px;background:#334155;border-radius:5px;margin:8px 0}}.b i{{display:block;height:100%;background:#22c55e;border-radius:5px}}small{{color:#94a3b8}}</style>
-</head><body><h2>Everyball downloads</h2><small>Updated {datetime.now():%H:%M:%S} · refreshes every 30 s ·
+</head><body><h2>Everyball downloads</h2><small>Updated {ist():%H:%M:%S} India time · refreshes every 30 s ·
 "+" means still finding files</small>{''.join(cards)}</body></html>"""
 
 

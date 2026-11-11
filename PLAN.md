@@ -50,11 +50,23 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
 - [x] **Step 2**: downloader `scripts/download.py` + tests (Claude, 11 Nov 2026)
 - [x] Step 2b: live tracker `scripts/tracker.py` (+ phone page), progress files, retry of failed files (Claude, 11 Nov 2026)
 - [x] Step 2c: automatic backup to GitHub Releases (`scripts/backup.py`) + one-command start/resume (`scripts/start.sh`) (Claude, 11 Nov 2026)
+- [x] Step 2d: Davis dead links handled fast (asked once, listed, never retried), pause 0.75 s, automatic slow-down on refusals, folder-typo and capital-letter fixes; ESPN one-year folders (`espn-years`), ESPN pause 1 s; tracker in India time with dead links shown (Claude, 11 Nov 2026)
 - [ ] **Step 3**: run the downloader in the Codespace (Anadi): `bash scripts/start.sh`. Started 11 Nov 2026: Cricsheet + Kaggle done; Davis found 24 archive links in contents.pdf, then about 11,400 PDFs in all (about 9-10 hours at 1.5 s each); ESPN ball-by-ball about 480+ files. Then `python scripts/download.py retry` and `python scripts/backup.py now`.
 - [ ] **Step 4**: send Claude 6 sample files (listed below) + the output of `python scripts/download.py status`
 - [ ] **Step 5**: readers + database builder (Claude)
 - [ ] **Step 6**: build the database (Anadi, one command)
 - [ ] Anadi's side task: 100 test questions with correct answers from ESPN (Tests + ODIs, old + new)
+
+### What we learned while downloading (11 Nov 2026)
+- Davis's archive runs 1877 to **November 2020** (about 2,390 Tests), in **747 series**. Each series: cover, sessions,
+  averages pages; each Test: main page, fall of wickets, ball-by-ball (looks like ONE bbb file per Test, for about 85%
+  of Tests; to confirm on a sample). About 16,600 links in all, about 6,000 of them dead (empty Test slots on his pages).
+- Real Davis files: about 10,000-11,000.
+- ESPN's old archive: one-year folders (e.g. `ARCHIVE/2001/`) hold matches played in England; nothing before about
+  the 1980s (`1970-71` is 404); blocked after about 2015-16 (`2020-21` gives 403).
+- **Next check (after downloads):** count Davis's Tests per year and compare with ESPN's list of Tests per year
+  (stats.cricinfo.com/ci/engine/records/team/match_results_year.html?class=1;id=YEAR;type=year, e.g. 1877 = Test #1, #2).
+  Every year must match; any year that doesn't is looked at by hand. ODIs: compare ESPN files with the Kaggle ODI list.
 
 ### Step 4 sample files
 1. `data/raw/davis/zArchive/contents.pdf`
