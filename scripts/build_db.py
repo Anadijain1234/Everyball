@@ -71,6 +71,8 @@ def davis_jobs(root):
             tests.setdefault((m[1], int(m[2])), {"page": None, "bbb": []})["bbb"].append((int(m[3] or 1), p))
             continue
         m = TEST_FILE.match(name)
+        if m and int(m[2]) == 50:             # '...50.pdf' is the series' "Scores of 50+" page, not a Test
+            continue
         if m:
             tests.setdefault((m[1], int(m[2])), {"page": None, "bbb": []})["page"] = p
     jobs = []
@@ -208,7 +210,9 @@ def save_davis_test(con, reg, res, stats):
         stats["segments"] += s["segments"]
         stats["sure"] += s["sure"]
         rows, notes = [], []
-        for i, inn in enumerate(bbb["innings"], 1):
+        order = {(x["team"], x["team_inn"]): j for j, x in enumerate((page or {}).get("innings", []), 1)}
+        for k, inn in enumerate(bbb["innings"], 1):
+            i = order.get((inn["team"], int(inn.get("n") or 0)), k)     # e.g. only England's 1st innings survives
             bat_team, bowl_team = inn["team"], inn["bowling_team"]
             for seq, b in enumerate(inn["balls"], 1):
                 rows.append((mid, i, seq, b["over_no"], b["ball"], reg.get(b["bowler"], bowl_team, "davis"),
@@ -217,6 +221,8 @@ def save_davis_test(con, reg, res, stats):
                              b["bat_runs"], b["extras"], b["extra_type"], b["legal"], b["wicket"], b["kind"],
                              reg.get(b["out"], bat_team, "davis") if b["out"] else None, b["sure"], "davis"))
             notes += [(mid, i, o, n, "davis") for o, n in inn["notes"]]
+            if inn.get("partial"):
+                notes.append((mid, i, 0, "PARTIAL RECORD: " + inn["partial"], "davis"))
         con.executemany("INSERT INTO balls VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
         con.executemany("INSERT INTO notes VALUES(?,?,?,?,?)", notes)
         stats["balls"] += len(rows)

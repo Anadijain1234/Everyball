@@ -16,7 +16,7 @@ from datetime import datetime
 import common as C
 
 LISTS = C.RAW / "espn_lists"
-LIST_URL = "https://stats.espncricinfo.com/ci/engine/records/team/match_results_year.html?class={cls};id={year};type=year"
+LIST_URL = "https://stats.espncricinfo.com/ci/engine/records/team/match_results.html?class={cls};id={year};type=year"
 FIRST_YEAR = {"Test": 1877, "ODI": 1971}
 
 
@@ -33,7 +33,7 @@ def fetch_lists(say):
     this_year = datetime.now().year
     for fmt, cls in (("Test", 1), ("ODI", 2)):
         for year in range(FIRST_YEAR[fmt], this_year + 1):
-            f = LISTS / f"{fmt}_{year}.html"
+            f = LISTS / f"{fmt}_{year}_results.html"
             if f.exists() and (year < this_year - 1 or time.time() - f.stat().st_mtime < 86400):
                 continue
             try:
@@ -91,7 +91,7 @@ def load_lists(con, say):
     failed = fetch_lists(say)
     con.execute("DELETE FROM ref_matches")
     n = 0
-    for f in sorted(LISTS.glob("*.html")):
+    for f in sorted(LISTS.glob("*_results.html")):
         fmt = f.name.split("_")[0]
         rows = parse_list(f.read_text(encoding="utf-8", errors="replace"), fmt)
         con.executemany("INSERT OR REPLACE INTO ref_matches VALUES(?,?,?,?,?,?,?,?)", rows)
@@ -185,12 +185,19 @@ def run(con, say):
     rows = q(con, """
         WITH b AS (SELECT match_id, inn, SUM(bat_runs + extras) r FROM balls WHERE source='davis' GROUP BY 1, 2)
         SELECT COUNT(*), SUM(CASE WHEN i.runs = b.r THEN 1 ELSE 0 END) FROM innings i
-        JOIN b ON b.match_id = i.match_id AND b.inn = i.inn WHERE i.source = 'davis'""")
+        JOIN b ON b.match_id = i.match_id AND b.inn = i.inn WHERE i.source = 'davis'
+        AND NOT EXISTS (SELECT 1 FROM notes n WHERE n.match_id = i.match_id AND n.inn = i.inn
+                        AND n.note LIKE 'PARTIAL RECORD%')""")
+    partial = one(con, "SELECT COUNT(DISTINCT match_id || '-' || inn) FROM notes WHERE note LIKE 'PARTIAL RECORD%'")
+    if partial:
+        lines.append(f"Innings where Davis's own record is partial (gaps he marks, or missing overs), left out below: "
+                     f"{partial:,}")
     if rows and rows[0][0]:
         lines.append(f"Innings whose balls add up to the scorecard total: {rows[0][1]:,} of {rows[0][0]:,}")
         bad = q(con, """WITH b AS (SELECT match_id, inn, SUM(bat_runs + extras) r FROM balls WHERE source='davis' GROUP BY 1, 2)
                         SELECT i.match_id, i.inn, i.runs, b.r FROM innings i JOIN b ON b.match_id = i.match_id AND b.inn = i.inn
-                        WHERE i.source = 'davis' AND i.runs <> b.r LIMIT 15""")
+                        WHERE i.source = 'davis' AND i.runs <> b.r AND NOT EXISTS (SELECT 1 FROM notes n
+                        WHERE n.match_id = i.match_id AND n.inn = i.inn AND n.note LIKE 'PARTIAL RECORD%') LIMIT 15""")
         if bad:
             lines.append("   Examples that don't add up (match, innings, scorecard, balls): " +
                          ", ".join(f"{m} inn{i} {a}/{b}" for m, i, a, b in bad))
@@ -261,6 +268,20 @@ def run(con, say):
             if missing:
                 lines.append(f"   Missing {fmt}s (first 40):")
                 lines += [f"     {fmt} #{n}: {d} {t1} v {t2}, {g}" for n, d, t1, t2, g in missing]
+            # same number, different match? (a source numbering its matches differently from ESPN)
+            for src in ("davis", "cricsheet", "kaggle", "espn", "book"):
+                wrong = q(con, f"""SELECT r.number, r.start_date, r.team1, r.team2, m.start_date, m.team1, m.team2
+                    FROM ref_matches r JOIN matches m ON m.match_id = (CASE r.format WHEN 'Test' THEN 'T' ELSE 'O' END)
+                      || printf('%04d', r.number)
+                    WHERE r.format = ? AND m.sources LIKE '%{src}%'
+                      AND (abs(julianday(r.start_date) - julianday(m.start_date)) > 3
+                           OR NOT ((r.team1 = m.team1 AND r.team2 = m.team2) OR (r.team1 = m.team2 AND r.team2 = m.team1)))
+                    ORDER BY r.number""", fmt)
+                if wrong:
+                    lines.append(f"   {src}: {len(wrong)} {fmt}s whose number points to a different match than ESPN's "
+                                 f"(first: " + "; ".join(f"#{n} ESPN {d} {a} v {b} / ours {d2} {c} v {e}"
+                                                         for n, d, a, b, d2, c, e in wrong[:4]) + ")")
+                    add(con, "numbers", f"{src} {fmt}", "check", str(len(wrong)))
     else:
         lines.append("ESPN's lists could not be downloaded right now; using the Test-number check below instead.")
     gaps = []

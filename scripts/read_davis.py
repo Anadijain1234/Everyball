@@ -97,11 +97,13 @@ def parse_cover(text):
 
 
 # ---------------------------------------------------------------- Test page (scorecard)
-HEAD = re.compile(r"^\s*(?P<t1>.+?) v (?P<t2>.+?)\s+(?P<season>\d{4}(?:/\d{2,4})?)\s+(?P<sno>\d+)(?:st|nd|rd|th) Test"
+HEAD = re.compile(r"^\s*(?P<t1>.+?) v (?P<t2>.+?)\s+(?P<season>\d{4}(?:/\d{2,4})?)\s+(?:(?:(?P<sno>\d+)(?:st|nd|rd|th)|Only)\s+)?Test"
                   r"\s+(?P<venue>.+?)\s+Test:\s*(?P<num>\d+)")
 INN_HEAD = re.compile(r"^\s*(?:Test #\s+)?(?P<team>[A-Z][A-Z\.' ]*?[A-Z])\s{2,}(?P<n>\d)(?:st|nd|rd|th) Innings")
 BAT = re.compile(r"^\s*(?:(?P<tno>\d[0-9a-z,]*)\s+)?(?P<name>[A-Za-z][A-Za-z'\-\. ]*?[A-Za-z'\.])\s{2,}"
-                 r"(?P<how>\S.*?)\s{2,}(?P<runs>\d+)\*?\s+(?P<mins>\d+|-)\s+(?P<f>\d+|-)\s*,\s*(?P<s>\d+|-)\s+(?P<bf>\d+|-)")
+                 r"(?P<how>\S.*?)\s{2,}(?P<runs>\d+)\*?(?:\s{1,8}(?P<mins>\d+|-)(?![\d,]))?(?P<rest>.*)$")
+FOURS_SIXES = re.compile(r"^\s+(?P<f>\d+|-)\s*,\s*(?P<s>\d+|-)")
+BALLS_FACED = re.compile(r"^\s+(?P<bf>\d+|-)(?![\d\-])")
 BOWL = re.compile(r"(?<!\S)(?P<name>" + NAME + r")\s+(?P<ov>\d+(?:\.\d)?)\s+(?P<m>\d+)\s+(?P<r>\d+)\s+(?P<w>\d+)"
                   r"(?:\s+[\d\-]+(?:\s*,\s*[\d\-]+)?)?(?:\s+[\d\-]+)?\s*$")
 TOTAL = re.compile(r"^\s*Total\s+(?P<desc>.*?)\s{2,}(?P<runs>\d+)(?:\s|$)")
@@ -114,7 +116,7 @@ def parse_test_page(text):
     for i, line in enumerate(lines[:6]):
         m = HEAD.match(line)
         if m:
-            out.update(team1=team(m["t1"]), team2=team(m["t2"]), season=m["season"], series_test_no=int(m["sno"]),
+            out.update(team1=team(m["t1"]), team2=team(m["t2"]), season=m["season"], series_test_no=int(m["sno"] or 1),
                        ground=m["venue"].strip().rstrip("."), number=int(m["num"]))
             nxt = next((l for l in lines[i + 1:i + 4] if l.strip()), "")
             out["result"] = re.split(r"\s{2,}", nxt.strip())[0].rstrip(".") if nxt else None
@@ -128,7 +130,8 @@ def parse_test_page(text):
     for line in lines:
         h = INN_HEAD.match(line)
         if h:
-            inn = {"team": team(h["team"]), "team_inn": int(h["n"]), "batting": [], "bowling": []}
+            inn = {"team": team(h["team"]), "team_inn": int(h["n"]), "batting": [], "bowling": [],
+                   "bf_end": (line.index(" BF") + 3) if re.search(r"\sBF(\s|$)", line) else None}
             out["innings"].append(inn)
             continue
         if inn is None:
@@ -155,10 +158,19 @@ def parse_test_page(text):
         if m and m["name"].strip() not in ("Extras", "Total"):
             kind, fielder, bowler = kind_of(m["how"])
             tno = m["tno"] or ""
+            rest, f6, bf = m["rest"], None, None          # 4s,6s and balls faced are blank in some old pages
+            fs = FOURS_SIXES.match(rest)
+            if fs:
+                f6, rest = fs, rest[fs.end():]
+            if inn["bf_end"]:                     # balls faced: the number that sits under the "BF" heading
+                bf = BALLS_FACED.match(rest)
+                if bf and bf.start("bf") > 3 and abs(len(line) - len(rest) + bf.end() - inn["bf_end"]) > 3:
+                    bf = None                         # not under the heading: it's the fall-of-wickets column
             inn["batting"].append({
                 "name": person(m["name"]), "how": m["how"].strip(), "kind": kind, "fielder": fielder,
-                "bowler": bowler, "runs": int(m["runs"]), "minutes": num(m["mins"]), "fours": num(m["f"]),
-                "sixes": num(m["s"]), "balls": num(m["bf"]), "not_out": int(kind in ("not out", "retired", "absent")),
+                "bowler": bowler, "runs": int(m["runs"]), "minutes": num(m["mins"]),
+                "fours": num(f6["f"]) if f6 else None, "sixes": num(f6["s"]) if f6 else None,
+                "balls": num(bf["bf"]) if bf else None, "not_out": int(kind in ("not out", "retired", "absent")),
                 "captain": int("c" in tno), "keeper": int("w" in tno)})
     # the opponent of each innings
     teams = [out.get("team1"), out.get("team2")]
@@ -296,10 +308,16 @@ def parse_bbb(text, rosters=None, bpo=None):
             continue
         h = INN_LINE.match(line)
         if h and "Ovs" not in line[:20]:
-            if not h["cont"]:
+            same = inn is not None and inn.get("team") == team(h["team"]) and inn.get("n") == h["n"]
+            if same and re.search(r"\bonly\b|partial", line, re.I):
+                inn["partial"] = line.strip()[:120]
+            if not h["cont"] and not same:              # a repeated heading on a new page continues the innings
                 bat_team = team(h["team"])
                 bowl_team = next((t for t in (out["teams"] or ()) if t != bat_team), None)
-                inn = {"team": bat_team, "bowling_team": bowl_team, "balls": [], "notes": [], "legal": 0}
+                inn = {"team": bat_team, "bowling_team": bowl_team, "balls": [], "notes": [], "legal": 0,
+                       "n": h["n"]}
+                if re.search(r"\bonly\b|partial", line, re.I):
+                    inn["partial"] = line.strip()[:120]
                 out["innings"].append(inn)
                 cum, state, pending = {}, None, None
                 tail = re.findall(r"(\d{1,4})\s*$", h["rest"] or "")
@@ -413,6 +431,11 @@ def parse_bbb(text, rosters=None, bpo=None):
         clean = re.sub(r"\s{2,}", " ", all_notes).strip()
         if clean and inn["balls"]:
             inn["notes"].append((inn["balls"][-1]["over_no"], clean))
+    for x in out["innings"]:                      # Davis's record has holes in some old Tests ("Large gap")
+        overs = sorted({b["over_no"] for b in x["balls"]})
+        holes = [f"{a + 1}-{b - 1}" if b - a > 2 else str(a + 1) for a, b in zip(overs, overs[1:]) if b - a > 1]
+        if holes and not x.get("partial"):
+            x["partial"] = "no record of overs " + ", ".join(holes[:5])
     out["stats"] = stats
     return out
 

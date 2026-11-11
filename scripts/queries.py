@@ -28,7 +28,7 @@ def find_players(con, text, limit=12):
                (SELECT COUNT(DISTINCT match_id) FROM bowling w WHERE w.player_id = p.player_id) AS games
         FROM players p
         WHERE p.name = ? COLLATE NOCASE OR p.name LIKE ? OR p.full_name LIKE ?
-        ORDER BY (p.name = ? COLLATE NOCASE) DESC, games DESC LIMIT ?""", (t, like, like, t, limit)).fetchall()
+        ORDER BY games DESC, (p.name = ? COLLATE NOCASE) DESC LIMIT ?""", (t, like, like, t, limit)).fetchall()
     return [dict(r) for r in rows]
 
 
@@ -243,12 +243,12 @@ def player_page(con, pid, fmt=None):
         SELECT x.bowler_id AS player_id, q.name, q.team, COUNT(*) AS n
         FROM batting x JOIN matches m ON m.match_id = x.match_id AND x.source = m.card_source
         JOIN players q ON q.player_id = x.bowler_id
-        WHERE x.player_id = ? {f_sql} GROUP BY 1 ORDER BY 4 DESC LIMIT 8""", [pid] + fa)]
+        WHERE x.player_id = ? {f_sql} GROUP BY 1 ORDER BY 4 DESC, 2 LIMIT 8""", [pid] + fa)]
     he_got = [dict(r) for r in con.execute(f"""
         SELECT x.player_id, q.name, q.team, COUNT(*) AS n
         FROM batting x JOIN matches m ON m.match_id = x.match_id AND x.source = m.card_source
         JOIN players q ON q.player_id = x.player_id
-        WHERE x.bowler_id = ? {f_sql} GROUP BY 1 ORDER BY 4 DESC LIMIT 8""", [pid] + fa)]
+        WHERE x.bowler_id = ? {f_sql} GROUP BY 1 ORDER BY 4 DESC, 2 LIMIT 8""", [pid] + fa)]
     out_kinds = "(x.kind IS NULL OR x.kind IN ('" + "','".join(k for k in BOWLER_KINDS if k) + "'))"
     faced = [dict(r) for r in con.execute(f"""
         SELECT x.bowler_id AS player_id, q.name, q.team, SUM(x.extra_type IS NOT 'wd') AS balls, SUM(x.bat_runs) AS runs,

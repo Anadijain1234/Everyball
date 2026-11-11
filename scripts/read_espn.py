@@ -241,6 +241,14 @@ def run(con, say):
         base = re.sub(r"_(BBB-COMMS|PLYR-V-PLYR)$", "", stem)
         groups[base][kind] = p
     stats = defaultdict(int)
+    team_players = defaultdict(list)          # everyone the other sources know, with the years they played
+    try:
+        for n, f, tm, y1, y2 in con.execute("""SELECT p.name, p.full_name, p.team, MIN(s.first_year), MAX(s.last_year)
+                                              FROM players p JOIN player_stats s USING(player_id)
+                                              WHERE p.sources NOT LIKE '%espn%' GROUP BY p.player_id"""):
+            team_players[tm].append((n, f, y1, y2))
+    except Exception:  # noqa: BLE001  (no player_stats yet)
+        pass
     for base, files in sorted(groups.items()):
         fmt = "ODI" if re.search(r"_ODI", base) else "Test" if re.search(r"_T\d", base) else None
         d = file_date(base)
@@ -260,7 +268,7 @@ def run(con, say):
             stats["skipped (not a numbered men's international)"] += 1
             continue
         stats["matched"] += 1
-        load_match(con, reg, mid, card, files, has_cricsheet_balls, stats)
+        load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_players)
         if stats["matched"] % 300 == 0:
             con.commit()
             say(f"   ...{stats['matched']} ESPN matches loaded")
@@ -270,8 +278,9 @@ def run(con, say):
     C.log(con, "espn", "ARCHIVE", "ok", dict(stats))
 
 
-def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats):
-    teams = list(con.execute("SELECT team1, team2 FROM matches WHERE match_id = ?", (mid,)).fetchone())
+def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_players=None):
+    t1, t2, start = con.execute("SELECT team1, team2, start_date FROM matches WHERE match_id = ?", (mid,)).fetchone()
+    teams, year = [t1, t2], int((start or "0")[:4])
     # which team batted in each innings: ESPN's scorecard, else the card already in the database
     inn_team = {i: t for i, t in con.execute("SELECT inn, team FROM innings WHERE match_id = ? ORDER BY source", (mid,))}
     inn_team.update({i: inn["team"] for i, inn in enumerate(card["innings"], 1)})
@@ -287,7 +296,11 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats):
         if not name or not tm:
             return None
         n = clean_name(name)
-        return reg.get(C.same_person(n, known[tm]) or n, tm, "espn")
+        hit = C.same_person(n, known[tm])
+        if not hit and team_players:         # e.g. 'Muralitharan' who bowled but didn't bat: look across his team
+            hit = C.same_person(n, [(a, f) for a, f, y1, y2 in team_players.get(tm, ())
+                                    if y1 and int(y1) - 1 <= year <= int(y2) + 1])
+        return reg.get(hit or n, tm, "espn")
 
     rosters = defaultdict(set)
     for inn in card["innings"]:
