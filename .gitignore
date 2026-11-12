@@ -8,3 +8,6 @@ data/build_report.txt
 samples.zip
 diag/
 diag.zip
+data/build.log
+samples_for_claude/
+samples_for_claude.zip

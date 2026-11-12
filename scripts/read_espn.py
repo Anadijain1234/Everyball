@@ -48,7 +48,9 @@ def file_date(stem):
 
 
 def clean_name(n):
-    return C.person(re.sub(r"^[\*\+]+|[\*\+†]+$", "", n.strip()))
+    n = re.sub(r"^[\*\+]+|[\*\+†]+$", "", n.strip())
+    n = " ".join(w for w in n.split() if not re.search(r"\d", w))    # 'WPUJC Vaas -1s' -> 'WPUJC Vaas'
+    return C.person(n)
 
 
 # ---------------------------------------------------------------- scorecard
@@ -193,10 +195,12 @@ def parse_bbb(lines):
 
 # ---------------------------------------------------------------- player v player
 def parse_pvp(lines):
-    out, inn, batter, cols, in_batsmen = [], 0, None, None, False
+    out, inn, batter, cols, in_batsmen, side = [], 0, None, None, False, None
     for l in lines:
-        if re.match(r"^\d(?:st|nd|rd|th) innings$", l, re.I):
+        h = re.match(r"^(?P<team>[A-Za-z][A-Za-z\. ]*?\s)?\d(?:st|nd|rd|th) innings\b", l, re.I)
+        if h and len(l) < 60:
             inn += 1
+            side = C.team(h["team"].strip()) if h["team"] else None
             in_batsmen = False
             continue
         if l.lower() == "batsmen":
@@ -215,7 +219,7 @@ def parse_pvp(lines):
         if v and batter and cols:
             vals = dict(zip(cols, v["nums"].split()))
             num = lambda k: int(float(vals[k])) if k in vals else 0  # noqa: E731
-            out.append({"inn": inn, "batter": batter, "bowler": clean_name(v["n"]), "dots": num("0s"), "ones": num("1s"),
+            out.append({"inn": inn, "team": side, "batter": batter, "bowler": clean_name(v["n"]), "dots": num("0s"), "ones": num("1s"),
                         "twos": num("2s"), "threes": num("3s"), "fours": num("4s"), "sixes": num("6s"),
                         "runs": num("Runs"), "balls": num("Balls")})
     return out
@@ -302,6 +306,15 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
                                     if y1 and int(y1) - 1 <= year <= int(y2) + 1])
         return reg.get(hit or n, tm, "espn")
 
+    def side(name):
+        """Which of the two teams does this name belong to (by this match's players, then each team's players)?"""
+        n = clean_name(name or "")
+        hits = {t for t in teams if t and (n in rosters[t] or C.same_person(n, known[t]))}
+        if not hits and team_players:
+            hits = {t for t in teams if t and C.same_person(n, [(a, f) for a, f, y1, y2 in team_players.get(t, ())
+                                                                 if y1 and int(y1) - 1 <= year <= int(y2) + 1])}
+        return hits.pop() if len(hits) == 1 else None
+
     rosters = defaultdict(set)
     for inn in card["innings"]:
         inn["bowl_team"] = next((t for t in teams if t and t != inn["team"]), None)
@@ -333,7 +346,10 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
     if "pvp" in files:
         rows = parse_pvp(html_lines(files["pvp"]))
         for r in rows:
-            bat_t = inn_team.get(r["inn"])
+            bat_t = r["team"] if r["team"] in teams else inn_team.get(r["inn"])
+            sb, sw = side(r["batter"]), side(r["bowler"])
+            if sb and sb != bat_t or (not sb and sw and sw == bat_t):     # names say the sides are the other way
+                bat_t = sb or next((t for t in teams if t and t != sw), None)
             bowl_t = next((t for t in teams if t and t != bat_t), None)
             con.execute("INSERT INTO pvp VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         (mid, r["inn"], pick(r["batter"], bat_t), pick(resolve_short(r["bowler"], rosters[bowl_t]), bowl_t),
@@ -344,6 +360,10 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
         rows, comm = [], []
         for i, inn in enumerate(inns, 1):
             bat_t = inn_team.get(i) or inn["team"]
+            votes = [side(b["batter"]) for b in inn["balls"][:60]]
+            other = next((t for t in teams if t and t != bat_t), None)
+            if votes.count(other) > votes.count(bat_t):                 # the batters belong to the other side
+                bat_t = other
             bowl_t = next((t for t in teams if t and t != bat_t), None)
             for seq, b in enumerate(inn["balls"], 1):
                 batter = pick(resolve_short(b["batter"], rosters[bat_t]), bat_t)

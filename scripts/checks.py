@@ -7,7 +7,8 @@ All the checks, and the report (data/build_report.txt). Run after the readers:  
   3. Cricket maths: batters' runs + extras = innings total; balls add up to the total.
   4. Davis's ball-by-ball vs Davis's own scorecard, batter by batter.
   5. Davis vs Cricsheet (same Tests, about 2002-2020) and Davis vs your book (1877-1970).
-  6. Famous facts the database must get exactly right.
+  6. Players: one person, one record.
+  7. Famous facts the database must get exactly right.
 """
 import re
 import time
@@ -119,16 +120,19 @@ FACTS = [
      "SELECT SUM(runs), ROUND(1.0*SUM(runs)/SUM(CASE WHEN not_out=0 THEN 1 ELSE 0 END),2) FROM bat "
      "WHERE format='Test' AND player='DG Bradman'", lambda r: r[0] == 6996 and abs((r[1] or 0) - 99.94) < 0.01),
     ("Lara: 400 not out, the highest Test score",
-     "SELECT runs, not_out FROM bat WHERE format='Test' ORDER BY runs DESC LIMIT 1",
+     "SELECT runs, not_out, player, match_id FROM bat WHERE format='Test' ORDER BY runs DESC LIMIT 1",
      lambda r: r[0] == 400 and r[1] == 1),
     ("Laker: 19 wickets in one Test (1956)",
      "SELECT SUM(wickets) FROM bowl WHERE player='JC Laker' GROUP BY match_id ORDER BY 1 DESC LIMIT 1",
      lambda r: r[0] == 19),
-    ("Tendulkar: 15,921 Test runs", "SELECT SUM(runs) FROM bat WHERE format='Test' AND player='SR Tendulkar'",
+    ("Tendulkar: 15,921 Test runs in 200 Tests",
+     "SELECT SUM(runs), COUNT(DISTINCT match_id) FROM bat WHERE format='Test' AND player='SR Tendulkar'",
      lambda r: r[0] == 15921),
     ("Muralitharan: 800 Test wickets",
-     "SELECT SUM(wickets) FROM bowl WHERE format='Test' AND (player LIKE '%Muralidaran' OR player LIKE '%Muralitharan')",
-     lambda r: r[0] == 800),
+     "SELECT SUM(wickets), COUNT(DISTINCT match_id) FROM bowl WHERE format='Test' AND (player LIKE '%Muralidaran' "
+     "OR player LIKE '%Muralitharan')", lambda r: r[0] == 800),
+    ("Vaas: 400 ODI wickets", "SELECT SUM(wickets) FROM bowl WHERE format='ODI' AND player LIKE '%Vaas'",
+     lambda r: r[0] == 400),
     ("First Test (1877): Australia won by 45 runs", "SELECT winner, result FROM matches WHERE match_id='T0001'",
      lambda r: r[0] == "Australia" and "45" in (r[1] or "")),
     ("Tendulkar: 18,426 ODI runs", "SELECT SUM(runs) FROM bat WHERE format='ODI' AND player='SR Tendulkar'",
@@ -292,8 +296,32 @@ def run(con, say):
                  (f": {', '.join(map(str, gaps[:60]))}" if gaps else ""))
     add(con, "coverage", "Davis Test numbers", "ok" if not gaps else "check", f"{len(gaps)} missing")
 
+    # one person, one record
+    section("6. Players (one person should be one record)")
+    teams_sql = "('World XI', 'ICC World XI', 'Asia XI', 'Africa XI', 'ACC Asian XI', 'ICC')"
+    split = q(con, f"""SELECT name, GROUP_CONCAT(team, ' / '), COUNT(*) FROM players
+                       WHERE player_id IN (SELECT player_id FROM player_stats)
+                         AND COALESCE(team, '') NOT IN {teams_sql}
+                       GROUP BY name HAVING COUNT(*) > 1 ORDER BY 3 DESC, 1""")
+    lines.append(f"Names that appear under more than one team (some are real: e.g. Wessels, Morris, Rizwan): "
+                 f"{len(split):,}")
+    lines += [f"   {n}: {t}" for n, t, c in split[:25]]
+    add(con, "players", "same name, several teams", "check" if len(split) > 60 else "ok", str(len(split)))
+    sur = q(con, """SELECT p.name, p.team, s.matches FROM players p JOIN player_stats s USING(player_id)
+                    WHERE p.name NOT LIKE '% %' AND p.team IN (SELECT team1 FROM matches WHERE number > 0)
+                      AND EXISTS (SELECT 1 FROM players o WHERE o.team = p.team AND o.name LIKE '% ' || p.name)
+                    ORDER BY 3 DESC""")
+    lines.append(f"Surname-only records that probably belong to a fuller name on the same team: {len(sur):,}"
+                 + (" (" + ", ".join(f"{n} {t} {m}" for n, t, m in sur[:15]) + ")" if sur else ""))
+    odd = q(con, """SELECT team, COUNT(*) FROM players WHERE team IS NULL OR team = ''
+                    OR team NOT IN (SELECT team1 FROM matches UNION SELECT team2 FROM matches) GROUP BY 1""")
+    lines.append("Players with a team that never played a match: " + (", ".join(f"{t!r} {n}" for t, n in odd[:10])
+                                                                      if odd else "none"))
+    big = q(con, "SELECT player, runs, match_id FROM bat WHERE runs >= 300 ORDER BY runs DESC")
+    lines.append("Scores of 300+ (check any you don't know): " + ", ".join(f"{p} {r} {m}" for p, r, m in big))
+
     # famous facts
-    section("6. Famous facts (must be exactly right)")
+    section("7. Famous facts (must be exactly right)")
     for label, sql, ok in FACTS:
         try:
             r = con.execute(sql).fetchone()

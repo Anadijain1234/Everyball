@@ -211,9 +211,17 @@ def save_davis_test(con, reg, res, stats):
         stats["sure"] += s["sure"]
         rows, notes = [], []
         order = {(x["team"], x["team_inn"]): j for j, x in enumerate((page or {}).get("innings", []), 1)}
+        known = [t for t in ((page or {}).get("team1"), (page or {}).get("team2")) if t] or \
+            [t for t in (bbb.get("teams") or ()) if t]
         for k, inn in enumerate(bbb["innings"], 1):
+            bat_team = inn["team"]
+            if known and bat_team not in known:          # a garbled heading: keep the real team it starts with
+                bat_team = next((t for t in known if (bat_team or "").lower().startswith(t.lower())), None)
+                if bat_team is None and len(known) == 2 and k <= len(order):
+                    bat_team = (page or {})["innings"][k - 1]["team"]
+            bowl_team = next((t for t in known if t != bat_team), inn["bowling_team"]) if known else inn["bowling_team"]
+            inn["team"] = bat_team
             i = order.get((inn["team"], int(inn.get("n") or 0)), k)     # e.g. only England's 1st innings survives
-            bat_team, bowl_team = inn["team"], inn["bowling_team"]
             for seq, b in enumerate(inn["balls"], 1):
                 rows.append((mid, i, seq, b["over_no"], b["ball"], reg.get(b["bowler"], bowl_team, "davis"),
                              reg.get(b["batter"], bat_team, "davis"),

@@ -99,7 +99,7 @@ def parse_cover(text):
 # ---------------------------------------------------------------- Test page (scorecard)
 HEAD = re.compile(r"^\s*(?P<t1>.+?) v (?P<t2>.+?)\s+(?P<season>\d{4}(?:/\d{2,4})?)\s+(?:(?:(?P<sno>\d+)(?:st|nd|rd|th)|Only)\s+)?Test"
                   r"\s+(?P<venue>.+?)\s+Test:\s*(?P<num>\d+)")
-INN_HEAD = re.compile(r"^\s*(?:Test #\s+)?(?P<team>[A-Z][A-Z\.' ]*?[A-Z])\s{2,}(?P<n>\d)(?:st|nd|rd|th) Innings")
+INN_HEAD = re.compile(r"^\s*(?:Test #\s+)?(?P<team>[A-Z][A-Za-z\.' ]*?[A-Za-z])\s{2,}(?P<n>\d)(?:st|nd|rd|th) Innings")
 BAT = re.compile(r"^\s*(?:(?P<tno>\d[0-9a-z,]*)\s+)?(?P<name>[A-Za-z][A-Za-z'\-\. ]*?[A-Za-z'\.])\s{2,}"
                  r"(?P<how>\S.*?)\s{2,}(?P<runs>\d+)\*?(?:\s{1,8}(?P<mins>\d+|-)(?![\d,]))?(?P<rest>.*)$")
 FOURS_SIXES = re.compile(r"^\s+(?P<f>\d+|-)\s*,\s*(?P<s>\d+|-)")
@@ -146,16 +146,16 @@ def parse_test_page(text):
             wk = re.search(r"(\d+)\s*(?:wkts?|wickets?)", d)
             ov = re.search(r"([\d.]+)\s*overs", d)
             inn.update(runs=int(t["runs"]), declared=int("dec" in d.lower()), overs=ov.group(1) if ov else None,
-                       wickets=10 if "all out" in d.lower() else (int(wk.group(1)) if wk else None))
+                       wickets=10 if "all out" in d.lower() else (int(wk.group(1)) if wk else None), closed=True)
             continue
         e = EXTRAS.match(line)
         if e:
             inn["extras"] = int(e["runs"])
             continue
-        m = BAT.match(line) if len(line) - len(line.lstrip()) < 40 else None
+        m = BAT.match(line) if len(line) - len(line.lstrip()) < 40 and not inn.get("closed") else None
         if m and re.fullmatch(r"[\d.\s\-,]+", m["how"]):
             m = None                            # a bowling-only line, not a batter
-        if m and m["name"].strip() not in ("Extras", "Total"):
+        if m and m["name"].strip().lower() not in ("extras", "total", "totals", "sundries", "did not bat", "dnb"):
             kind, fielder, bowler = kind_of(m["how"])
             tno = m["tno"] or ""
             rest, f6, bf = m["rest"], None, None          # 4s,6s and balls faced are blank in some old pages
@@ -176,6 +176,8 @@ def parse_test_page(text):
     teams = [out.get("team1"), out.get("team2")]
     for x in out["innings"]:
         x["bowling_team"] = next((t for t in teams if t and t != x["team"]), None)
+        if x.get("runs") is not None:          # a "batter" with more runs than the whole innings is a misread line
+            x["batting"] = [b for b in x["batting"] if (b["runs"] or 0) <= x["runs"]]
     return out
 
 
@@ -320,7 +322,7 @@ def parse_bbb(text, rosters=None, bpo=None):
                     inn["partial"] = line.strip()[:120]
                 out["innings"].append(inn)
                 cum, state, pending = {}, None, None
-                tail = re.findall(r"(\d{1,4})\s*$", h["rest"] or "")
+                tail = re.findall(r"(?<![\d\-/])(\d{1,4})\s*$", h["rest"] or "")   # not the year of a date
                 if tail and out["number"] is None:
                     out["number"] = int(tail[0])
                 d = iso(h["rest"])
