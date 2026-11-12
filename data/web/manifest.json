@@ -1,0 +1,18 @@
+{
+ "sha256": "073840bcddd600cc2b3b1eb5ed2569cc2882e4a305dd7f06196ac6b666da1bbc",
+ "bytes": 773320704,
+ "parts": [
+  "everyball.db.xz.001",
+  "everyball.db.xz.002",
+  "everyball.db.xz.003"
+ ],
+ "built": "2026-11-12 05:44",
+ "counts": {
+  "matches": 7653,
+  "players": 5543,
+  "batting": 305547,
+  "bowling": 186843,
+  "balls": 7837683,
+  "pvp": 29638
+ }
+}
