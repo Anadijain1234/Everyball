@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Duel · Everyball{% endblock %}
+{% block content %}
+<section class="card" id="finder">
+  <div class="grid2" style="gap:12px;align-items:end">
+    <div class="field ac" style="margin:0"><label for="d-bat">Batter</label>
+      <input type="text" id="d-bat" placeholder="e.g. Tendulkar" autocomplete="off"></div>
+    <div class="field ac" style="margin:0"><label for="d-bowl">Bowler</label>
+      <input type="text" id="d-bowl" placeholder="e.g. McGrath" autocomplete="off"></div>
+  </div>
+  <div class="row" style="justify-content:space-between;margin-top:14px">
+    <div class="seg" id="d-fmt"><button data-f="" class="on">All</button><button data-f="Test">Tests</button><button data-f="ODI">ODIs</button></div>
+    <button class="btn" id="d-go" disabled>See the duel</button>
+  </div>
+</section>
+<div id="duel" class="section"></div>
+{% endblock %}

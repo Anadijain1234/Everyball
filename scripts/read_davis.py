@@ -19,7 +19,7 @@ import itertools
 import re
 from datetime import datetime
 
-from common import person, surname, team
+from common import TEAMS, person, surname, team
 
 # ---------------------------------------------------------------- small helpers
 NAME = r"(?:[A-Za-z][A-Za-z'\-\.]*\s)*?[A-Za-z][A-Za-z'\-\.]*"
@@ -97,17 +97,56 @@ def parse_cover(text):
 
 
 # ---------------------------------------------------------------- Test page (scorecard)
-HEAD = re.compile(r"^\s*(?P<t1>.+?) v (?P<t2>.+?)\s+(?P<season>\d{4}(?:/\d{2,4})?)\s+(?:(?:(?P<sno>\d+)(?:st|nd|rd|th)|Only)\s+)?Test"
+HEAD = re.compile(r"^\s*(?P<t1>.+?) v (?P<t2>.+?)\s+(?P<season>\d{4}(?:[/-]\d{2,4})?)\s+(?:(?:(?P<sno>\d+)(?:st|nd|rd|th)|Only)\s+)?Test"
                   r"\s+(?P<venue>.+?)\s+Test:\s*(?P<num>\d+)")
 INN_HEAD = re.compile(r"^\s*(?:Test #\s+)?(?P<team>[A-Z][A-Za-z\.' ]*?[A-Za-z])\s{2,}(?P<n>\d)(?:st|nd|rd|th) Innings")
 BAT = re.compile(r"^\s*(?:(?P<tno>\d[0-9a-z,]*)\s+)?(?P<name>[A-Za-z][A-Za-z'\-\. ]*?[A-Za-z'\.])\s{2,}"
                  r"(?P<how>\S.*?)\s{2,}(?P<runs>\d+)\*?(?:\s{1,8}(?P<mins>\d+|-)(?![\d,]))?(?P<rest>.*)$")
+# A batter line, read by its words rather than by column gaps (gaps are sometimes one space wide):
+#   [Test no / c / w marks]  NAME  HOW-OUT  RUNS  [MINS]  [4s,6s]  [BF]  ...fall of wickets
+BAT_START = re.compile(r"^\s*(?:(?P<tno>\d[0-9a-z,]*|#N/A)\s+)?(?P<rest>[A-Za-z].*)$")
+HOW_WORD = re.compile(r"(?<=\s)(?=(?:c-\S*|cwk|c\s*&\s*b|c and b|c|b-\S*|b|lbw-?\S*|st|run out|not out|retired|retd|ret\.|"
+                      r"hit wicket|hit wkt|hw|absent|handled|obstructing|obs|timed out|the ball)\*?(?:\s|$))")
+RUNS_ETC = re.compile(r"\s(?P<runs>\d+)[*\u2020]?(?:\s{1,8}(?P<mins>\d+|-)(?![\d,]))?(?P<rest>(?:\s.*)?)$")
 FOURS_SIXES = re.compile(r"^\s+(?P<f>\d+|-)\s*,\s*(?P<s>\d+|-)")
 BALLS_FACED = re.compile(r"^\s+(?P<bf>\d+|-)(?![\d\-])")
 BOWL = re.compile(r"(?<!\S)(?P<name>" + NAME + r")\s+(?P<ov>\d+(?:\.\d)?)\s+(?P<m>\d+)\s+(?P<r>\d+)\s+(?P<w>\d+)"
                   r"(?:\s+[\d\-]+(?:\s*,\s*[\d\-]+)?)?(?:\s+[\d\-]+)?\s*$")
 TOTAL = re.compile(r"^\s*Total\s+(?P<desc>.*?)\s{2,}(?P<runs>\d+)(?:\s|$)")
 EXTRAS = re.compile(r"^\s*Extras\s+(?P<desc>.*?)\s{2,}(?P<runs>\d+)(?:\s|$)")
+
+
+def parse_bat_line(line, cont=None):
+    """Split a scorecard line into name / how out / runs / minutes / the rest, by the dismissal words.
+    `cont`: the next line, when a long dismissal pushed the numbers onto it."""
+    b = BAT_START.match(re.sub(r"^(\s*\d[\d,c]*,w)(?=[A-Z])", r"\1 ", line))     # '12,c10,wFCM Alexander'
+    if not b:
+        return None
+    body = re.sub(r"(?<=[a-z\)])(\d+)(?=\s|$)", r" \1", " " + b["rest"])      # 'b Phillip124' -> 'b Phillip 124'
+    h = HOW_WORD.search(body)
+    if not h or h.start() < 2:
+        return None
+    name, after = body[:h.start()].strip(), body[h.start():]
+    if not re.fullmatch(r"[A-Za-z][A-Za-z'\-\. ]*[A-Za-z'\.]", name):
+        return None
+    pos_line = line
+    if cont is not None:
+        if re.search(r"\s\d+\*?(?=\s|$)", after) or not re.match(r"^\s{12,}\d+\*?\s", cont):
+            return None
+        how, pos_line = after.strip(), cont
+        r = RUNS_ETC.match(cont, len(cont) - len(cont.lstrip()) - 1)
+    else:
+        r = None
+        for x in re.finditer(r"\s(\d+)[*\u2020]?(?=\s|$)", after):   # runs = first stand-alone number after the dismissal
+            r = RUNS_ETC.match(after, x.start())
+            break
+        if not r:
+            return None
+        how = after[:r.start()].strip()
+    if not how or re.fullmatch(r"[\d.\s\-,]+", how):
+        return None
+    return {"tno": b["tno"], "name": name, "how": how, "runs": r["runs"], "mins": r["mins"], "rest": r["rest"],
+            "pos_line": pos_line}
 
 
 def parse_test_page(text):
@@ -121,13 +160,20 @@ def parse_test_page(text):
             nxt = next((l for l in lines[i + 1:i + 4] if l.strip()), "")
             out["result"] = re.split(r"\s{2,}", nxt.strip())[0].rstrip(".") if nxt else None
             break
+    if "number" not in out:                 # a page whose title line is missing: number from 'Test: 287', teams below
+        tnum = re.search(r"Test:\s*(\d+)", "\n".join(lines[:4]))
+        heads = [team(h["team"]) for h in (INN_HEAD.match(l) for l in lines) if h]
+        two = list(dict.fromkeys(heads))[:2]
+        if tnum and len(two) == 2:
+            out.update(number=int(tnum.group(1)), team1=two[0], team2=two[1], series_test_no=None, ground=None,
+                       result=re.split(r"\s{2,}", lines[1].strip())[0].rstrip(".") if len(lines) > 1 else None)
     toss = re.search(r"Toss:\s*([A-Za-z][A-Za-z ]*?)(?:\s{2,}|$)", text, re.M)
     ump = re.search(r"Umpires:\s*(.+?)\s*$", text, re.M)
     out["toss"] = team(toss.group(1)) if toss else None
     out["umpires"] = ump.group(1).strip() if ump else None
     out["start_date"] = iso(text)
     inn = None
-    for line in lines:
+    for k, line in enumerate(lines):
         h = INN_HEAD.match(line)
         if h:
             inn = {"team": team(h["team"]), "team_inn": int(h["n"]), "batting": [], "bowling": [],
@@ -152,9 +198,18 @@ def parse_test_page(text):
         if e:
             inn["extras"] = int(e["runs"])
             continue
-        m = BAT.match(line) if len(line) - len(line.lstrip()) < 40 and not inn.get("closed") else None
-        if m and re.fullmatch(r"[\d.\s\-,]+", m["how"]):
-            m = None                            # a bowling-only line, not a batter
+        m = None
+        if len(line) - len(line.lstrip()) < 40 and not inn.get("closed"):
+            m = parse_bat_line(line)
+            if m is None and k + 1 < len(lines):
+                m = parse_bat_line(line, lines[k + 1])          # numbers on the next line
+        if m and m["pos_line"] is not line:
+            line = m["pos_line"]
+        if m is None and not inn.get("closed") and len(line) - len(line.lstrip()) < 40:
+            d = re.match(r"^\s*(?:\d[0-9a-z,]*\s+|#N/A\s+)?([A-Z][A-Za-z'\-\. ]*?[A-Za-z])(?:\s{2,}did not bat)?\s*$", line)
+            if d and d.group(1).lower() not in ("extras", "total") and len(d.group(1).split()) <= 4:
+                inn.setdefault("dnb", []).append(person(re.split(r"\s+(?:absent|retired|dnb)\b", d.group(1))[0]))
+            continue
         if m and m["name"].strip().lower() not in ("extras", "total", "totals", "sundries", "did not bat", "dnb"):
             kind, fielder, bowler = kind_of(m["how"])
             tno = m["tno"] or ""
@@ -172,18 +227,44 @@ def parse_test_page(text):
                 "fours": num(f6["f"]) if f6 else None, "sixes": num(f6["s"]) if f6 else None,
                 "balls": num(bf["bf"]) if bf else None, "not_out": int(kind in ("not out", "retired", "absent")),
                 "captain": int("c" in tno), "keeper": int("w" in tno)})
+    # Davis's page templates sometimes carry a wrong team name ('p v South Africa', 'West Indies 1st Innings' in a
+    # Pakistan v England Test): the two teams are the ones in the title, and each innings must belong to one of them
+    known = set(TEAMS.values())
+    heads = list(dict.fromkeys(x["team"] for x in out["innings"] if x["team"] in known))
+    for k in ("team1", "team2"):
+        if out.get(k) not in known:
+            other = out.get("team2" if k == "team1" else "team1")
+            out[k] = next((t for t in heads if t != other), out.get(k))
+    valid = [t for t in (out.get("team1"), out.get("team2")) if t]
+    if len(valid) == 2:
+        for j, x in enumerate(out["innings"]):
+            if x["team"] in valid:
+                continue
+            mine = {b["name"] for b in x["batting"]}
+            best = next((y["team"] for y in out["innings"] if y is not x and y["team"] in valid
+                         and mine & {b["name"] for b in y["batting"]}), None)
+            if not best and j:
+                prev = out["innings"][j - 1]["team"]
+                best = next((t for t in valid if t != prev), None) if prev in valid else None
+            if best:
+                x["team"] = best
     # the opponent of each innings
     teams = [out.get("team1"), out.get("team2")]
     for x in out["innings"]:
         x["bowling_team"] = next((t for t in teams if t and t != x["team"]), None)
         if x.get("runs") is not None:          # a "batter" with more runs than the whole innings is a misread line
             x["batting"] = [b for b in x["batting"] if (b["runs"] or 0) <= x["runs"]]
+            short = x["runs"] - sum(b["runs"] or 0 for b in x["batting"]) - (x.get("extras") or 0)
+            if short == 5 and (out.get("start_date") or "")[:4] >= "2000":
+                x["extras"] = (x.get("extras") or 0) + 5     # 5 penalty runs: in the total, not in Davis's extras line
+                x["penalty"] = 5
     return out
 
 
 # ---------------------------------------------------------------- ball-by-ball
 OVS = re.compile(r"(?<=\s)(\d{1,3})\.(\d)\s+(\d{1,4})-(\d{1,2})(?=\s|$)")
 BOWLER_TOK = re.compile(r"(?<!\S)(" + NAME + r")\((\d+(?:\.\d)?)\)\s+(\d+)-(\d+)")
+BOWLER_BARE = re.compile(r"(?<!\S)(" + NAME + r")\s{2,}(?=[.\dWRny\[])")     # a bowler with no figures yet
 BATTER_TOK = re.compile(r"(?<!\S)(" + NAME + r")\s(\d+)\((\d+)\)")
 FOW_TOK = re.compile(r"(?<!\S)(\d+)-(\d+)\s+(" + NAME + r")\s\d+\(\d+\)")
 FOW_TOK2 = re.compile(r"(?<!\S)(\d+)-(\d+)\s+(" + NAME + r")\s(\d+)\((\d+)\)")
@@ -214,8 +295,8 @@ def ball_options(tok):
     m = re.fullmatch(r"\[(\d*)\s*,?\s*([A-Za-z]+)(\d*)\]", tok)
     if not m:
         return [(0, 0, "?", 1, 1, None)]
-    k = int(m.group(1)) if m.group(1) else 0
     code, tail = m.group(2), m.group(3)
+    k = int(m.group(1)) if m.group(1) else (int(tail) if tail and code.lower() != "pen" else 0)  # [n2] = [2n], [RO1]
     if code == "B":
         return [(0, k, "b", 1, 1, None)]
     if code == "L":
@@ -267,14 +348,49 @@ def simulate(events, pair, incoming, fow_order, bpo, legal_before):
     return gain, faced_by, outs, (on, off)
 
 
-def resolve(name, roster):
-    """Davis writes 'WM Lawry' once, then just 'Lawry'. Map short forms back to the full name for this match."""
+def short_form_of(short, full):
+    """Is 'M Jayaward.' / 'Javed M.' / 'G Pollock' / 'Inzamam' / 'Al Hasan' / 'S Waugh' a short form of `full`
+    ('DPMD Jayawardene', 'Javed Miandad', 'RG Pollock', 'Inzamam-ul-Haq', 'Shakib Al Hasan', 'SR Waugh')?"""
+    fw = full.split()
+    initials = set(fw[0]) if len(fw) > 1 and fw[0].isupper() and len(fw[0]) <= 5 else set()
+    parts = [p for w in (fw[1:] if initials else fw) for p in re.split(r"-", w) if p]
+    used, letters_wanted, word_hit = set(), [], False
+    for w in short.replace(".", ". ").split():
+        if w.endswith(".") and not (len(w) == 2 and w[0].isupper()):     # an abbreviated word: 'Jayaward.'
+            hit = next((i for i, p in enumerate(parts) if i not in used and p.lower().startswith(w[:-1].lower())), None)
+        elif (w.isupper() and len(w) <= 4) or (len(w) == 2 and w.endswith(".")):     # initials: 'M', 'SR', 'M.'
+            letters_wanted.append(w.rstrip("."))
+            continue
+        else:
+            hit = next((i for i, p in enumerate(parts) if i not in used and p.lower() == w.lower()), None)
+        if hit is None:
+            return False
+        used.add(hit)
+        word_hit = True
+    # initials must be the person's initials, or the first letters of the name parts not matched above
+    letters = initials | {p[0] for i, p in enumerate(parts) if i not in used}
+    return word_hit and all(set(x) <= letters for x in letters_wanted)
+
+
+def resolve(name, roster, prefer=None):
+    """Davis writes 'WM Lawry' once, then just 'Lawry'. Map short forms back to the full name for this match.
+    `prefer`: when two players share the surname ('Singh'), the ones who actually bowled (or batted) win."""
     if not name:
         return None
     n = person(name)
     if n in roster:
         return n
     hits = [r for r in roster if surname(r) == n or r.split()[-1] == n]
+    if len(hits) > 1 and prefer:
+        hits = [r for r in hits if r in prefer] or hits
+    if len(hits) == 1:
+        return hits[0]
+    raw = name.strip()
+    if re.match(r"^[WRny]\s+\S+\s+\S", raw):            # 'W Habibul B.': a wicket mark in front of the name
+        raw = raw[2:]
+    hits = [r for r in roster if r != n and short_form_of(raw, r)]
+    if len(hits) > 1 and prefer:
+        hits = [r for r in hits if r in prefer] or hits
     if len(hits) == 1:
         return hits[0]
     parts = n.split()
@@ -349,6 +465,8 @@ def parse_bbb(text, rosters=None, bpo=None):
         left, right = line[:m.start()], line[m.end():]
         bt = BOWLER_TOK.search(left)
         extra_notes = []
+        if not bt and pending is None:
+            bt = BOWLER_BARE.search(left)      # 'SK Warne  1...': a bowler finishing someone else's over
         if bt:
             ball_str = (left[:bt.start()] + left[bt.end():]).replace(" ", "")
         elif pending is not None:
@@ -357,9 +475,16 @@ def parse_bbb(text, rosters=None, bpo=None):
             stats["skipped_lines"] += 1
             continue
         pending = None
+        page_teams = [k for k in rosters if isinstance(k, str) and rosters[k]]
+        if inn["team"] not in page_teams and len(page_teams) == 2:    # a wrong heading: which side are these batters?
+            who = [person(f.group(1)).split()[-1] for f in batter_tokens(right)]
+            score = {t: sum(1 for w in who if any(r.split()[-1] == w for r in rosters[t])) for t in page_teams}
+            if max(score.values()) > min(score.values()):
+                inn["team"] = max(score, key=score.get)
+                inn["bowling_team"] = next(t for t in page_teams if t != inn["team"])
         bowl_roster = rosters.setdefault(inn["bowling_team"], set())
         bat_roster = rosters.setdefault(inn["team"], set())
-        bowler = resolve(bt.group(1), bowl_roster)
+        bowler = resolve(bt.group(1), bowl_roster, rosters.get((inn["bowling_team"], "bowled")))
         found = batter_tokens(right)
         if len(found) < 2:                     # the batters' columns can spill onto the next line
             for j in (idx + 1, idx + 2):

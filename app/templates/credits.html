@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Credits · Everyball{% endblock %}
+{% block content %}
+<section style="max-width:760px">
+  <h1>Where the numbers come from</h1>
+  <p class="muted">Everyball is built on the work of people who spent years writing cricket down. Thank you.</p>
+
+  <div class="card section">
+    <h3>Charles Davis, The Test Match Database</h3>
+    <p>Ball-by-ball records and scorecards for Test cricket from 1877, rebuilt by Charles Davis from scorebooks,
+      newspapers and broadcasts (sportstats.com.au). Used with his kind permission.</p>
+  </div>
+  <div class="card section">
+    <h3>Cricsheet</h3>
+    <p>Ball-by-ball data for Tests and ODIs from the 2000s to today, by Stephen Rushe and contributors
+      (<a href="https://cricsheet.org" rel="noopener">cricsheet.org</a>), under the Open Data Commons Attribution License.</p>
+  </div>
+  <div class="card section">
+    <h3>ESPNcricinfo</h3>
+    <p>Scorecards, ball-by-ball commentary and batter-against-bowler tables from ESPNcricinfo's archive
+      (<a href="https://www.espncricinfo.com" rel="noopener">espncricinfo.com</a>), used with permission. ESPNcricinfo's
+      year-by-year match lists are also how we check that no match is missing.</p>
+  </div>
+  <div class="card section">
+    <h3>ODI scorecards dataset on Kaggle</h3>
+    <p>Scorecards for every ODI from 1971 to 2024, with players' dates of birth and styles, compiled by bhuvaneshprasad
+      on <a href="https://www.kaggle.com" rel="noopener">Kaggle</a>.</p>
+  </div>
+  <div class="card section">
+    <h3>Bill Frindall, The Wisden Book of Test Cricket</h3>
+    <p>Figures from the book are used to cross-check Test scorecards. Only numbers are used; none of the book's text.</p>
+  </div>
+  <div class="card section">
+    <h3>test-cricket-tours.co.uk</h3>
+    <p>Facts about tours and series, used for checking.</p>
+  </div>
+
+  <div class="section notice small">
+    <b>How the numbers are kept honest.</b> Where two sources cover the same match, they are compared batter by batter.
+    Every innings' balls must add up to its scorecard. Every year's match count is checked against ESPNcricinfo's own
+    list. Ball-by-ball figures always say how many matches they come from.
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} · Everyball{% endblock %}
+{% block content %}
+<section class="phead" id="phead" data-pid="{{ p.player_id }}">
+  <div>
+    <h1 style="margin-bottom:.15em">{{ p.name }}</h1>
+    <div class="facts">
+      <span class="tag">{{ p.team }}</span>
+      {% if p.full_name and p.full_name != p.name %}<span class="tag">{{ p.full_name }}</span>{% endif %}
+      {% if p.dob or p.born %}<span class="tag">Born {{ p.dob or p.born }}</span>{% endif %}
+      {% if p.batting_style %}<span class="tag">{{ p.batting_style }}</span>{% endif %}
+      {% if p.bowling_style %}<span class="tag">{{ p.bowling_style }}</span>{% endif %}
+    </div>
+  </div>
+  <div class="seg" id="p-fmt"><button data-f="" class="on">All</button><button data-f="Test">Tests</button><button data-f="ODI">ODIs</button></div>
+</section>
+<div id="player" class="section" style="margin-top:20px"><div class="empty"><span class="spin"></span>Loading…</div></div>
+{% endblock %}

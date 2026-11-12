@@ -86,7 +86,9 @@ One-time setup (the PDF reader): `sudo apt-get update && sudo apt-get install -y
 python scripts/build_db.py all
 ```
 Reads everything in `data/raw/` into one database file, `data/everyball.db` (never sent to GitHub; it can always be
-rebuilt). Steps can also run one at a time, in this order: `davis`, `cricsheet`, `book`, `kaggle`, `espn`, `checks`
+rebuilt; `all` starts from an empty database). Steps can also run one at a time, in this order: `lists` (ESPN's
+year lists, used to check every match number), `davis`, `cricsheet`, `book`, `kaggle`, `espn`, `people` (one person =
+one record), `checks`
 (Kaggle gives every ODI its number; ESPN's files are then matched to those numbers by date and teams, so ESPN's
 domestic, tour and women's games are left out).
 Your Wisden book data goes in `data/raw/book/` (the CSV files from cricket-project/data/).
@@ -103,9 +105,29 @@ python scripts/ask.py sql "SELECT player, SUM(runs) FROM bat WHERE format='Test'
 ```
 Easy tables: `bat`, `bowl`, `ball` (every ball, with names), `matches`, `players`.
 
+## The website (Stage 2a)
+
+Run it in the Codespace (after the database is built):
+```
+pip install flask && python app/server.py
+```
+Open the **Ports** tab, then port **5000**. Pages: home (Duel finder, Ask box, coverage), `/duel`, `/player/<id>`, `/credits`.
+
+**Ask box keys:** copy `.env.example` to `.env` and put your Groq and Sarvam keys there. `.env` is never sent to GitHub.
+Without keys the whole site works except the Ask box, which says it isn't switched on.
+
+**Put it online (Render, free):**
+1. In the Codespace: `python scripts/publish_db.py pack`, then `git add data/web && git commit -m "Website database" && git push`.
+   This saves a compressed copy of the database in 45 MB parts (GitHub refuses single files over 100 MB).
+2. On render.com: **New -> Blueprint**, pick the Everyball repo (allow Render to see it). It reads `render.yaml`.
+3. Render asks for `GROQ_API_KEY` and `SARVAM_API_KEY`: paste them there, and only there.
+4. Every time the database is rebuilt: run step 1 again, then in Render press **Manual Deploy**.
+
+The free plan sleeps after 15 minutes without visitors; the first visit after that takes about a minute.
+
 ## Tests
 ```
-python tests/test_download.py && python tests/test_backup.py && python tests/test_build.py
+python tests/test_download.py && python tests/test_backup.py && python tests/test_build.py && python tests/test_web.py
 ```
 
 ## Credits

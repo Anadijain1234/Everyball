@@ -109,6 +109,7 @@ def davis_work(job):
             for inn in (page or {}).get("innings", []):
                 rosters.setdefault(inn["team"], set()).update(b["name"] for b in inn["batting"])
                 rosters.setdefault(inn["bowling_team"], set()).update(b["name"] for b in inn["bowling"])
+                rosters.setdefault((inn["bowling_team"], "bowled"), set()).update(b["name"] for b in inn["bowling"])
             bbb = RD.parse_bbb(text, rosters, bpo=cover.get("balls_per_over"))
         except Exception as e:  # noqa: BLE001
             out["errors"].append(f"ball-by-ball: {e}")
@@ -161,6 +162,32 @@ def step_davis(con):
         f"{pct:.1f}% of over-lines fully checked, {stats['errors']} files with problems")
 
 
+def fix_innings_teams(con, page):
+    """Both innings headings wrong (Davis's template said 'South Africa' and 'Australia' in a New Zealand v England
+    Test): decide which team batted from the players we already know, and give the other heading the other team."""
+    if not page:
+        return
+    valid = [t for t in (page.get("team1"), page.get("team2")) if t]
+    wrong = [x for x in page["innings"] if x["team"] not in valid]
+    if len(valid) != 2 or not wrong:
+        return
+    label = wrong[0]["team"]
+    names = [b["name"] for x in page["innings"] if x["team"] == label for b in x["batting"]]
+    votes = dict(con.execute(f"SELECT team, COUNT(*) FROM players WHERE team IN (?, ?) AND name IN "
+                             f"({','.join('?' * len(names))}) GROUP BY team", (*valid, *names)).fetchall()) if names else {}
+    if not votes or len(set(votes.values())) == 1 and len(votes) == 2:
+        return
+    first = max(votes, key=votes.get)
+    second = next(t for t in valid if t != first)
+    for x in page["innings"]:
+        if x["team"] == label:
+            x["team"] = first
+        elif x["team"] not in valid:
+            x["team"] = second
+    for x in page["innings"]:
+        x["bowling_team"] = next((t for t in valid if t != x["team"]), None)
+
+
 def save_davis_test(con, reg, res, stats):
     job, page, bbb, cover = res["job"], res["page"], res["bbb"], res["cover"]
     src_file = job.get("page") or job.get("series")
@@ -168,10 +195,13 @@ def save_davis_test(con, reg, res, stats):
         stats["errors"] += 1
         C.log(con, "davis", src_file, "error", e)
     number = (page or {}).get("number") or (bbb or {}).get("number")
+    if number and page:
+        number = C.espn_number(con, "Test", number, page.get("start_date"), page.get("team1"), page.get("team2")) or number
     if not number:
         C.log(con, "davis", src_file, "skipped", "no Test number found")
         return
     mid = f"T{number:04d}"
+    fix_innings_teams(con, page)
     teams = ((page or {}).get("team1"), (page or {}).get("team2"))
     if not all(teams) and bbb and bbb.get("teams"):
         teams = bbb["teams"]
@@ -200,6 +230,8 @@ def save_davis_test(con, reg, res, stats):
                              reg.get(bowler_full, bowl_team, "davis") if bowler_full else None, b["fielder"],
                              b["runs"], b["balls"], b["minutes"], b["fours"], b["sixes"], b["not_out"],
                              b["captain"], b["keeper"], "davis"))
+            for nm in inn.get("dnb", []):
+                con.execute("INSERT INTO played VALUES(?,?,?,?)", (mid, bat_team, reg.get(nm, bat_team, "davis"), "davis"))
             for w in inn["bowling"]:
                 con.execute("INSERT INTO bowling VALUES(?,?,?,?,?,?,?,?,?,?)",
                             (mid, i, reg.get(w["name"], bowl_team, "davis"), bowl_team, w["overs"],
@@ -265,16 +297,27 @@ def _step(name, con):
     if name == "checks":
         import checks
         return checks.run(con, say)
+    if name == "people":
+        return C.link_people(con, say)
+    if name == "lists":
+        import checks
+        n, failed = checks.load_lists(con, say)
+        C._REF.clear()
+        say(f"ESPN's year-by-year lists: {n:,} matches" + (f" ({failed} pages failed)" if failed else ""))
+        return n
     raise SystemExit(f"unknown step: {name}")
 
 
-ORDER = ["davis", "cricsheet", "book", "kaggle", "espn", "checks"]
+ORDER = ["lists", "davis", "cricsheet", "book", "kaggle", "espn", "people", "checks"]
 
 
 def main():
     what = sys.argv[1] if len(sys.argv) > 1 else "all"
     steps = ORDER if what == "all" else [what]
     C.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if what == "all":                    # a full build starts from an empty database: nothing old is left behind
+        for f in C.DB_PATH.parent.glob(C.DB_PATH.name + "*"):
+            f.unlink()
     con = C.connect()
     t0 = time.time()
     for s in steps:

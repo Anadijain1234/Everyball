@@ -120,8 +120,10 @@ def duel_ids(con, bat_ids, bowl_ids, fmt=None, bat=None, bowl=None):
         WHERE b.player_id IN ({qb}) {fmt_sql}
           AND EXISTS (SELECT 1 FROM bowling w WHERE w.match_id = b.match_id AND w.inn = b.inn AND w.source = b.source
                       AND w.player_id IN ({qw}))""", [*bowl_ids, *bat_ids] + ([fmt] if fmt else []) + bowl_ids).fetchone()
-    pvp = con.execute(f"""SELECT SUM(balls), SUM(runs), COUNT(DISTINCT match_id) FROM pvp
-                          WHERE batter_id IN ({qb}) AND bowler_id IN ({qw})""", [*bat_ids, *bowl_ids]).fetchone()
+    pvp = con.execute(f"""SELECT SUM(x.balls), SUM(x.runs), COUNT(DISTINCT x.match_id) FROM pvp x
+                          JOIN matches m ON m.match_id = x.match_id
+                          WHERE x.batter_id IN ({qb}) AND x.bowler_id IN ({qw}) {fmt_sql}""",
+                      [*bat_ids, *bowl_ids] + ([fmt] if fmt else [])).fetchone()
     s.update(
         batter=bat["name"], batter_team=bat["team"], bowler=bowl["name"], bowler_team=bowl["team"], format=fmt,
         average=round(s["runs"] / s["outs"], 2) if s["outs"] else None,

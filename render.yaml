@@ -1,0 +1,17 @@
+# Render blueprint for the Everyball website (free plan).
+# Render: New -> Blueprint -> pick this repo. It asks for the two keys; paste them there (never on GitHub).
+services:
+  - type: web
+    name: everyball
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python scripts/publish_db.py unpack
+    startCommand: gunicorn app.server:app --workers 2 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: GROQ_API_KEY
+        sync: false
+      - key: SARVAM_API_KEY
+        sync: false

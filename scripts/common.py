@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS balls(
   sure INTEGER,                       -- 1 = checked against the over-by-over totals, 0 = best guess
   source TEXT);
 CREATE TABLE IF NOT EXISTS notes(match_id TEXT, inn INTEGER, over_no INTEGER, note TEXT, source TEXT);
+CREATE TABLE IF NOT EXISTS played(match_id TEXT, team TEXT, player_id INTEGER, source TEXT);
 CREATE TABLE IF NOT EXISTS commentary(match_id TEXT, inn INTEGER, seq INTEGER, text TEXT, source TEXT);
 CREATE TABLE IF NOT EXISTS pvp(
   match_id TEXT, inn INTEGER, batter_id INTEGER, bowler_id INTEGER, dots INTEGER, ones INTEGER, twos INTEGER,
@@ -114,14 +115,22 @@ CREATE VIEW inns AS
 STATS = """
 DROP TABLE IF EXISTS player_stats;
 CREATE TABLE player_stats AS
-  SELECT player_id, format, COUNT(DISTINCT match_id) AS matches, MIN(substr(start_date, 1, 4)) AS first_year,
-         MAX(substr(start_date, 1, 4)) AS last_year, SUM(r) AS runs, SUM(w) AS wickets
-  FROM (SELECT b.player_id, m.format, m.match_id, m.start_date, b.runs AS r, 0 AS w
+  SELECT a.player_id, a.format, COUNT(DISTINCT a.match_id) AS matches, MIN(substr(a.start_date, 1, 4)) AS first_year,
+         MAX(substr(a.start_date, 1, 4)) AS last_year, COALESCE(r.runs, 0) AS runs, COALESCE(r.wickets, 0) AS wickets
+  FROM (SELECT b.player_id, m.format, m.match_id, m.start_date
           FROM batting b JOIN matches m ON m.match_id = b.match_id AND b.source = m.card_source
-        UNION ALL
-        SELECT w.player_id, m.format, m.match_id, m.start_date, 0, w.wickets
-          FROM bowling w JOIN matches m ON m.match_id = w.match_id AND w.source = m.card_source)
-  GROUP BY player_id, format;
+        UNION SELECT w.player_id, m.format, m.match_id, m.start_date
+          FROM bowling w JOIN matches m ON m.match_id = w.match_id AND w.source = m.card_source
+        UNION SELECT x.player_id, m.format, m.match_id, m.start_date      -- in the XI but didn't bat or bowl
+          FROM played x JOIN matches m ON m.match_id = x.match_id) a
+  LEFT JOIN (SELECT player_id, format, SUM(r) AS runs, SUM(w) AS wickets FROM (
+          SELECT b.player_id, m.format, b.runs AS r, 0 AS w FROM batting b
+            JOIN matches m ON m.match_id = b.match_id AND b.source = m.card_source
+          UNION ALL SELECT w.player_id, m.format, 0, w.wickets FROM bowling w
+            JOIN matches m ON m.match_id = w.match_id AND w.source = m.card_source) GROUP BY 1, 2) r
+    ON r.player_id = a.player_id AND r.format = a.format
+  WHERE a.player_id IS NOT NULL
+  GROUP BY a.player_id, a.format;
 CREATE INDEX ix_stats_player ON player_stats(player_id);
 """
 
@@ -137,10 +146,27 @@ def connect(path=None):
 def finish(con):
     """Indexes, views and the per-match choice of preferred source. Run at the end of every build step."""
     con.executescript(INDEXES)
+    # a source's scorecard for a match "adds up" when every innings' batters' runs + extras = its total
+    con.executescript("""
+        DROP TABLE IF EXISTS card_ok;
+        CREATE TEMP TABLE card_ok AS
+          SELECT i.match_id, i.source,
+                 MIN(CASE WHEN i.runs = COALESCE(b.r, 0) + COALESCE(i.extras, 0)
+                           -- the bowlers' runs must fit too (a page can carry another Test's bowling by mistake)
+                           AND (w.r IS NULL OR w.r BETWEEN i.runs - COALESCE(i.extras, 0) AND i.runs)
+                          THEN 1 ELSE 0 END) ok
+          FROM innings i LEFT JOIN (SELECT match_id, inn, source, SUM(runs) r FROM batting GROUP BY 1, 2, 3) b
+            ON b.match_id = i.match_id AND b.inn = i.inn AND b.source = i.source
+          LEFT JOIN (SELECT match_id, inn, source, SUM(runs) r FROM bowling GROUP BY 1, 2, 3) w
+            ON w.match_id = i.match_id AND w.inn = i.inn AND w.source = i.source
+          GROUP BY 1, 2;
+        CREATE INDEX temp.ix_card_ok ON card_ok(match_id, source);""")
     for table, col, prio in (("batting", "card_source", CARD_PRIORITY), ("balls", "ball_source", BALL_PRIORITY)):
         order = " ".join(f"WHEN '{s}' THEN {n}" for s, n in prio.items())
+        adds_up = ("(SELECT ok FROM card_ok c WHERE c.match_id = t.match_id AND c.source = t.source) DESC,"
+                   if col == "card_source" else "")
         con.execute(f"""UPDATE matches SET {col} = (SELECT source FROM {table} t WHERE t.match_id = matches.match_id
-                        GROUP BY source ORDER BY CASE source {order} ELSE 9 END LIMIT 1)""")
+                        GROUP BY source ORDER BY {adds_up} CASE source {order} ELSE 9 END LIMIT 1)""")
     con.executescript(VIEWS)
     con.executescript(STATS)
     con.commit()
@@ -217,6 +243,44 @@ def pdf_text(path):
 
 
 # ---------------------------------------------------------------- players and matches
+_REF = {}
+
+
+def espn_number(con, fmt, number, date, t1, t2):
+    """ESPN's number for this match. A source's own number is kept when ESPN's list agrees (same teams, start within
+    3 days); otherwise the match is looked up in ESPN's list by date and teams. None if ESPN's list doesn't have it."""
+    if fmt not in _REF:
+        try:
+            rows = con.execute("SELECT number, start_date, team1, team2 FROM ref_matches WHERE format = ?", (fmt,)).fetchall()
+        except sqlite3.Error:
+            rows = []
+        _REF[fmt] = {r[0]: (r[1], frozenset((r[2], r[3]))) for r in rows}
+    ref = _REF[fmt]
+    if not ref:
+        return number                                   # no ESPN list loaded: trust the source
+    teams = frozenset((t1, t2))
+
+    from datetime import date as D
+
+    def close(d1, d2):
+        if not d1 or not d2:
+            return True
+        try:
+            return abs((D.fromisoformat(d1[:10]) - D.fromisoformat(d2[:10])).days) <= 3
+        except ValueError:
+            return False
+    if number in ref and ref[number][1] == teams and close(ref[number][0], date):
+        return number
+    # the same teams within 3 days; if several (an ODI series), the one starting closest to this match's date
+    hits = sorted((abs((D.fromisoformat(d[:10]) - D.fromisoformat(date[:10])).days), n) for n, (d, t) in ref.items()
+                  if t == teams and d and date and close(d, date))
+    if hits and (len(hits) == 1 or hits[0][0] < hits[1][0]):
+        return hits[0][1]
+    if number in ref:            # the number belongs to a different match in ESPN's list: don't overwrite that one
+        return number if ref[number][1] == teams else None
+    return number                # ESPN's list doesn't know this number (yet): keep the source's
+
+
 def same_person(name, candidates):
     """Which of `candidates` [(name, full_name), ...] is `name`?  'ME Waugh' or 'Mark Waugh' -> 'ME Waugh', never
     'SR Waugh'. Same surname, then same first name (from full names) or same first initial, and only if exactly one
@@ -233,6 +297,10 @@ def same_person(name, candidates):
     first = words[0]
     if not re.fullmatch(r"[A-Z]{1,4}", first):
         hit = [c for c in pool if c[1] and c[1].split()[0].lower() == first.lower()]
+        if len(hit) == 1:
+            return hit[0][0]
+        # Sri Lankan and other long names: 'Chaminda Vaas' = 'Warnakulasuriya Patabendige Ushantha Joseph Chaminda Vaas'
+        hit = [c for c in pool if c[1] and first.lower() in c[1].lower().split()]
         if len(hit) == 1:
             return hit[0][0]
     hit = [c for c in pool if len(c[0].split()) > 1 and c[0].split()[0][0] == first[0]]
@@ -285,7 +353,7 @@ def log(con, source, file, status, detail=""):
 
 def clear_source(con, source, formats=None):
     """Remove one source's rows so a step can be re-run cleanly."""
-    for t in ("innings", "batting", "bowling", "balls", "notes", "pvp", "commentary"):
+    for t in ("innings", "batting", "bowling", "balls", "notes", "pvp", "commentary", "played"):
         con.execute(f"DELETE FROM {t} WHERE source = ?", (source,))
     con.execute("DELETE FROM build_log WHERE source = ?", (source,))
     con.commit()
@@ -299,3 +367,83 @@ def overs_to_balls(overs, bpo=6):
     if not m:
         return None
     return int(m.group(1)) * bpo + int(m.group(2) or 0)
+
+
+# ---------------------------------------------------------------- one person, one record
+def link_people(con, say=print):
+    """Merge the records that are one person: the same ESPNcricinfo id (Flintoff for England and the World XI,
+    'Usman Khan' and 'Usman Khan (2)'), or a record with no id that matches a record with an id on the same team in the
+    same years ('C Vaas' / 'WPUJC Vaas'). Every table is moved to the surviving record, so the website and the Ask
+    box see one person."""
+    rows = con.execute("""SELECT p.player_id, p.name, p.team, p.full_name, p.cricinfo_id,
+                                 MIN(s.first_year), MAX(s.last_year), COALESCE(SUM(s.matches), 0)
+                          FROM players p LEFT JOIN player_stats s USING(player_id) GROUP BY p.player_id""").fetchall()
+    parent = {r[0]: r[0] for r in rows}
+
+    def root(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def join(a, b):
+        ra, rb = root(a), root(b)
+        if ra != rb:
+            parent[rb] = ra
+    by_ci = {}
+    for pid, name, tm, full, ci, y1, y2, games in rows:
+        if ci:
+            if ci in by_ci:
+                join(by_ci[ci], pid)
+            else:
+                by_ci[ci] = pid
+    with_id = {}
+    for pid, name, tm, full, ci, y1, y2, games in rows:
+        if ci:
+            with_id.setdefault(tm, []).append((name, full, y1, y2, pid))
+    linked = 0
+    for pid, name, tm, full, ci, y1, y2, games in rows:
+        if ci or not games:
+            continue
+        cands = [c for c in with_id.get(tm, ()) if not (y1 and c[2] and (int(y1) > int(c[3]) + 1 or int(y2) < int(c[2]) - 1))]
+        hit = same_person(name, [(c[0], c[1]) for c in cands])
+        if not hit and full:
+            hit = same_person(full, [(c[0], c[1]) for c in cands])
+        if hit:
+            join(next(c[4] for c in cands if c[0] == hit), pid)
+            linked += 1
+    groups = {}
+    for pid in parent:
+        groups.setdefault(root(pid), []).append(pid)
+    info = {r[0]: r for r in rows}
+    mapping = []
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        keep = max(members, key=lambda m: (info[m][7], bool(info[m][4]), -m))     # most matches, then has an id
+        for m in members:
+            if m != keep:
+                mapping.append((m, keep))
+                con.execute("""UPDATE players SET full_name = COALESCE(full_name, (SELECT full_name FROM players WHERE player_id = ?)),
+                                 dob = COALESCE(dob, (SELECT dob FROM players WHERE player_id = ?)),
+                                 batting_style = COALESCE(batting_style, (SELECT batting_style FROM players WHERE player_id = ?)),
+                                 bowling_style = COALESCE(bowling_style, (SELECT bowling_style FROM players WHERE player_id = ?)),
+                                 cricinfo_id = COALESCE(cricinfo_id, (SELECT cricinfo_id FROM players WHERE player_id = ?)),
+                                 cricsheet_id = COALESCE(cricsheet_id, (SELECT cricsheet_id FROM players WHERE player_id = ?))
+                               WHERE player_id = ?""", (m, m, m, m, m, m, keep))
+    if mapping:
+        con.execute("DROP TABLE IF EXISTS temp.remap")
+        con.execute("CREATE TEMP TABLE remap(old INTEGER PRIMARY KEY, new INTEGER)")
+        con.executemany("INSERT INTO remap VALUES(?, ?)", mapping)
+        for table, cols in (("batting", ("player_id", "bowler_id")), ("bowling", ("player_id",)),
+                            ("balls", ("bowler_id", "batter_id", "non_striker_id", "out_id")),
+                            ("pvp", ("batter_id", "bowler_id")), ("played", ("player_id",))):
+            for col in cols:
+                con.execute(f"UPDATE {table} SET {col} = (SELECT new FROM remap WHERE old = {col}) "
+                            f"WHERE {col} IN (SELECT old FROM remap)")
+        con.execute("DELETE FROM players WHERE player_id IN (SELECT old FROM remap)")
+    con.commit()
+    finish(con)
+    say(f"People: {len(mapping):,} duplicate records merged into one person each "
+        f"({linked:,} matched by name to a record with an ESPNcricinfo id)")
+    return len(mapping)

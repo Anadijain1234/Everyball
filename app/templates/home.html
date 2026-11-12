@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ "Ask · Everyball" if page == "ask" else "Everyball · every ball since 1877" }}{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Every ball since 1877.</h1>
+  <p class="muted">Every Test and every ODI, with ball-by-ball records wherever they exist. Pick a batter and a
+    bowler, or just ask, in English or हिंदी.</p>
+</section>
+
+<div class="grid2 section" style="margin-top:18px">
+  <section class="card" id="duelcard">
+    <h2>Duel</h2>
+    <p class="muted small">Every ball one bowler sent down to one batter.</p>
+    <div class="field ac"><label for="d-bat">Batter</label>
+      <input type="text" id="d-bat" placeholder="e.g. Tendulkar" autocomplete="off"></div>
+    <div class="vs">versus</div>
+    <div class="field ac"><label for="d-bowl">Bowler</label>
+      <input type="text" id="d-bowl" placeholder="e.g. McGrath" autocomplete="off"></div>
+    <div class="row" style="justify-content:space-between;margin-top:14px">
+      <div class="seg" id="d-fmt"><button data-f="" class="on">All</button><button data-f="Test">Tests</button><button data-f="ODI">ODIs</button></div>
+      <button class="btn" id="d-go" disabled>See the duel</button>
+    </div>
+    <div style="margin-top:16px" class="small muted">Try:
+      <span class="chip" data-duel="Tendulkar|McGrath">Tendulkar v McGrath</span>
+      <span class="chip" data-duel="Lara|Warne">Lara v Warne</span>
+      <span class="chip" data-duel="Stackpole|Snow">Stackpole v Snow, 1970</span>
+    </div>
+  </section>
+
+  <section class="card" id="askcard">
+    <h2>Ask</h2>
+    <p class="muted small">Plain words. The AI writes the query; the database does the counting, and you can see how.</p>
+    <div class="field"><textarea id="q" maxlength="500" placeholder="How many times did McGrath dismiss Lara in Tests?  ·  सचिन ने वनडे में कितने शतक बनाए?"></textarea></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="small muted">
+        <span class="chip" data-q="Most Test wickets at Lord's">Most wickets at Lord's</span>
+        <span class="chip" data-q="Highest ODI scores before 1990">Highest ODI scores before 1990</span>
+      </div>
+      <button class="btn" id="ask-go">Ask</button>
+    </div>
+    <div id="answer" class="answer"></div>
+  </section>
+</div>
+
+<section class="section card" id="coverage">
+  <div class="phead">
+    <div><h2>What's in here</h2>
+      <p class="muted small" style="margin:0">Scorecards for every match. Ball-by-ball where a record survives: most Tests,
+        and ODIs from October 1998. Before that, ODI deliveries were never written down anywhere we can reach.</p></div>
+  </div>
+  <div id="cov" class="section" style="margin-top:18px"><div class="empty"><span class="spin"></span>Counting…</div></div>
+</section>
+{% endblock %}

@@ -80,11 +80,16 @@ def parse_list(html, fmt):
         cells = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", c)).strip()
                  for c in re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S | re.I)]
         cells = [c.replace("&amp;", "&") for c in cells]
-        if len(cells) < 6:
+        if len(cells) < 5:
             continue
-        out.append((fmt, int(m.group(1)), parse_date(cells[5]), C.team(cells[0]), C.team(cells[1]),
+        # drawn matches have no margin cell, so find the date by its shape; the ground is just before it
+        d = next((i for i, c in enumerate(cells) if i >= 3 and parse_date(c)), None)
+        if d is None:
+            continue
+        margin = cells[3] if d == 5 else None
+        out.append((fmt, int(m.group(1)), parse_date(cells[d]), C.team(cells[0]), C.team(cells[1]),
                     C.team(cells[2]) if cells[2] and cells[2].lower() not in ("drawn", "tied", "no result", "abandoned")
-                    else cells[2], cells[3], cells[4]))
+                    else cells[2], margin, cells[d - 1]))
     return out
 
 

@@ -92,7 +92,8 @@ def run(con, say):
 
     key_of = {}
     for m in matches:
-        num = i(m["ODI Match No"])
+        num = C.espn_number(con, "ODI", i(m["ODI Match No"]), m["Match Date"], C.team(m["Team1 Name"]),
+                            C.team(m["Team2 Name"]))
         if not num:
             continue
         mid = f"O{num:04d}"
@@ -110,7 +111,11 @@ def run(con, say):
     n_bat = 0
     for r in batting:
         km = key_of.get(r["Match ID"])
-        if not km or r["wicketType"] == "DNB":
+        if not km:
+            continue
+        if r["wicketType"] == "DNB":                                  # in the XI, didn't bat
+            tm = C.team(r["team"])
+            con.execute("INSERT INTO played VALUES(?,?,?,?)", (km[0], tm, pid(r["batsman"], tm), "kaggle"))
             continue
         mid, m = km
         inn = i(r["innings"])

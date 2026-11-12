@@ -35,6 +35,14 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
 3. **Context model**: pitch/spin/seam indices from match numbers, pitch tags from match reports, pressure, matchup ("expected vs actual") verdicts with ranges.
 4. **Research**: estimate 1971-98 ODI head-to-heads from scorecards (IPF, Bayesian/MCMC, Markov + multinomial), tested on hidden modern matches; paper with a professor.
 
+## Layers (medallion)
+- **Bronze**: raw downloads in `data/raw/`, never changed.
+- **Silver**: every source read into the same tables, each row tagged with its `source` (davis, cricsheet, espn,
+  kaggle, book), plus `played` (every player in each XI) and `ref_matches` (ESPN's own year lists).
+- **Gold**: one chosen version per match (`matches.card_source` / `ball_source`: a source that adds up, by priority),
+  the views `bat`, `bowl`, `ball`, `inns`, one record per person (`people` step), and `player_stats`.
+  The website and the Ask box read only gold.
+
 ## Storage
 - Raw downloads: `data/raw/` in the Codespace (gitignored, never in the code history).
 - **Safe copy of the raw downloads: automatic, every 20 min, to this private repo's Releases -> `raw-data`**
@@ -56,8 +64,25 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
 - [x] **Step 4**: samples studied (11 Nov 2026)
 - [x] **Step 5, part 1 (Tests)**: `scripts/build_db.py` + readers for Davis (Test pages, ball-by-ball with batter-by-batter checks, covers, player lists), Cricsheet, the Wisden book data; `scripts/checks.py` (ESPN year lists, Test-number gaps, cricket maths, Davis vs Cricsheet/book, famous facts); `scripts/ask.py` (Claude, 11 Nov 2026)
 - [x] **Step 5, part 2 (ODIs)**: `read_kaggle.py` (every ODI 1971-2024, numbered; players joined to Davis/Cricsheet names by cricinfo id, full name, then surname + first name/initial) and `read_espn.py` (scorecards used only when every innings adds up; ball-by-ball commentary + the commentary text; player-v-player tables); report checks ESPN commentary against ESPN's player-v-player tables (Claude, 11 Nov 2026)
-- [ ] Stage 2a: the website + Ask box (Claude)
+- [x] **Stage 2a: the website** (Claude, 12 Nov 2026): Flask (`app/`), Duel finder with autocomplete and the
+  "every ball" strip, player pages (totals, year by year, how he got out, rivals), coverage by decade, Credits page,
+  light/dark, phone layout. Ask box: Groq `openai/gpt-oss-120b` writes one read-only SQL query; the database counts;
+  the answer line is written from the returned rows only; "How it was counted" shows the query. Hindi via Sarvam
+  (`mayura:v1`). 6 questions/min and 60/day per visitor; same question = cached answer. `scripts/publish_db.py`
+  packs the database into 45 MB parts for GitHub; `render.yaml` for Render.
+- [x] **Step 5, round 3: the full data, fixed in one go** (Claude, 12 Nov 2026, on Anadi's full data): Davis's newer
+  pages (mixed-case teams), batter lines read by dismissal words (one-space gaps, wrapped lines, '#N/A', daggers,
+  5 penalty runs), wrong team names in Davis's templates, "Scores of 50+" pages skipped, Davis's short names in the
+  ball-by-ball ('M Jayaward.', 'Javed M.', 'G Pollock'), partial old records marked; every source's match number
+  checked against ESPN's year lists; the book's OCR numbers checked by date and teams; one person = one record
+  (ESPNcricinfo ids + name matching); every player in the XI counted (did not bat); a scorecard is only chosen if
+  its batters and bowlers add up. Result: all 9 famous facts PASS; Davis scorecards add up 99.4%; Davis vs Cricsheet
+  22,052/22,054 batters agree; Davis ball-by-ball: 98.6% of balls proven, 94.1% of batters match the scorecard.
+- [ ] Anadi: run the one command (unzip, tests, commit, build), then try the site in the Codespace; pack + Render.
+- [ ] Later: recent matches Cricsheet doesn't have yet (19 Tests, 32 ODIs, mostly 2024-26) -> fresh Cricsheet download
+  (Stage 2b weekly update); ESPN commentary vs player-v-player (612/905 innings agree) to look at.
 - [ ] **Step 6**: build the database (Anadi): `python scripts/build_db.py all`, then send Claude data/build_report.txt
+- [ ] Stage 2b (later): weekly Cricsheet update with GitHub Actions + Render auto-deploy
 - [ ] Anadi's side task: 100 test questions with correct answers from ESPN (Tests + ODIs, old + new)
 
 ### What we learned while downloading (11 Nov 2026)

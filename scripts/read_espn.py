@@ -296,11 +296,24 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
                                     SELECT player_id FROM bowling WHERE match_id = ?)""", (mid, mid)):
         known[tm].append((name, full))
 
-    def pick(name, tm):
+    did = defaultdict(set)                 # who bowled / batted in each innings, by the other sources' cards
+    for inn_no, nm in con.execute("""SELECT b.inn, p.name FROM bowling b JOIN players p USING(player_id)
+                                     WHERE b.match_id = ? AND b.source != 'espn'""", (mid,)):
+        did[("bowl", inn_no)].add(nm)
+        did[("bowl", None)].add(nm)
+    for inn_no, nm in con.execute("""SELECT b.inn, p.name FROM batting b JOIN players p USING(player_id)
+                                     WHERE b.match_id = ? AND b.source != 'espn'""", (mid,)):
+        did[("bat", inn_no)].add(nm)
+
+    def pick(name, tm, bowler=False, inn=None, batter=False):
         if not name or not tm:
             return None
         n = clean_name(name)
-        hit = C.same_person(n, known[tm])
+        hit = None
+        if bowler or batter:              # 'Singh' who bowled: Harbhajan, not Robin who only batted
+            role = did[("bowl" if bowler else "bat", inn)] or (did[("bowl", None)] if bowler else set())
+            hit = C.same_person(n, [c for c in known[tm] if c[0] in role])
+        hit = hit or C.same_person(n, known[tm]) or C.same_person(n, [(r, None) for r in rosters[tm] if r != n])
         if not hit and team_players:         # e.g. 'Muralitharan' who bowled but didn't bat: look across his team
             hit = C.same_person(n, [(a, f) for a, f, y1, y2 in team_players.get(tm, ())
                                     if y1 and int(y1) - 1 <= year <= int(y2) + 1])
@@ -331,16 +344,17 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
                                                                      inn.get("declared"), "espn"))
     for i, inn in enumerate(card["innings"] if card_ok else [], 1):
         bat_t, bowl_t = inn["team"], inn["bowl_team"]
+        for nm in inn["dnb"]:
+            con.execute("INSERT INTO played VALUES(?,?,?,?)", (mid, bat_t, pick(nm, bat_t), "espn"))
         for pos, b in enumerate(inn["batting"], 1):
-            bowler = resolve_short(b["bowler"], rosters[bowl_t]) if b["bowler"] else None
+            bowler = b["bowler"]
             con.execute("INSERT INTO batting VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                        (mid, i, pos, pick(b["name"], bat_t), bat_t, b["how"], b["kind"], pick(bowler, bowl_t),
+                        (mid, i, pos, pick(b["name"], bat_t), bat_t, b["how"], b["kind"], pick(bowler, bowl_t, True),
                          b["fielder"], b["runs"], b["balls"], b["minutes"], b["fours"], b["sixes"], b["not_out"], None,
                          None, "espn"))
         for w in inn["bowling"]:
-            full = resolve_short(w["name"], rosters[bowl_t])
             con.execute("INSERT INTO bowling VALUES(?,?,?,?,?,?,?,?,?,?)",
-                        (mid, i, pick(full, bowl_t), bowl_t, w["overs"], C.overs_to_balls(w["overs"]), w["maidens"],
+                        (mid, i, pick(w["name"], bowl_t, bowler=True), bowl_t, w["overs"], C.overs_to_balls(w["overs"]), w["maidens"],
                          w["runs"], w["wickets"], "espn"))
     stats["scorecards"] += card_ok
     if "pvp" in files:
@@ -352,7 +366,7 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
                 bat_t = sb or next((t for t in teams if t and t != sw), None)
             bowl_t = next((t for t in teams if t and t != bat_t), None)
             con.execute("INSERT INTO pvp VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                        (mid, r["inn"], pick(r["batter"], bat_t), pick(resolve_short(r["bowler"], rosters[bowl_t]), bowl_t),
+                        (mid, r["inn"], pick(r["batter"], bat_t), pick(r["bowler"], bowl_t, bowler=True),
                          r["dots"], r["ones"], r["twos"], r["threes"], r["fours"], r["sixes"], r["runs"], r["balls"], "espn"))
         stats["player-v-player tables"] += bool(rows)
     if "bbb" in files and mid not in has_cricsheet_balls:
@@ -366,8 +380,8 @@ def load_match(con, reg, mid, card, files, has_cricsheet_balls, stats, team_play
                 bat_t = other
             bowl_t = next((t for t in teams if t and t != bat_t), None)
             for seq, b in enumerate(inn["balls"], 1):
-                batter = pick(resolve_short(b["batter"], rosters[bat_t]), bat_t)
-                rows.append((mid, i, seq, b["over"], b["ball"], pick(resolve_short(b["bowler"], rosters[bowl_t]), bowl_t),
+                batter = pick(b["batter"], bat_t, inn=i, batter=True)
+                rows.append((mid, i, seq, b["over"], b["ball"], pick(b["bowler"], bowl_t, bowler=True, inn=i),
                              batter, None, b["bat_runs"], b["extras"], b["extra_type"], b["legal"], b["wicket"], None,
                              batter if b["wicket"] else None, 1, "espn"))
                 if b["text"]:
@@ -383,6 +397,8 @@ def resolve_short(name, roster):
     if not name:
         return None
     n = clean_name(name)
+    if not n:
+        return None
     if n in roster:
         return n
     hits = [r for r in roster if C.surname(r) == n or r.split()[-1] == n or r.endswith(" " + n)]

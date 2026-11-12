@@ -35,11 +35,13 @@ def load_match(con, reg, d, ids, fmt):
     info = d["info"]
     if info.get("gender") != "male" or info.get("team_type", "international") != "international":
         return 0
-    num = info.get("match_type_number")
+    teams = [C.team(t) for t in info.get("teams", [])]
+    start = (info.get("dates") or [None])[0]
+    num = C.espn_number(con, fmt, int(info["match_type_number"]) if info.get("match_type_number") else None,
+                        start, *(teams + [None, None])[:2])       # checked against ESPN's own list
     if not num:
         return 0
     mid = f"{'T' if fmt == 'Test' else 'O'}{int(num):04d}"
-    teams = [C.team(t) for t in info.get("teams", [])]
     result, winner = result_text(info)
     bpo = info.get("balls_per_over", 6)
     C.upsert_match(con, mid, "cricsheet", format=fmt, number=int(num), start_date=(info.get("dates") or [None])[0],
@@ -57,6 +59,10 @@ def load_match(con, reg, d, ids, fmt):
         if cs and ids.get(cs):
             extra["cricinfo_id"] = ids[cs]
         return reg.get(name, tm, "cricsheet", **extra)
+
+    for t, names in info.get("players", {}).items():                     # the whole XI, batted or not
+        con.executemany("INSERT INTO played VALUES(?,?,?,?)", [(mid, C.team(t), pid(nm, C.team(t)), "cricsheet")
+                                                              for nm in names])
 
     balls = []
     inn_no = 0
