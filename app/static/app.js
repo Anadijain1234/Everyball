@@ -246,12 +246,13 @@
     const scorecard = d.scorecard_dismissals || [];
     if (!d.balls) {
       return `<section class="card">${who}
-        <div class="notice section" style="margin-top:16px">No ball-by-ball record of this duel${d.matches_both_played ? "" : ", and no match where he bowled while the other batted"}.
+        <div class="notice section" style="margin-top:16px">${d.matches_never_faced ? `They both played in ${n(d.matches_never_faced)} match${d.matches_never_faced === 1 ? "" : "es"} with ball-by-ball, but ${esc(d.bowler)} never bowled a ball to ${esc(d.batter)}.${d.matches_no_balls ? ` ${n(d.matches_no_balls)} more have no ball-by-ball.` : ""}` : `No ball-by-ball record of this duel${d.matches_both_played ? "" : ", and no match where he bowled while the other batted"}.`}
         ${d.matches_both_played ? `They met in <b>${n(d.matches_both_played)}</b> match${d.matches_both_played === 1 ? "" : "es"} (from the scorecards), and ${esc(d.bowler)} got him out <b>${n(d.dismissed_in_scorecards)}</b> time${d.dismissed_in_scorecards === 1 ? "" : "s"}.` : ""}</div>
         ${scorecard.length ? `<h3 class="section">Dismissals in the scorecards</h3>${dismissalTable(scorecard)}` : ""}</section>`;
     }
     const met = Math.max(d.matches_both_played || 0, d.matches_with_balls);
-    const cov = met ? 100 * d.matches_with_balls / met : 100;
+    const known = d.matches_with_balls + (d.matches_never_faced || 0);
+    const cov = met ? 100 * known / met : 100;
     const oc = d.outcomes, total = Object.values(oc).reduce((a, b) => a + b, 0) || 1, cols = OUT_COLORS();
     const labels = { "0": "dots", "1": "1s", "2": "2s", "3": "3s", "4": "4s", "5+": "5s", "6": "6s", W: "out", extras: "extras" };
     const srcNames = { davis: "Charles Davis", cricsheet: "Cricsheet", espn: "ESPNcricinfo" };
@@ -267,7 +268,7 @@
         <div class="tile"><div class="k">Longest dot run</div><div class="v">${n(d.longest_dot_streak)}</div><div class="s">balls in a row</div></div>
       </div>
       <div class="section" style="margin-top:20px">
-        <div class="row" style="justify-content:space-between"><b class="small">Ball-by-ball for ${n(d.matches_with_balls)} of ${n(met)} matches they met in</b>
+        <div class="row" style="justify-content:space-between"><b class="small">Faced each other in ${n(d.matches_with_balls)} of ${n(met)} matches they both played${d.matches_never_faced ? ` · played together but never faced in ${n(d.matches_never_faced)}` : ""}${d.matches_no_balls ? ` · no ball-by-ball for ${n(d.matches_no_balls)}` : ""}</b>
           <span class="small muted">${n(cov, 0)}%</span></div>
         <div class="meter" style="margin-top:6px"><i style="width:${cov}%"></i></div>
       </div>
@@ -289,7 +290,8 @@
       <p>Every delivery ${esc(d.bowler)} bowled to ${esc(d.batter)} in matches with a ball-by-ball record:
       ${Object.entries(d.ball_sources).map(([s, v]) => `${n(v)} from ${srcNames[s] || s}`).join(", ")}.
       Wides don't count as balls faced. Run outs aren't credited to the bowler.</p>
-      ${d.matches_both_played > d.matches_with_balls ? `<p>${n(d.matches_both_played - d.matches_with_balls)} of the matches they met in have no ball-by-ball record, so the numbers above leave them out. The scorecard list above includes them.</p>` : ""}
+      ${d.matches_never_faced ? `<p>In ${n(d.matches_never_faced)} match${d.matches_never_faced === 1 ? "" : "es"} they both played and the ball-by-ball is there, but ${esc(d.bowler)} never bowled a ball to ${esc(d.batter)}.</p>` : ""}
+      ${d.matches_no_balls ? `<p>${n(d.matches_no_balls)} match${d.matches_no_balls === 1 ? " has" : "es have"} no ball-by-ball record, so the numbers above leave ${d.matches_no_balls === 1 ? "it" : "them"} out. The scorecard list includes them.</p>` : ""}
       ${d.sure_pct !== null && d.ball_sources.davis ? `<p>Charles Davis's records were rebuilt over by over; for ${n(d.sure_pct, 1)}% of these balls the batter on strike is proven by the over-by-over totals.</p>` : ""}
       ${d.espn_player_v_player ? `<p>ESPNcricinfo's own batter-against-bowler tables give ${n(d.espn_player_v_player.runs)} runs off ${n(d.espn_player_v_player.balls)} balls in ${n(d.espn_player_v_player.matches)} match(es), a separate check.</p>` : ""}
     </div></details></section>`;

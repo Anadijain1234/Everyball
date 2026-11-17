@@ -114,12 +114,20 @@ def duel_ids(con, bat_ids, bowl_ids, fmt=None, bat=None, bowl=None):
             outs_list.append({"match_id": r["match_id"], "date": r["start_date"], "ground": r["ground"],
                               "kind": r["kind"] or "out", "inn": r["inn"], "over": r["over_no"]})
     # matches where both played (from the scorecards) and how often he got him out there
-    both = con.execute(f"""
-        SELECT COUNT(DISTINCT b.match_id), SUM(CASE WHEN b.bowler_id IN ({qw}) THEN 1 ELSE 0 END)
+    both_rows = con.execute(f"""
+        SELECT b.match_id, m.ball_source IS NOT NULL AS has_balls,
+               SUM(CASE WHEN b.bowler_id IN ({qw}) THEN 1 ELSE 0 END) AS outs
         FROM batting b JOIN matches m ON m.match_id = b.match_id AND b.source = m.card_source
         WHERE b.player_id IN ({qb}) {fmt_sql}
           AND EXISTS (SELECT 1 FROM bowling w WHERE w.match_id = b.match_id AND w.inn = b.inn AND w.source = b.source
-                      AND w.player_id IN ({qw}))""", [*bowl_ids, *bat_ids] + ([fmt] if fmt else []) + bowl_ids).fetchone()
+                      AND w.player_id IN ({qw}))
+        GROUP BY b.match_id""", [*bowl_ids, *bat_ids] + ([fmt] if fmt else []) + bowl_ids).fetchall()
+    # split the matches they met in: faced each other (balls found) / ball-by-ball exists but he never bowled
+    # to him (he batted while the other bowled at someone else) / no ball-by-ball for that match
+    met_ids = {r["match_id"] for r in both_rows} | set(per_match)
+    never_faced = [r["match_id"] for r in both_rows if r["has_balls"] and r["match_id"] not in per_match]
+    no_balls = [r["match_id"] for r in both_rows if not r["has_balls"] and r["match_id"] not in per_match]
+    both = (len(met_ids), sum(r["outs"] or 0 for r in both_rows))
     pvp = con.execute(f"""SELECT SUM(x.balls), SUM(x.runs), COUNT(DISTINCT x.match_id) FROM pvp x
                           JOIN matches m ON m.match_id = x.match_id
                           WHERE x.batter_id IN ({qb}) AND x.bowler_id IN ({qw}) {fmt_sql}""",
@@ -131,7 +139,8 @@ def duel_ids(con, bat_ids, bowl_ids, fmt=None, bat=None, bowl=None):
         dot_pct=round(100 * s["dots"] / s["balls"], 1) if s["balls"] else None,
         longest_dot_streak=best[0], longest_dot_streak_match=best[1],
         matches_with_balls=len(per_match), matches_both_played=both[0] or 0,
-        dismissed_in_scorecards=both[1] or 0, sure_pct=round(100 * s["sure"] / s["all"], 1) if s["all"] else None,
+        dismissed_in_scorecards=both[1] or 0, matches_never_faced=len(never_faced),
+        matches_no_balls=len(no_balls), never_faced_ids=never_faced, no_balls_ids=no_balls, sure_pct=round(100 * s["sure"] / s["all"], 1) if s["all"] else None,
         espn_player_v_player={"balls": pvp[0], "runs": pvp[1], "matches": pvp[2]} if pvp and pvp[0] else None,
         matches=list(per_match.values()), ball_sources=sources, outcomes=outcome, dismissals=outs_list,
         batter_id=bat["player_id"], bowler_id=bowl["player_id"],

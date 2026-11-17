@@ -78,6 +78,14 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
   (ESPNcricinfo ids + name matching); every player in the XI counted (did not bat); a scorecard is only chosen if
   its batters and bowlers add up. Result: all 9 famous facts PASS; Davis scorecards add up 99.4%; Davis vs Cricsheet
   22,052/22,054 batters agree; Davis ball-by-ball: 98.6% of balls proven, 94.1% of batters match the scorecard.
+- [x] **Stage 1 (17 Nov 2026, Claude)**: `scripts/add_espn_live.py` adds ESPN live-site ball-by-ball (all 66 files + redo)
+  ONLY to matches that had none: 457 matches added (275 complete, 182 partial and marked sure=0, mostly 1999-2001);
+  ODIs with ball-by-ball 61% -> 70.4%, Tests 87.2%; e.g. 25 Jan 2000 India v Pakistan now has it. Tested against
+  Cricsheet on overlapping matches: 97.1% balls identical, batter 99.9%, bowler 99.3%, wicket kinds 100%.
+  `scripts/merge_players.py`: 279 stray name records joined to the real player by match context (four Glenn McGraths
+  -> one); 51 look-alikes left unjoined and listed in data/reports/players_merged.csv. Duel page now says "faced each
+  other in X of Y; played together but never faced in Z; no ball-by-ball for W". render.yaml: health check removed
+  (Anadi runs his own 10-minute pinger).
 - [ ] Anadi: run the one command (unzip, tests, commit, build), then try the site in the Codespace; pack + Render.
 - [ ] Later: recent matches Cricsheet doesn't have yet (19 Tests, 32 ODIs, mostly 2024-26) -> fresh Cricsheet download
   (Stage 2b weekly update); ESPN commentary vs player-v-player (612/905 innings agree) to look at.

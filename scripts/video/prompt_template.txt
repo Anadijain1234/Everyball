@@ -1,0 +1,17 @@
+SETTINGS (Google AI Studio, free): model Gemini 3.8 Flash · Grounding with Google Search OFF · URL context OFF
+Video settings: agentic OFF (agentic does not allow start/end; a full 3-hour video is over the token limit), start/end = one 30-35 min chunk (~9 overs), FPS 2.
+Use a NEW chat per match; same chat for follow-ups ("You skipped balls X, Y (between t1 and t2). Write those lines, same format.").
+
+PROMPT (edit the first lines, batters, bowlers and stop-over):
+This clip is <TEAM>'s innings, <MATCH>, <GROUND>, <DATE>. It starts at over <N>. <BATTERS AT CREASE> are batting.
+FIRST LINE: write the score at the start exactly as the score box shows it.
+Then write ONLY a CSV, no explanation. One line for EVERY delivery you can see:
+over.ball, bowler, striker, runs off bat, extras (type+runs or 0), wicket (how, or none), what happened (max 8 words), timestamp, confidence (high/medium/low)
+Rules:
+- The score box "Overs" shows overs COMPLETED (Overs 10.3 = 3rd ball of the 11th over). Number balls by the real over.
+- If an over or ball is cut from the video, write it as "not shown", with the score before and after from the score box.
+- Use the score box and the commentary. Skip replays and breaks. A wide or no-ball gets its own line numbered as the next ball (ball number repeats).
+- Before answering, check: odd runs swap the striker; the striker swaps at every over end; every over has exactly 6 legal balls; your running total must match the score box.
+- Never guess. If unclear, still write the line with "unknown" and confidence low.
+- <TEAM> batters: ... <OPPONENT> bowlers: ...
+- Stop after over <M>.
