@@ -183,6 +183,21 @@ def prior_without(c, mid):
     return {ph: {v: (cnt[v] + 1) / (sum(cnt.values()) + 7) for v in range(7)} for ph, cnt in t.items()}
 
 
+def patterns_without(c, mid, k=200):
+    """Each batter's and each bowler's run pattern (how often 0, 1, 2, 3, 4, 5, 6 off the bat), from every ODI ball
+    we have - this match left out. Small samples lean on the average player (k pretend balls of average)."""
+    allc, bat, bowl = collections.Counter(), collections.defaultdict(collections.Counter), collections.defaultdict(collections.Counter)
+    for bt, bw, br, n in c.execute("select b.batter_id, b.bowler_id, b.bat_runs, count(*) from balls b join matches m "
+                                   "using(match_id) where m.format='ODI' and b.source = m.ball_source and b.match_id != ? "
+                                   "and coalesce(b.extra_type,'') != 'wd' group by 1, 2, 3", (mid,)):
+        x = min(int(br or 0), 6)
+        allc[x] += n; bat[bt][x] += n; bowl[bw][x] += n
+    tot = sum(allc.values()) or 1
+    pall = {x: (allc[x] + 1) / (tot + 7) for x in range(7)}
+    shrink = lambda cnt: {x: (cnt[x] + k * pall[x]) / (sum(cnt.values()) + k) for x in range(7)}
+    return {"all": pall, "bat": {p: shrink(cn) for p, cn in bat.items()}, "bowl": {p: shrink(cn) for p, cn in bowl.items()}}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("match")
@@ -206,12 +221,27 @@ def main():
     c = L.connect(a.db)
     names = dict(c.execute("select player_id, name from players"))
     prior = prior_without(c, a.match)
+    print("Learning run patterns of every batter and bowler from our ODI balls (this match left out)...", flush=True)
+    patterns = patterns_without(c, a.match)
     info = L.match_info(c, a.match)
     out = os.path.join(R.ROOT, "data", "solver", "accuracy", a.match)
     os.makedirs(out, exist_ok=True)
     report = {"match": a.match, "date": info["day"], "teams": f"{info['team1']} v {info['team2']}", "backend": R.BACKEND,
               "workers": a.workers, "results": []}
     jpath = os.path.join(out, "report.json")
+    n_runs, run_no = len(a.levels.split(",")) * len(a.innings.split(",")), [0]
+    t_start = time.time()
+
+    def heartbeat():                          # a status line every 30 s: where it is, how long, how far
+        while True:
+            time.sleep(30)
+            st = SS.STATUS
+            el = int(time.time() - t_start)
+            prog = f" | {st['done']}/{st['total']} deliveries checked" if st.get("total") else ""
+            print(f"  ⏱ {el // 60}:{el % 60:02d} | {st.get('run', '')} | {st.get('stage', '')}{prog}"
+                  + (f" | {st['extra']}" if st.get("extra") else ""), flush=True)
+    if a.engine == "split":
+        threading.Thread(target=heartbeat, daemon=True).start()
     for lv in a.levels.split(","):
         for inn in [int(x) for x in a.innings.split(",")]:
             truth, why = L.true_deliveries(c, a.match, inn)
@@ -223,6 +253,8 @@ def main():
                 print(f"innings {inn}: the real balls break a modelled rule ({probs[0]}) - skipped"); continue
             facts0 = facts                       # the real facts (the replay check uses these, never the plan)
             if a.engine == "split":
+                run_no[0] += 1
+                SS.STATUS.update(run=f"run {run_no[0]} of {n_runs}: {NAMES[lv]}, innings {inn}", stage="starting")
                 limit = a.time_level1 if lv == "1" else a.time
                 print(f"{NAMES[lv]}, innings {inn}: split-at-wickets solver "
                       f"({'no time limit' if limit <= 0 else f'up to {int(limit)} s'}, {a.workers} workers)", flush=True)
@@ -232,7 +264,7 @@ def main():
                 try:
                     sol, sinfo = SS.solve_innings(facts, prior, seconds=limit, workers=a.workers, prove=not a.no_prove,
                                                   prove_seconds=a.prove_seconds, prove_budget=a.prove_budget,
-                                                  log=lambda t_: print(t_, flush=True))
+                                                  log=lambda t_: print(t_, flush=True), patterns=patterns)
                 except ValueError as e:
                     sol, sinfo = None, {"status": f"can't split: {e}"}
                 secs = round(time.time() - t0)

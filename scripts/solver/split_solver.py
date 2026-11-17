@@ -39,6 +39,8 @@ except ImportError:
 
 import cricket_facts as F
 
+STATUS = {"stage": "starting", "done": 0, "total": 0, "found": 0, "extra": ""}   # read by the progress timer
+
 LEGAL_ONLY = ("bowled", "caught", "caught and bowled", "lbw")
 STRIKER_ONLY = LEGAL_ONLY + ("stumped", "hit wicket", "handled the ball", "hit the ball twice")
 
@@ -401,7 +403,7 @@ class Piece:
     balls plus a few spare slots for wides / no-balls (unused spares are switched off), so where the extras fall
     is decided by the solver together with everything else."""
 
-    def __init__(self, f, p, bowler_of, prior, model, spare):
+    def __init__(self, f, p, bowler_of, prior, model, spare, patterns=None):
         era, bpo = f["era"], f["bpo"]
         P, BB, TB = era["pen_plus"], era["nb_byes_are_byes"], era["to_bowler"]
         m = self.m = model
@@ -619,16 +621,30 @@ class Piece:
                 m.Add(bn == q).OnlyEnforceIf(z); m.Add(bn != q).OnlyEnforceIf(z.Not())
                 z2 = self._and(z, S[i]["L"])
                 self.ball_ind[(o, q)].append((i, z2))
-        # most likely values: run rates by phase (learned from real balls); byes / leg-byes and extras rare
+        # most likely values, learned from our real balls (this match left out): run rates by phase of the
+        # innings, adjusted for the batter on strike and for the bowler (when the bowler of the over is known)
         like = []
+        pat = patterns or {}
+        ball_all = pat.get("all") or {}
+        def delta(table, pid, x):
+            """how much more / less likely runs x (vs a dot) are for this player than for an average player"""
+            t = (table or {}).get(pid)
+            if not t or not ball_all:
+                return 0.0
+            return (math.log(t[0]) - math.log(ball_all[0])) - (math.log(t[x]) - math.log(ball_all[x]))
         for i in range(D):
             o = overof[i]
             ph = 0 if o < 10 else (2 if o >= 40 else 1)
             pr = prior.get(ph) or prior.get(str(ph)) or {}
             p0 = pr.get(0, pr.get("0", 0.5))
+            bw = bowler_of.get(o) if bowler_of else None
             for x in range(1, 7):
                 px = pr.get(x, pr.get(str(x), 0.001))
-                like.append(int(round(100 * (math.log(p0) - math.log(max(px, 1e-6))))) * S[i]["v"][x])
+                base = math.log(p0) - math.log(max(px, 1e-6)) + delta(pat.get("bowl"), bw, x)
+                dA, dB = delta(pat.get("bat"), p["A"], x), delta(pat.get("bat"), p["B"], x)
+                like.append(int(round(100 * (base + dB))) * S[i]["v"][x])
+                if round(100 * (dA - dB)):
+                    like.append(int(round(100 * (dA - dB))) * self._and(S[i]["v"][x], sA[i]))
             like.append(150 * S[i]["rxp"])
         self.like = like
 
@@ -674,7 +690,7 @@ class Joint:
     strike after each wicket, over runs, bowlers' figures, batters' 4s / 6s, extras. The over of every delivery
     is fixed by the plan, so the model is small and fixed-shape (nothing has to be searched for twice)."""
 
-    def __init__(self, f, pieces, prior, bowler_hint=None):
+    def __init__(self, f, pieces, prior, bowler_hint=None, patterns=None):
         era, bpo = f["era"], f["bpo"]
         TB = era["to_bowler"]
         m = self.m = cp.CpModel()
@@ -700,7 +716,7 @@ class Joint:
             spare = {"*": tot}
         self.spare = spare
         for i, p in enumerate(pieces):
-            pc = Piece(f, p, bo_known, prior, m, spare)
+            pc = Piece(f, p, bo_known, prior, m, spare, patterns)
             self.P.append(pc)
             like += pc.like
         if all(k is not None for k in known):                        # total wides and no-balls (deliveries)
@@ -756,6 +772,22 @@ class Joint:
                 if w and p["how"] in F.CREDITED and w.get("bowler") in wix and pc.D:
                     for i_ in range(pc.D):
                         m.AddImplication(pc.plast[i_], x[pc.overof[i_]][wix[w["bowler"]]])
+            pat = patterns or {}
+            if pat.get("bowl") and pat.get("all"):                   # bowler patterns, weighed by who bowls the over
+                al = pat["all"]
+                for o in range(NO):
+                    cnt = {xv: sum(pc.S[i]["v"][xv] for pc in self.P for i in pc.in_over.get(o, [])) for xv in range(1, 7)}
+                    for b, bp in enumerate(bowlers):
+                        t = pat["bowl"].get(bp)
+                        if not t:
+                            continue
+                        for xv in range(1, 7):
+                            dlt = int(round(100 * ((math.log(t[0]) - math.log(al[0])) - (math.log(t[xv]) - math.log(al[xv])))))
+                            if not dlt:
+                                continue
+                            y = m.NewIntVar(0, 12, "pb")
+                            m.Add(y == cnt[xv]).OnlyEnforceIf(x[o][b]); m.Add(y == 0).OnlyEnforceIf(x[o][b].Not())
+                            like.append(dlt * y)
             if bowler_hint:
                 for o, b in bowler_hint.items():
                     m.AddHint(x[o][b], 1) if hasattr(m, "AddHint") else None
@@ -820,7 +852,17 @@ class Joint:
 
     def solve(self, seconds, workers):
         s = _solver(seconds, workers)
-        st = s.StatusName(s.Solve(self.m))
+        STATUS.update(stage="solving ball by ball", found=0, extra="")
+        if BACKEND == "ortools":
+            t0 = time.time()
+
+            class Found(cp.CpSolverSolutionCallback):
+                def on_solution_callback(cb):
+                    STATUS["found"] += 1
+                    STATUS["extra"] = f"answer #{STATUS['found']} found at {round(time.time() - t0)} s, still improving it"
+            st = s.StatusName(s.Solve(self.m, Found()))
+        else:
+            st = s.StatusName(s.Solve(self.m))
         self.status = st
         if st not in ("OPTIMAL", "FEASIBLE"):
             return None
@@ -862,6 +904,14 @@ def prove_all(jt, out, info, prove_seconds, prove_budget, workers, log=print):
         if pc.p["wicket"]:
             lits.append(pc.plast[i] if d["out"] else pc.plast[i].Not())
         return pc._and_all(lits)
+    todo = sum(1 for piece in out for d in piece if d["legal"] and d["label"] == "estimate")
+    todo += len({d["over"] for piece in out for d in piece if not d["legal"]})
+    STATUS.update(stage="proven / guessed check", done=0, total=todo)
+    cnt = collections.Counter()
+    def tick(lab):
+        cnt[lab] += 1
+        STATUS["done"] += 1
+        STATUS["extra"] = f"proven {cnt['proven']}, guessed {cnt['guessed']}, unchecked {cnt['unchecked']}"
     for pc, piece in zip(jt.P, out):
         for d in piece:
             if not d["legal"] or d["label"] != "estimate":
@@ -876,6 +926,7 @@ def prove_all(jt, out, info, prove_seconds, prove_budget, workers, log=print):
             st = s.StatusName(s.Solve(m))
             d["label"] = "proven" if st == "INFEASIBLE" else ("guessed" if st in ("OPTIMAL", "FEASIBLE") else "unchecked")
             nproven += d["label"] == "proven"
+            tick(d["label"])
     # wides / no-balls: could the extras of this over have been placed or scored differently?
     overs_ex = collections.defaultdict(dict)                     # over -> {(piece no, slot): delivery}
     for k_, (pc, piece) in enumerate(zip(jt.P, out)):
@@ -905,6 +956,7 @@ def prove_all(jt, out, info, prove_seconds, prove_budget, workers, log=print):
         for d in cur.values():
             d["label"] = lab
             nproven += lab == "proven"
+        tick(lab)
     jt.m.ClearAssumptions()
     info["proven"] = nproven
     info["prove_seconds"] = round(time.time() - tp)
@@ -912,11 +964,13 @@ def prove_all(jt, out, info, prove_seconds, prove_budget, workers, log=print):
 
 
 # ------------------------------------------------------------------------------------------- the whole innings
-def solve_innings(f, prior, seconds=600, workers=8, prove=True, prove_seconds=2, prove_budget=900, log=print):
+def solve_innings(f, prior, seconds=600, workers=8, prove=True, prove_seconds=2, prove_budget=900, log=print,
+                  patterns=None):
     """Returns (deliveries, info). Deliveries carry label 'proven' / 'guessed' ('real' = given as a fact)."""
     t0 = time.time()
     pieces = make_pieces(f)
-    jt = Joint(f, pieces, prior)
+    STATUS.update(stage="building the puzzle", done=0, total=0, found=0, extra="")
+    jt = Joint(f, pieces, prior, patterns=patterns)
     log(f"  {len(pieces)} partnerships, {sum(pc.D for pc in jt.P)} delivery slots; solving all together...")
     out = jt.solve(seconds, workers)
     info = {"status": jt.status, "seconds": round(time.time() - t0), "pieces": len(pieces)}
