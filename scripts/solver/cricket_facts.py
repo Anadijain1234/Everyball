@@ -61,10 +61,18 @@ def ran_parity(d):
 
 
 # ----------------------------------------------------------------------------------------------- facts
+LEVELS = {"1": "card", "level1": "card", "2": "overs", "level2": "overs", "3a": "overs_events",
+          "level3a": "overs_events", "3b": "overs_exact", "level3b": "overs_exact"}
+
+
 def facts_from_deliveries(dl, day, bpo, level="card", order=None):
-    """Make the facts a scorecard (+ highlights / + over-by-over) would give, from a true delivery list.
-    level: card | highlights (card + every boundary and wicket ball seen) | overs (highlights + bowler and
-    runs of every over)."""
+    """Make the facts a scorecard (+ over-by-over / + boundaries) would give, from a true delivery list.
+    level: card (level 1: scorecard, fall of wickets with the over, partnerships)
+           highlights (card + the exact ball of every four and six)
+           overs (level 2: card + bowler and runs of every over)
+           overs_events (level 3a: level 2 + in which over each four and six came, and who hit it - not the ball)
+           overs_exact (level 3b: level 2 + the exact ball of every four and six)."""
+    level = LEVELS.get(level, level)
     era = era_flags(day, bpo)
     if order is None:
         order = []
@@ -98,7 +106,7 @@ def facts_from_deliveries(dl, day, bpo, level="card", order=None):
         if d["legal"]:
             b["balls"] += 1; legal_total += 1; lidx[o] += 1; ov["legal"] += 1
             b["dots"] += c == 0
-            if level in ("highlights", "overs") and d["bat"] in (4, 6):
+            if level in ("highlights", "overs_exact") and d["bat"] in (4, 6):
                 anchors.append({"over": o, "ball": lidx[o], "bat": d["bat"], "striker": d["striker"], "bowler": d["bowler"]})
         for k in ("b", "lb"):
             ex[k] += d["ex_" + k]
@@ -122,8 +130,11 @@ def facts_from_deliveries(dl, day, bpo, level="card", order=None):
     f = {"day": str(day), "bpo": bpo, "era": era, "order": order, "legal_total": legal_total,
          "total": cum, "pen": 0, "batters": [bat[p] for p in order], "bowlers": list(bowl.values()),
          "extras": ex, "fow": fow, "partnerships": pships, "anchors": anchors, "overs": None}
-    if level == "overs":
+    if level in ("overs", "overs_events", "overs_exact"):
         f["overs"] = [{"over": o, "bowler": ov["bowler"], "runs": ov["runs"]} for o, ov in overs.items()]
+    if level == "overs_events":
+        ev = collections.Counter((d["over"], d["striker"], d["bat"]) for d in dl if d["bat"] in (4, 6))
+        f["over_events"] = [{"over": o, "striker": s, "bat": b, "n": n} for (o, s, b), n in sorted(ev.items())]
     return f
 
 

@@ -22,7 +22,8 @@ def true_deliveries(c, mid, inn):
     info = match_info(c, mid)
     era = F.era_flags(info["day"], info["bpo"])
     rows = c.execute("select over_no, ball, bowler_id, batter_id, non_striker_id, bat_runs, extras, extra_type, legal,"
-                     " wicket, kind, out_id from balls where match_id=? and inn=? order by seq", (mid, inn)).fetchall()
+                     " wicket, kind, out_id from balls x where match_id=? and inn=? and source = (select ball_source from matches"
+                     " where match_id = x.match_id) order by seq", (mid, inn)).fetchall()
     if not rows:
         return None, "no ball-by-ball"
     dl, why = [], None

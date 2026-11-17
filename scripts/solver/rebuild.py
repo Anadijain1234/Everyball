@@ -472,6 +472,15 @@ class Rebuilder:
                 m.AddImplication(ok, self.eqB[o][self.wix[ov["bowler"]]])
                 self.anchor_ok.append(({"over": o, "what": "bowler"}, ok))
             self.soft_eq(agg[o]["tr"], ov.get("runs"), f"over{o + 1}_runs")
+        # ---------- level 3a: which over each four / six came in, and who hit it (not which ball)
+        for e, ev in enumerate(f.get("over_events") or []):
+            o = ev["over"]
+            if o >= self.NO or ev["striker"] not in self.bix:
+                continue
+            p = self.bix[ev["striker"]]
+            gs = [g for g, (oo, _) in enumerate(self.slots) if oo == o]
+            self.soft_eq(sum(self.AND([S[g]["v"][ev["bat"]], self.eqS[g][p]], f"ev{e}_{g}") for g in gs), ev["n"],
+                         f"over{o + 1}_{ev['bat']}s_by_{ev['striker']}")
         # ---------- objective: break no fact, then the most likely runs
         like = []
         for g, (o, k) in enumerate(self.slots):
