@@ -54,8 +54,11 @@ W = 1000          # cost of one unit of a broken fact (runs, balls, ...) - much 
 
 
 class Rebuilder:
-    def __init__(self, facts, prior, extra_slots=None):
-        self.f, self.prior = facts, prior
+    def __init__(self, facts, prior, extra_slots=None, lock=False):
+        """lock=True: every fact is HARD (wickets on their exact ball and score, partnerships, figures, overs):
+        the innings is cut into pieces at the wickets inside the model. Use when the facts agree with each
+        other (tests from real ball-by-ball); if they don't, the model is INFEASIBLE - rebuild with lock=False."""
+        self.f, self.prior, self.lock = facts, prior, lock
         self.era, self.bpo = facts["era"], facts["bpo"]
         self.m = cp.CpModel()
         self.slack = []           # (name, var)
@@ -100,7 +103,7 @@ class Rebuilder:
     def soft_eq(self, expr, value, name, ub=1000):
         if value is None:
             return
-        s = self.i(0, ub, "sl_" + name)
+        s = self.i(0, 0 if self.lock else ub, "sl_" + name)
         self.m.Add(expr - value <= s)
         self.m.Add(value - expr <= s)
         self.slack.append((name, s))
@@ -337,9 +340,9 @@ class Rebuilder:
         self.fs, self.fl = {}, {}
         for d, w in enumerate(fow):
             if w.get("score") is not None:
-                self.fs[d] = self.i(0, 2000, f"sl_fow{d}_score"); self.slack.append((f"fow{d + 1}_score", self.fs[d]))
+                self.fs[d] = self.i(0, 0 if self.lock else 2000, f"sl_fow{d}_score"); self.slack.append((f"fow{d + 1}_score", self.fs[d]))
             if w.get("legal") is not None:
-                self.fl[d] = self.i(0, 2000, f"sl_fow{d}_balls"); self.slack.append((f"fow{d + 1}_balls", self.fl[d]))
+                self.fl[d] = self.i(0, 0 if self.lock else 2000, f"sl_fow{d}_balls"); self.slack.append((f"fow{d + 1}_balls", self.fl[d]))
         for g in range(T):
             d_ = S[g]
             A, Bv = self.i(0, NB - 1, f"A{g}"), self.i(0, NB - 1, f"Bv{g}")
@@ -463,6 +466,8 @@ class Rebuilder:
                     m.AddBoolOr([z.Not(), ok.Not(), self.eqS[g][self.bix[an["striker"]]]])
             if an.get("bowler") in self.wix:
                 m.AddImplication(ok, self.eqB[o][self.wix[an["bowler"]]])
+        planned = bool(f.get("overs_planned"))    # a GUESSED over plan (level 1): guidance only, never locked
+        self.plan_terms = []
         for ov in f.get("overs") or []:
             o = ov["over"]
             if o >= self.NO:
@@ -470,8 +475,17 @@ class Rebuilder:
             if ov.get("bowler") in self.wix:
                 ok = self.b(f"overbowler{o}")
                 m.AddImplication(ok, self.eqB[o][self.wix[ov["bowler"]]])
-                self.anchor_ok.append(({"over": o, "what": "bowler"}, ok))
-            self.soft_eq(agg[o]["tr"], ov.get("runs"), f"over{o + 1}_runs")
+                if planned:
+                    self.plan_terms.append(3 * (1 - ok))
+                else:
+                    self.anchor_ok.append(({"over": o, "what": "bowler"}, ok))
+            if planned:
+                if ov.get("runs") is not None:
+                    d = self.i(0, 60, f"pl_over{o}")
+                    m.Add(agg[o]["tr"] - ov["runs"] <= d); m.Add(ov["runs"] - agg[o]["tr"] <= d)
+                    self.plan_terms.append(d)
+            else:
+                self.soft_eq(agg[o]["tr"], ov.get("runs"), f"over{o + 1}_runs")
         # ---------- level 3a: which over each four / six came in, and who hit it (not which ball)
         for e, ev in enumerate(f.get("over_events") or []):
             o = ev["over"]
@@ -490,22 +504,42 @@ class Rebuilder:
                 p0 = pr.get(0, pr.get("0", 0.5)); px = pr.get(x, pr.get(str(x), 0.01))
                 like.append(int(round(100 * (math.log(p0) - math.log(px)))) * S[g]["v"][x])   # cost vs a dot
             like.append(150 * S[g]["rxp"])                                                      # byes etc. are rare
-        m.Minimize(W * sum(s for _, s in self.slack) + W * sum(1 - ok for _, ok in self.anchor_ok) + sum(like))
+        if self.lock:
+            for _, ok in self.anchor_ok:
+                m.Add(ok == 1)
+        m.Minimize(W * sum(s for _, s in self.slack) + W * sum(1 - ok for _, ok in self.anchor_ok)
+                   + (W // 4) * sum(self.plan_terms) + sum(like))
         return self
 
     # ------------------------------------------------------------------ solve and read the answer
-    def solve(self, seconds=120, workers=8):
+    def solve(self, seconds=120, workers=8, on_better=None, stop=None):
+        """seconds <= 0: no time limit (runs until the best answer is proven, or stop() says stop).
+        on_better(answer, seconds_so_far): called with every better answer found (OR-Tools only)."""
         sol = cp.CpSolver()
-        sol.parameters.max_time_in_seconds = float(seconds)
+        if seconds and seconds > 0:
+            sol.parameters.max_time_in_seconds = float(seconds)
         try:
             sol.parameters.num_workers = workers
         except Exception:
             sol.parameters.num_search_workers = workers
-        st = sol.Solve(self.m)
+        self.live = sol                 # lets another thread call self.live.StopSearch()
+        if on_better is not None and BACKEND == "ortools":
+            me, t0 = self, time.time()
+
+            class Better(cp.CpSolverSolutionCallback):
+                def on_solution_callback(cb):
+                    on_better(me._read(cb.Value, cb.BooleanValue), round(time.time() - t0))
+                    if stop and stop():
+                        cb.StopSearch()
+            st = sol.Solve(self.m, Better())
+        else:
+            st = sol.Solve(self.m)
         self.sol, self.status = sol, sol.StatusName(st)
         if self.status not in ("OPTIMAL", "FEASIBLE"):
             return None
-        V, Bo = sol.Value, sol.BooleanValue
+        return self._read(sol.Value, sol.BooleanValue)
+
+    def _read(self, V, Bo):
         out = []
         ND = len(self.f["fow"])
         for g, (o, k) in enumerate(self.slots):
@@ -533,21 +567,41 @@ class Rebuilder:
                        for an, ok in self.anchor_ok if not Bo(ok)]
         return out
 
-    def mark_forced(self, dl, seconds=5):
-        """For each estimated legal ball: is any other run value possible with no more broken facts?"""
+    def mark_forced(self, dl, seconds=2, budget=600, workers=8, log=None):
+        """PROVEN or GUESSED for every legal ball: keeping every real fact as true as in the answer (the guessed
+        over plan of level 1 does not count), could this ball have had any other runs off the bat?
+        If no other value is possible -> label 'proven'; if another is possible -> 'guessed';
+        if the check ran out of time -> 'unchecked'. Stops after `budget` seconds in all (rest 'unchecked')."""
         if BACKEND != "ortools":
             return dl
         best = sum(v for _, v in self.broken)
         self.m.Add(sum(s for _, s in self.slack) + sum(1 - ok for _, ok in self.anchor_ok) <= best)
+        try:                              # only "is another value possible?" matters now: drop the objective
+            self.m.ClearObjective()
+        except Exception:
+            try:
+                self.m.Proto().ClearField("objective")
+            except Exception:
+                pass
+        t0, n = time.time(), 0
         for x in dl:
             if x["label"] != "estimate" or not x["legal"]:
                 continue
+            if time.time() - t0 > budget:
+                x["label"] = "unchecked"; continue
             d = self.S[x["g"]]
             self.m.ClearAssumptions()
             self.m.AddAssumptions([d["v"][x["bat"]].Not(), d["act"]])
             sol = cp.CpSolver(); sol.parameters.max_time_in_seconds = seconds
-            if sol.StatusName(sol.Solve(self.m)) == "INFEASIBLE":
-                x["label"] = "forced"
+            try:
+                sol.parameters.num_workers = workers
+            except Exception:
+                pass
+            st = sol.StatusName(sol.Solve(self.m))
+            x["label"] = "proven" if st == "INFEASIBLE" else ("guessed" if st in ("OPTIMAL", "FEASIBLE") else "unchecked")
+            n += 1
+            if log and n % 50 == 0:
+                log(f"  proven/guessed check: {n} balls done ({round(time.time() - t0)} s)")
         self.m.ClearAssumptions()
         return dl
 
