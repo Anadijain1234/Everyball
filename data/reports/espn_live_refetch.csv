@@ -1,0 +1,184 @@
+format,number,date,teams,match_id,result,balls,innings check,note
+ODI,3174,2011-08-09,Afghanistan v Canada,O3174,"partial, re-fetch no better",238,"inn1: 111/111 balls, 149/150 runs PARTIAL; inn2: 120/120 balls, 133/133 runs",before: 231 legal balls
+ODI,3157,2011-05-28,Ireland v Pakistan,O3157,"partial, re-fetch no better",294,"inn1: 120/120 balls, 95/96 runs PARTIAL; inn2: 165/165 balls, 94/97 runs PARTIAL",before: 285 legal balls
+ODI,1565,2000-02-19,New Zealand v Australia,O1565,"partial, re-fetch no better",345,"inn1: 182/181 balls, 122/122 runs PARTIAL; inn2: 148/148 balls, 125/123 runs PARTIAL",before: 330 legal balls
+ODI,2118,2004-04-18,West Indies v England,O2118,"partial, re-fetch no better",381,"inn1: 180/180 balls, 156/156 runs; inn2: 176/177 balls, 157/157 runs PARTIAL",before: 356 legal balls
+ODI,2171,2004-09-12,Bangladesh v South Africa,O2171,"partial, re-fetch no better",305,"inn1: 189/189 balls, 93/93 runs; inn2: 106/107 balls, 94/94 runs PARTIAL",before: 295 legal balls
+ODI,3029,2010-07-20,Bangladesh v Netherlands,O3029,"partial, re-fetch no better",359,"inn1: 180/180 balls, 198/199 runs PARTIAL; inn2: 173/173 balls, 200/200 runs",before: 353 legal balls
+ODI,2107,2004-02-29,New Zealand v South Africa,O2107,"partial, re-fetch no better",384,"inn1: 198/198 balls, 192/193 runs PARTIAL; inn2: 174/174 balls, 175/175 runs",before: 372 legal balls
+ODI,2731,2008-07-03,Scotland v New Zealand,O2731,"partial, re-fetch no better",291,"inn1: 199/200 balls, 101/101 runs PARTIAL; inn2: 88/88 balls, 102/102 runs",before: 287 legal balls
+ODI,3975,2018-02-13,Zimbabwe v Afghanistan,O3975,"partial, re-fetch no better",380,"inn1: 207/207 balls, 154/154 runs; inn2: 166/165 balls, 158/158 runs PARTIAL",before: 373 legal balls
+ODI,2120,2004-04-22,Zimbabwe v Sri Lanka,O2120,"partial, re-fetch no better",363,"inn1: 219/220 balls, 136/136 runs PARTIAL; inn2: 125/125 balls, 139/139 runs",before: 344 legal balls
+ODI,3417,2013-10-02,Kenya v Afghanistan,O3417,"partial, re-fetch no better",346,"inn1: 228/227 balls, 86/89 runs PARTIAL; inn2: 107/107 balls, 95/95 runs",before: 335 legal balls
+ODI,2279,2005-09-04,Bangladesh v Sri Lanka,O2279,"partial, re-fetch no better",382,"inn1: 231/230 balls, 109/108 runs PARTIAL; inn2: 129/128 balls, 106/106 runs PARTIAL",before: 360 legal balls
+ODI,1485,1999-08-22,Australia v Sri Lanka,O1485,"partial, re-fetch no better",501,"inn1: 258/258 balls, 206/205 runs PARTIAL; inn2: 226/226 balls, 160/160 runs",before: 484 legal balls
+ODI,2844,2009-04-19,Kenya v Netherlands,O2844,"partial, re-fetch no better",467,"inn1: 259/259 balls, 179/179 runs; inn2: 193/193 balls, 181/183 runs PARTIAL",before: 452 legal balls
+ODI,3418,2013-10-04,Kenya v Afghanistan,O3418,"partial, re-fetch no better",395,"inn1: 261/261 balls, 93/93 runs; inn2: 125/125 balls, 98/96 runs PARTIAL",before: 386 legal balls
+ODI,2272,2005-08-24,New Zealand v Zimbabwe,O2272,"partial, re-fetch no better",541,"inn1: 264/264 balls, 396/397 runs PARTIAL; inn2: 257/258 balls, 205/205 runs PARTIAL",before: 521 legal balls
+ODI,2860,2009-07-11,Kenya v Ireland,O2860,"partial, re-fetch no better",406,"inn1: 270/271 balls, 174/175 runs PARTIAL; inn2: 126/126 balls, 104/104 runs",before: 396 legal balls
+ODI,4003,2018-03-20,United Arab Emirates v Afghanistan,O4003,"partial, re-fetch no better",475,"inn1: 258/258 balls, 177/177 runs; inn2: 205/207 balls, 177/178 runs PARTIAL",before: 463 legal balls
+ODI,3173,2011-08-07,Canada v Afghanistan,O3173,"partial, re-fetch no better",530,"inn1: 269/269 balls, 230/230 runs; inn2: 247/247 balls, 212/213 runs PARTIAL",before: 516 legal balls
+ODI,1554,2000-02-02,Pakistan v Australia,O1554,"partial, re-fetch no better",551,"inn1: 284/284 balls, 153/154 runs PARTIAL; inn2: 256/256 balls, 155/155 runs",before: 540 legal balls
+ODI,2451,2006-11-28,Bermuda v Netherlands,O2451,"partial, re-fetch no better",517,"inn1: 276/276 balls, 177/177 runs; inn2: 228/227 balls, 180/180 runs PARTIAL",before: 504 legal balls
+ODI,2743,2008-08-18,Scotland v England,O2743,"partial, re-fetch no better",286,"inn1: 264/264 balls, 153/156 runs PARTIAL; inn2: 15/15 balls, 10/10 runs",before: 279 legal balls
+ODI,1724,2001-06-17,England v Pakistan,O1724,"partial, re-fetch no better",538,"inn1: 272/272 balls, 156/156 runs; inn2: 239/239 balls, 154/153 runs PARTIAL",before: 511 legal balls
+ODI,1571,2000-03-03,Australia v New Zealand,O1571,"partial, re-fetch no better",537,"inn1: 278/278 balls, 190/191 runs PARTIAL; inn2: 245/246 balls, 194/194 runs PARTIAL",before: 523 legal balls
+ODI,2001,2003-04-11,India v Bangladesh,O2001,"partial, re-fetch no better",480,"inn1: 297/297 balls, 276/276 runs; inn2: 164/165 balls, 76/76 runs PARTIAL",before: 461 legal balls
+ODI,729,1992-03-04,India v Pakistan,O0729,"partial, re-fetch no better",616,"inn1: 293/294 balls, 219/216 runs PARTIAL; inn2: 289/289 balls, 177/173 runs PARTIAL",before: 582 legal balls
+ODI,3053,2010-10-09,Kenya v Afghanistan,O3053,"partial, re-fetch no better",407,"inn1: 240/246 balls, 133/139 runs PARTIAL; inn2: 162/162 balls, 143/143 runs",before: 402 legal balls
+ODI,3019,2010-07-09,Afghanistan v Scotland,O3019,"partial, re-fetch no better",566,"inn1: 283/283 balls, 141/141 runs; inn2: 263/263 balls, 140/142 runs PARTIAL",before: 546 legal balls
+ODI,3381,2013-07-02,Kenya v Scotland,O3381,"partial, re-fetch no better",492,"inn1: 279/279 balls, 182/183 runs PARTIAL; inn2: 202/202 balls, 139/139 runs",before: 481 legal balls
+ODI,2752,2008-08-24,Canada v West Indies,O2752,"partial, re-fetch no better",465,"inn1: 282/281 balls, 179/179 runs PARTIAL; inn2: 165/165 balls, 183/181 runs PARTIAL",before: 447 legal balls
+ODI,2307,2005-12-19,Pakistan v England,O2307,"partial, re-fetch no better",590,"inn1: 285/284 balls, 209/210 runs PARTIAL; inn2: 289/289 balls, 197/197 runs",before: 574 legal balls
+ODI,2002,2003-04-13,India v South Africa,O2002,"partial, re-fetch no better",529,"inn1: 301/300 balls, 308/307 runs PARTIAL; inn2: 209/209 balls, 154/154 runs",before: 510 legal balls
+ODI,3021,2010-07-09,Ireland v Netherlands,O3021,"partial, re-fetch no better",535,"inn1: 290/290 balls, 176/177 runs PARTIAL; inn2: 233/233 balls, 139/138 runs PARTIAL",before: 523 legal balls
+ODI,3413,2013-09-08,Scotland v Ireland,O3413,"partial, re-fetch no better",502,"inn1: 297/297 balls, 164/165 runs PARTIAL; inn2: 198/198 balls, 165/166 runs PARTIAL",before: 495 legal balls
+ODI,2305,2005-12-12,England v Pakistan,O2305,"partial, re-fetch no better",573,"inn1: 292/292 balls, 230/230 runs; inn2: 266/264 balls, 229/231 runs PARTIAL",before: 558 legal balls
+ODI,3487,2014-05-01,Hong Kong v Afghanistan,O3487,"partial, re-fetch no better",569,"inn1: 297/297 balls, 216/216 runs; inn2: 259/259 balls, 219/218 runs PARTIAL",before: 556 legal balls
+ODI,3541,2014-11-08,Hong Kong v Papua New Guinea,O3541,"partial, re-fetch no better",551,"inn1: 291/291 balls, 202/202 runs; inn2: 240/234 balls, 202/203 runs PARTIAL",before: 531 legal balls
+ODI,2064,2003-11-18,Australia v India,O2064,"partial, re-fetch no better",563,"inn1: 300/300 balls, 235/235 runs; inn2: 251/251 balls, 197/198 runs PARTIAL",before: 551 legal balls
+ODI,3023,2010-07-10,Scotland v Ireland,O3023,"partial, re-fetch no better",573,"inn1: 293/293 balls, 232/232 runs; inn2: 268/269 balls, 232/233 runs PARTIAL",before: 561 legal balls
+ODI,3729,2016-01-26,Hong Kong v Scotland,O3729,"partial, re-fetch no better",541,"inn1: 295/295 balls, 258/259 runs PARTIAL; inn2: 235/235 balls, 150/150 runs",before: 530 legal balls
+ODI,1487,1999-08-25,India v Sri Lanka,O1487,"partial, re-fetch no better",608,"inn1: 299/300 balls, 205/205 runs PARTIAL; inn2: 280/280 balls, 205/206 runs PARTIAL",before: 579 legal balls
+ODI,1082,1996-03-14,Australia v West Indies,O1082,"partial, re-fetch no better",613,"inn1: 301/300 balls, 210/207 runs PARTIAL; inn2: 298/297 balls, 202/202 runs PARTIAL",before: 599 legal balls
+ODI,2252,2005-06-21,England v Bangladesh,O2252,"partial, re-fetch no better",600,"inn1: 300/300 balls, 391/391 runs; inn2: 271/272 balls, 223/223 runs PARTIAL",before: 571 legal balls
+ODI,2148,2004-07-18,Sri Lanka v India,O2148,"partial, re-fetch no better",636,"inn1: 300/300 balls, 282/282 runs; inn2: 300/300 balls, 269/270 runs PARTIAL",before: 600 legal balls
+ODI,1078,1996-03-09,India v Pakistan,O1078,"partial, re-fetch no better",614,"inn1: 299/300 balls, 287/287 runs PARTIAL; inn2: 294/294 balls, 248/248 runs",before: 593 legal balls
+ODI,2100,2004-02-17,South Africa v New Zealand,O2100,"partial, re-fetch no better",589,"inn1: 300/300 balls, 253/253 runs; inn2: 272/271 balls, 255/255 runs PARTIAL",before: 572 legal balls
+ODI,2201,2004-12-26,Bangladesh v India,O2201,"partial, re-fetch no better",605,"inn1: 300/300 balls, 229/229 runs; inn2: 286/287 balls, 214/214 runs PARTIAL",before: 586 legal balls
+ODI,2235,2005-04-02,India v Pakistan,O2235,"partial, re-fetch no better",590,"inn1: 300/300 balls, 281/281 runs; inn2: 271/272 balls, 194/194 runs PARTIAL",before: 571 legal balls
+ODI,3542,2014-11-09,Hong Kong v Papua New Guinea,O3542,"partial, re-fetch no better",616,"inn1: 298/297 balls, 262/261 runs PARTIAL; inn2: 296/296 balls, 264/264 runs",before: 594 legal balls
+ODI,1810,2002-02-17,West Indies v Pakistan,O1810,"partial, re-fetch no better",558,"inn1: 299/300 balls, 260/260 runs PARTIAL; inn2: 242/242 balls, 150/150 runs",before: 541 legal balls
+ODI,1490,1999-08-29,India v Sri Lanka,O1490,"partial, re-fetch no better",574,"inn1: 300/300 balls, 295/296 runs PARTIAL; inn2: 252/252 balls, 247/247 runs",before: 552 legal balls
+ODI,2187,2004-10-14,Sri Lanka v Pakistan,O2187,"partial, re-fetch no better",623,"inn1: 300/300 balls, 293/293 runs; inn2: 293/293 balls, 298/297 runs PARTIAL",before: 593 legal balls
+ODI,2033,2003-07-05,Zimbabwe v South Africa,O2033,"partial, re-fetch no better",520,"inn1: 299/300 balls, 174/174 runs PARTIAL; inn2: 206/206 balls, 175/175 runs",before: 505 legal balls
+ODI,3762,2016-07-14,Afghanistan v Ireland,O3762,"partial, re-fetch no better",597,"inn1: 295/295 balls, 237/236 runs PARTIAL; inn2: 285/285 balls, 237/237 runs",before: 580 legal balls
+ODI,750,1992-03-21,New Zealand v Pakistan,O0750,"partial, re-fetch no better",608,"inn1: 300/300 balls, 262/262 runs; inn2: 294/294 balls, 265/264 runs PARTIAL",before: 594 legal balls
+ODI,1570,2000-03-01,New Zealand v Australia,O1570,"partial, re-fetch no better",587,"inn1: 300/300 balls, 243/243 runs; inn2: 275/274 balls, 247/245 runs PARTIAL",before: 575 legal balls
+ODI,2278,2005-09-02,New Zealand v India,O2278,"partial, re-fetch no better",607,"inn1: 302/300 balls, 276/278 runs PARTIAL; inn2: 285/285 balls, 278/279 runs PARTIAL",before: 587 legal balls
+ODI,2228,2005-02-22,Australia v New Zealand,O2228,"partial, re-fetch no better",563,"inn1: 301/300 balls, 314/314 runs PARTIAL; inn2: 244/244 balls, 208/208 runs",before: 545 legal balls
+ODI,1391,1999-01-23,England v Sri Lanka,O1391,"partial, re-fetch no better",610,"inn1: 300/300 balls, 302/302 runs; inn2: 299/298 balls, 303/303 runs PARTIAL",before: 599 legal balls
+ODI,2110,2004-03-10,Bangladesh v Zimbabwe,O2110,"partial, re-fetch no better",623,"inn1: 300/300 balls, 235/238 runs PARTIAL; inn2: 300/300 balls, 232/230 runs PARTIAL",before: 600 legal balls
+ODI,1129,1996-10-21,Australia v India,O1129,"partial, re-fetch no better",613,"inn1: 300/300 balls, 219/215 runs PARTIAL; inn2: 293/293 balls, 219/216 runs PARTIAL",before: 593 legal balls
+ODI,3761,2016-07-12,Afghanistan v Ireland,O3761,"partial, re-fetch no better",603,"inn1: 296/296 balls, 250/250 runs; inn2: 290/290 balls, 210/211 runs PARTIAL",before: 586 legal balls
+ODI,2290,2005-10-31,Sri Lanka v India,O2290,"partial, re-fetch no better",596,"inn1: 299/300 balls, 298/298 runs PARTIAL; inn2: 277/277 balls, 303/303 runs",before: 576 legal balls
+ODI,2012,2003-05-18,Sri Lanka v Pakistan,O2012,"partial, re-fetch no better",621,"inn1: 299/299 balls, 170/172 runs PARTIAL; inn2: 286/286 balls, 160/160 runs",before: 585 legal balls
+ODI,2876,2009-08-22,Ireland v Scotland,O2876,"partial, re-fetch no better",557,"inn1: 300/300 balls, 204/205 runs PARTIAL; inn2: 243/243 balls, 108/109 runs PARTIAL",before: 543 legal balls
+ODI,2244,2005-05-14,West Indies v South Africa,O2244,"partial, re-fetch no better",596,"inn1: 299/300 balls, 231/231 runs PARTIAL; inn2: 281/281 balls, 232/232 runs",before: 580 legal balls
+ODI,2268,2005-08-09,Sri Lanka v India,O2268,"partial, re-fetch no better",612,"inn1: 300/300 balls, 281/281 runs; inn2: 300/300 balls, 262/263 runs PARTIAL",before: 600 legal balls
+ODI,1137,1996-11-03,India v Australia,O1137,"partial, re-fetch no better",609,"inn1: 299/300 balls, 291/289 runs PARTIAL; inn2: 295/295 balls, 284/284 runs",before: 594 legal balls
+ODI,3410,2013-09-03,Australia v Scotland,O3410,"partial, re-fetch no better",573,"inn1: 300/300 balls, 361/362 runs PARTIAL; inn2: 262/263 balls, 162/162 runs PARTIAL",before: 562 legal balls
+ODI,2387,2006-06-27,Scotland v Pakistan,O2387,"partial, re-fetch no better",572,"inn1: 299/300 balls, 203/203 runs PARTIAL; inn2: 263/263 balls, 205/205 runs",before: 562 legal balls
+ODI,1569,2000-02-26,Australia v New Zealand,O1569,"partial, re-fetch no better",610,"inn1: 299/300 balls, 350/349 runs PARTIAL; inn2: 300/300 balls, 301/301 runs",before: 599 legal balls
+ODI,2083,2004-01-17,New Zealand v Pakistan,O2083,"partial, re-fetch no better",619,"inn1: 300/300 balls, 307/307 runs; inn2: 298/297 balls, 303/303 runs PARTIAL",before: 598 legal balls
+ODI,2111,2004-03-12,Zimbabwe v Bangladesh,O2111,"partial, re-fetch no better",632,"inn1: 300/300 balls, 242/242 runs; inn2: 296/296 balls, 227/228 runs PARTIAL",before: 596 legal balls
+ODI,2596,2007-07-03,Netherlands v Canada,O2596,"partial, re-fetch no better",578,"inn1: 300/300 balls, 288/289 runs PARTIAL; inn2: 256/258 balls, 174/172 runs PARTIAL",before: 556 legal balls
+ODI,3988,2018-03-06,Zimbabwe v Afghanistan,O3988,"partial, re-fetch no better",556,"inn1: 255/258 balls, 189/196 runs PARTIAL; inn2: 291/297 balls, 190/194 runs PARTIAL",before: 546 legal balls
+ODI,3748,2016-06-16,Sri Lanka v Ireland,O3748,"partial, re-fetch no better",553,"inn1: 300/300 balls, 301/303 runs PARTIAL; inn2: 244/244 balls, 217/216 runs PARTIAL",before: 544 legal balls
+ODI,2090,2004-01-28,South Africa v West Indies,O2090,"partial, re-fetch no better",572,"inn1: 300/300 balls, 179/179 runs; inn2: 255/256 balls, 163/163 runs PARTIAL",before: 555 legal balls
+ODI,2247,2005-05-21,Pakistan v West Indies,O2247,"partial, re-fetch no better",621,"inn1: 301/300 balls, 258/258 runs PARTIAL; inn2: 290/290 balls, 218/218 runs",before: 591 legal balls
+ODI,1327,1998-04-24,Australia v India,O1327,"partial, re-fetch no better",604,"inn1: 300/300 balls, 274/272 runs PARTIAL; inn2: 291/291 balls, 276/275 runs PARTIAL",before: 591 legal balls
+ODI,2162,2004-08-28,Australia v Pakistan,O2162,"partial, re-fetch no better",595,"inn1: 300/300 balls, 192/192 runs; inn2: 282/283 balls, 175/175 runs PARTIAL",before: 582 legal balls
+ODI,2213,2005-01-28,West Indies v Pakistan,O2213,"partial, re-fetch no better",627,"inn1: 301/300 balls, 339/339 runs PARTIAL; inn2: 300/300 balls, 281/281 runs",before: 601 legal balls
+ODI,2251,2005-06-19,Australia v England,O2251,"partial, re-fetch no better",613,"inn1: 300/300 balls, 252/252 runs; inn2: 286/285 balls, 253/253 runs PARTIAL",before: 586 legal balls
+ODI,2503,2007-02-04,Ireland v Canada,O2503,"partial, re-fetch no better",626,"inn1: 300/300 balls, 306/308 runs PARTIAL; inn2: 298/298 balls, 312/312 runs",before: 598 legal balls
+ODI,2746,2008-08-20,Bermuda v West Indies,O2746,"partial, re-fetch no better",511,"inn1: 300/300 balls, 155/158 runs PARTIAL; inn2: 191/191 balls, 159/159 runs",before: 491 legal balls
+ODI,2074,2003-12-07,Pakistan v New Zealand,O2074,"partial, re-fetch no better",621,"inn1: 300/300 balls, 277/277 runs; inn2: 299/300 balls, 228/228 runs PARTIAL",before: 599 legal balls
+ODI,2881,2009-09-01,Netherlands v Afghanistan,O2881,"partial, re-fetch no better",597,"inn1: 300/300 balls, 232/231 runs PARTIAL; inn2: 280/280 balls, 232/232 runs",before: 580 legal balls
+ODI,1568,2000-02-23,Australia v New Zealand,O1568,"partial, re-fetch no better",585,"inn1: 300/300 balls, 310/310 runs; inn2: 270/270 balls, 259/260 runs PARTIAL",before: 570 legal balls
+ODI,2585,2007-05-20,Pakistan v Sri Lanka,O2585,"partial, re-fetch no better",562,"inn1: 300/300 balls, 314/313 runs PARTIAL; inn2: 239/239 balls, 215/215 runs",before: 539 legal balls
+ODI,2857,2009-07-08,Canada v Scotland,O2857,"partial, re-fetch no better",604,"inn1: 299/300 balls, 249/250 runs PARTIAL; inn2: 284/284 balls, 253/253 runs",before: 583 legal balls
+ODI,2144,2004-07-16,India v United Arab Emirates,O2144,"partial, re-fetch no better",527,"inn1: 300/300 balls, 260/260 runs; inn2: 209/210 balls, 144/144 runs PARTIAL",before: 509 legal balls
+ODI,2789,2009-01-10,New Zealand v West Indies,O2789,"partial, re-fetch no better",374,"inn1: 300/300 balls, 276/275 runs PARTIAL; inn2: 63/63 balls, 64/64 runs",before: 363 legal balls
+ODI,2312,2006-01-08,Sri Lanka v New Zealand,O2312,"partial, re-fetch no better",610,"inn1: 301/300 balls, 272/273 runs PARTIAL; inn2: 291/290 balls, 252/253 runs PARTIAL",before: 592 legal balls
+ODI,2767,2008-10-18,Ireland v Kenya,O2767,"partial, re-fetch no better",562,"inn1: 281/282 balls, 285/285 runs PARTIAL; inn2: 270/264 balls, 202/199 runs PARTIAL",before: 551 legal balls
+ODI,3172,2011-07-13,Sri Lanka v Scotland,O3172,"partial, re-fetch no better",511,"inn1: 300/300 balls, 283/284 runs PARTIAL; inn2: 196/196 balls, 104/101 runs PARTIAL",before: 496 legal balls
+ODI,2764,2008-10-11,New Zealand v Bangladesh,O2764,"partial, re-fetch no better",559,"inn1: 300/300 balls, 210/212 runs PARTIAL; inn2: 255/256 balls, 137/137 runs PARTIAL",before: 555 legal balls
+ODI,3050,2010-09-30,Ireland v Zimbabwe,O3050,"partial, re-fetch no better",597,"inn1: 298/298 balls, 244/244 runs; inn2: 286/286 balls, 223/224 runs PARTIAL",before: 584 legal balls
+ODI,2480,2007-01-21,India v West Indies,O2480,"partial, re-fetch no better",621,"inn1: 300/300 balls, 337/338 runs PARTIAL; inn2: 300/300 balls, 324/324 runs",before: 600 legal balls
+ODI,3048,2010-09-26,Ireland v Zimbabwe,O3048,"partial, re-fetch no better",590,"inn1: 284/285 balls, 202/200 runs PARTIAL; inn2: 300/300 balls, 206/206 runs",before: 584 legal balls
+ODI,2076,2004-01-07,New Zealand v Pakistan,O2076,"partial, re-fetch no better",610,"inn1: 301/300 balls, 235/235 runs PARTIAL; inn2: 282/282 balls, 237/236 runs PARTIAL",before: 583 legal balls
+ODI,2879,2009-08-28,Australia v Scotland,O2879,"partial, re-fetch no better",550,"inn1: 300/300 balls, 343/345 runs PARTIAL; inn2: 237/237 balls, 156/156 runs",before: 537 legal balls
+ODI,2313,2006-01-13,Australia v Sri Lanka,O2313,"partial, re-fetch no better",616,"inn1: 301/300 balls, 317/318 runs PARTIAL; inn2: 300/300 balls, 202/202 runs",before: 601 legal balls
+ODI,2763,2008-10-09,New Zealand v Bangladesh,O2763,"partial, re-fetch no better",582,"inn1: 301/300 balls, 201/201 runs PARTIAL; inn2: 273/273 balls, 203/202 runs PARTIAL",before: 574 legal balls
+ODI,2584,2007-05-18,Sri Lanka v Pakistan,O2584,"partial, re-fetch no better",569,"inn1: 301/300 balls, 235/235 runs PARTIAL; inn2: 252/252 balls, 239/239 runs",before: 553 legal balls
+ODI,2394,2006-08-02,Bangladesh v Zimbabwe,O2394,"partial, re-fetch no better",625,"inn1: 293/294 balls, 236/236 runs PARTIAL; inn2: 300/300 balls, 238/238 runs",before: 593 legal balls
+ODI,3027,2010-07-15,Bangladesh v Ireland,O3027,"partial, re-fetch no better",586,"inn1: 300/300 balls, 234/234 runs; inn2: 270/270 balls, 236/235 runs PARTIAL",before: 570 legal balls
+ODI,2072,2003-12-03,Pakistan v New Zealand,O2072,"partial, re-fetch no better",619,"inn1: 300/300 balls, 314/314 runs; inn2: 298/300 balls, 263/263 runs PARTIAL",before: 598 legal balls
+ODI,2693,2008-03-18,Ireland v Bangladesh,O2693,"partial, re-fetch no better",550,"inn1: 300/300 balls, 183/185 runs PARTIAL; inn2: 239/239 balls, 186/186 runs",before: 539 legal balls
+ODI,3562,2014-12-04,United Arab Emirates v Afghanistan,O3562,"partial, re-fetch no better",613,"inn1: 300/300 balls, 256/258 runs PARTIAL; inn2: 297/297 balls, 228/228 runs",before: 597 legal balls
+ODI,2807,2009-01-29,Zimbabwe v Kenya,O2807,"partial, re-fetch no better",598,"inn1: 300/300 balls, 350/351 runs PARTIAL; inn2: 271/271 balls, 200/200 runs",before: 571 legal balls
+ODI,3034,2010-08-16,Ireland v Netherlands,O3034,"partial, re-fetch no better",581,"inn1: 300/300 balls, 272/275 runs PARTIAL; inn2: 270/271 balls, 205/205 runs PARTIAL",before: 570 legal balls
+ODI,2156,2004-08-20,South Africa v Sri Lanka,O2156,"partial, re-fetch no better",609,"inn1: 300/300 balls, 263/263 runs; inn2: 293/294 balls, 265/265 runs PARTIAL",before: 593 legal balls
+ODI,2204,2005-01-14,Australia v West Indies,O2204,"partial, re-fetch no better",596,"inn1: 301/300 balls, 301/301 runs PARTIAL; inn2: 278/278 balls, 185/185 runs",before: 579 legal balls
+ODI,2997,2010-06-19,Scotland v England,O2997,"partial, re-fetch no better",510,"inn1: 299/299 balls, 212/211 runs PARTIAL; inn2: 202/202 balls, 213/213 runs",before: 501 legal balls
+ODI,2880,2009-08-30,Netherlands v Afghanistan,O2880,"partial, re-fetch no better",609,"inn1: 282/282 balls, 188/188 runs; inn2: 299/299 balls, 172/180 runs PARTIAL",before: 581 legal balls
+ODI,2099,2004-02-13,New Zealand v South Africa,O2099,"partial, re-fetch no better",609,"inn1: 300/300 balls, 225/225 runs; inn2: 299/298 balls, 226/226 runs PARTIAL",before: 599 legal balls
+ODI,3503,2014-07-18,Afghanistan v Zimbabwe,O3503,"partial, re-fetch no better",588,"inn1: 300/300 balls, 221/223 runs PARTIAL; inn2: 272/272 balls, 227/227 runs",before: 572 legal balls
+ODI,2604,2007-07-15,Ireland v Scotland,O2604,"partial, re-fetch no better",598,"inn1: 300/300 balls, 222/222 runs; inn2: 295/297 balls, 198/199 runs PARTIAL",before: 595 legal balls
+ODI,2370,2006-05-07,West Indies v Zimbabwe,O2370,"partial, re-fetch no better",632,"inn1: 300/300 balls, 333/333 runs; inn2: 299/300 balls, 251/251 runs PARTIAL",before: 599 legal balls
+ODI,3576,2015-01-14,Scotland v Afghanistan,O3576,"partial, re-fetch no better",415,"inn1: 296/300 balls, 212/213 runs PARTIAL; inn2: 111/111 balls, 63/63 runs",before: 407 legal balls
+ODI,2805,2009-01-27,Zimbabwe v Kenya,O2805,"partial, re-fetch no better",590,"inn1: 301/300 balls, 305/306 runs PARTIAL; inn2: 278/278 balls, 197/197 runs",before: 579 legal balls
+ODI,3008,2010-07-03,Ireland v Afghanistan,O3008,"partial, re-fetch no better",599,"inn1: 300/300 balls, 237/237 runs; inn2: 283/283 balls, 200/198 runs PARTIAL",before: 583 legal balls
+ODI,2992,2010-06-15,Scotland v Netherlands,O2992,"partial, re-fetch no better",606,"inn1: 296/300 balls, 228/235 runs PARTIAL; inn2: 297/297 balls, 235/236 runs PARTIAL",before: 593 legal balls
+ODI,2243,2005-05-11,South Africa v West Indies,O2243,"partial, re-fetch no better",620,"inn1: 300/300 balls, 284/284 runs; inn2: 300/299 balls, 283/283 runs PARTIAL",before: 600 legal balls
+ODI,2912,2009-10-18,Zimbabwe v Kenya,O2912,"partial, re-fetch no better",555,"inn1: 300/300 balls, 329/329 runs; inn2: 236/237 balls, 187/187 runs PARTIAL",before: 536 legal balls
+ODI,2729,2008-07-02,Ireland v Scotland,O2729,"partial, re-fetch no better",592,"inn1: 300/300 balls, 207/210 runs PARTIAL; inn2: 284/285 balls, 211/211 runs PARTIAL",before: 584 legal balls
+ODI,3379,2013-06-30,Scotland v Kenya,O3379,"partial, re-fetch no better",608,"inn1: 300/300 balls, 240/242 runs PARTIAL; inn2: 295/295 balls, 231/230 runs PARTIAL",before: 595 legal balls
+ODI,3164,2011-06-28,Scotland v Netherlands,O3164,"partial, re-fetch no better",610,"inn1: 300/300 balls, 255/255 runs; inn2: 294/294 balls, 238/240 runs PARTIAL",before: 594 legal balls
+ODI,3007,2010-07-01,Netherlands v Scotland,O3007,"partial, re-fetch no better",615,"inn1: 300/300 balls, 229/234 runs PARTIAL; inn2: 299/299 balls, 235/235 runs",before: 599 legal balls
+ODI,2744,2008-08-18,Canada v Bermuda,O2744,"partial, re-fetch no better",621,"inn1: 300/300 balls, 259/260 runs PARTIAL; inn2: 300/300 balls, 233/235 runs PARTIAL",before: 600 legal balls
+ODI,2908,2009-10-12,Zimbabwe v Kenya,O2908,"partial, re-fetch no better",515,"inn1: 198/300 balls, 153/313 runs PARTIAL; inn2: 299/299 balls, 222/222 runs",before: 497 legal balls
+ODI,3983,2018-03-04,Afghanistan v Scotland,O3983,"partial, re-fetch no better",591,"inn1: 298/298 balls, 254/255 runs PARTIAL; inn2: 284/284 balls, 256/256 runs",before: 582 legal balls
+ODI,2695,2008-03-22,Bangladesh v Ireland,O2695,"partial, re-fetch no better",585,"inn1: 300/300 balls, 292/293 runs PARTIAL; inn2: 273/273 balls, 213/214 runs PARTIAL",before: 573 legal balls
+ODI,3359,2013-05-31,South Africa v Netherlands,O3359,"partial, re-fetch no better",619,"inn1: 300/300 balls, 339/341 runs PARTIAL; inn2: 300/300 balls, 257/258 runs PARTIAL",before: 600 legal balls
+ODI,2768,2008-10-19,Kenya v Zimbabwe,O2768,"partial, re-fetch no better",546,"inn1: 299/300 balls, 285/285 runs PARTIAL; inn2: 229/229 balls, 188/190 runs PARTIAL",before: 528 legal balls
+ODI,3017,2010-07-07,Netherlands v Afghanistan,O3017,"partial, re-fetch no better",564,"inn1: 300/300 balls, 203/202 runs PARTIAL; inn2: 255/255 balls, 205/203 runs PARTIAL",before: 555 legal balls
+ODI,2303,2005-12-10,Australia v New Zealand,O2303,"partial, re-fetch no better",613,"inn1: 302/300 balls, 329/331 runs PARTIAL; inn2: 296/294 balls, 332/332 runs PARTIAL",before: 598 legal balls
+ODI,2533,2007-03-14,Canada v Kenya,O2533,"partial, re-fetch no better",589,"inn1: 300/300 balls, 199/199 runs; inn2: 260/260 balls, 198/203 runs PARTIAL",before: 560 legal balls
+ODI,3005,2010-07-01,Canada v Afghanistan,O3005,"partial, re-fetch no better",612,"inn1: 300/300 balls, 257/257 runs; inn2: 292/292 balls, 256/258 runs PARTIAL",before: 592 legal balls
+ODI,3342,2013-03-08,Scotland v Afghanistan,O3342,"partial, re-fetch no better",616,"inn1: 300/300 balls, 257/259 runs PARTIAL; inn2: 292/292 balls, 263/261 runs PARTIAL",before: 592 legal balls
+ODI,3842,2017-02-26,Afghanistan v Zimbabwe,O3842,"partial, re-fetch no better",393,"inn1: 300/300 balls, 253/253 runs; inn2: 82/83 balls, 54/54 runs PARTIAL",before: 382 legal balls
+ODI,3024,2010-07-10,Netherlands v Afghanistan,O3024,"partial, re-fetch no better",588,"inn1: 300/300 balls, 218/218 runs; inn2: 276/276 balls, 220/219 runs PARTIAL",before: 576 legal balls
+ODI,3009,2010-07-03,Scotland v Canada,O3009,"partial, re-fetch no better",468,"inn1: 300/300 balls, 234/236 runs PARTIAL; inn2: 156/156 balls, 126/126 runs",before: 456 legal balls
+ODI,3171,2011-07-12,Ireland v Scotland,O3171,"partial, re-fetch no better",603,"inn1: 300/300 balls, 319/320 runs PARTIAL; inn2: 291/291 balls, 323/323 runs",before: 591 legal balls
+ODI,2978,2010-04-15,Ireland v West Indies,O2978,"partial, re-fetch no better",577,"inn1: 300/300 balls, 219/219 runs; inn2: 259/264 balls, 211/213 runs PARTIAL",before: 559 legal balls
+ODI,3386,2013-07-09,Ireland v Netherlands,O3386,"partial, re-fetch no better",611,"inn1: 300/300 balls, 269/268 runs PARTIAL; inn2: 300/300 balls, 268/268 runs",before: 600 legal balls
+ODI,2765,2008-10-14,New Zealand v Bangladesh,O2765,"partial, re-fetch no better",603,"inn1: 297/300 balls, 245/249 runs PARTIAL; inn2: 299/300 balls, 170/170 runs PARTIAL",before: 596 legal balls
+ODI,3012,2010-07-05,Kenya v Afghanistan,O3012,"partial, re-fetch no better",603,"inn1: 293/300 balls, 224/233 runs PARTIAL; inn2: 299/300 balls, 233/234 runs PARTIAL",before: 592 legal balls
+ODI,2835,2009-04-06,Bermuda v Kenya,O2835,"partial, re-fetch no better",581,"inn1: 300/300 balls, 259/259 runs; inn2: 264/270 balls, 254/260 runs PARTIAL",before: 564 legal balls
+ODI,3934,2017-11-25,Papua New Guinea v Scotland,O3934,"partial, re-fetch no better",589,"inn1: 300/300 balls, 191/192 runs PARTIAL; inn2: 278/278 balls, 196/196 runs",before: 578 legal balls
+ODI,3764,2016-07-19,Ireland v Afghanistan,O3764,"partial, re-fetch no better",622,"inn1: 300/300 balls, 265/265 runs; inn2: 300/300 balls, 254/253 runs PARTIAL",before: 600 legal balls
+ODI,2837,2009-04-08,Netherlands v Bermuda,O2837,"partial, re-fetch no better",616,"inn1: 301/300 balls, 304/304 runs PARTIAL; inn2: 300/300 balls, 241/241 runs",before: 601 legal balls
+ODI,3049,2010-09-28,Ireland v Zimbabwe,O3049,"partial, re-fetch no better",604,"inn1: 300/300 balls, 239/238 runs PARTIAL; inn2: 294/293 balls, 239/239 runs PARTIAL",before: 594 legal balls
+ODI,3345,2013-03-13,Canada v Kenya,O3345,"partial, re-fetch no better",610,"inn1: 300/300 balls, 252/253 runs PARTIAL; inn2: 288/288 balls, 253/254 runs PARTIAL",before: 588 legal balls
+ODI,2858,2009-07-09,Kenya v Ireland,O2858,"partial, re-fetch no better",607,"inn1: 299/300 balls, 214/214 runs PARTIAL; inn2: 292/293 balls, 215/215 runs PARTIAL",before: 591 legal balls
+ODI,3990,2018-03-08,Hong Kong v Afghanistan,O3990,"partial, re-fetch no better",578,"inn1: 288/300 balls, 220/241 runs PARTIAL; inn2: 271/276 balls, 192/195 runs PARTIAL",before: 559 legal balls
+ODI,4123,2019-04-14,Zimbabwe v United Arab Emirates,O4123,"partial, re-fetch no better",596,"inn1: 299/300 balls, 307/307 runs PARTIAL; inn2: 278/278 balls, 177/176 runs PARTIAL",before: 577 legal balls
+ODI,3997,2018-03-15,West Indies v Afghanistan,O3997,"partial, re-fetch no better",603,"inn1: 300/300 balls, 197/197 runs; inn2: 285/286 balls, 198/198 runs PARTIAL",before: 585 legal balls
+ODI,2911,2009-10-17,Kenya v Zimbabwe,O2911,"partial, re-fetch no better",601,"inn1: 300/300 balls, 270/270 runs; inn2: 288/288 balls, 272/271 runs PARTIAL",before: 588 legal balls
+ODI,4131,2019-05-10,Scotland v Afghanistan,O4131,"partial, re-fetch no better",582,"inn1: 300/300 balls, 325/325 runs; inn2: 270/269 balls, 269/269 runs PARTIAL",before: 570 legal balls
+ODI,4350,2022-01-25,Afghanistan v Netherlands,O4350,"partial, re-fetch no better",573,"inn1: 300/300 balls, 249/254 runs PARTIAL; inn2: 256/256 balls, 179/179 runs",before: 556 legal balls
+ODI,4032,2018-08-27,Afghanistan v Ireland,O4032,"partial, re-fetch no better",597,"inn1: 299/300 balls, 227/227 runs PARTIAL; inn2: 291/291 balls, 198/198 runs",before: 590 legal balls
+ODI,4338,2021-11-27,Oman v Namibia,O4338,"partial, re-fetch no better",619,"inn1: 300/300 balls, 291/291 runs; inn2: 299/300 balls, 281/282 runs PARTIAL",before: 599 legal balls
+ODI,2749,2008-08-22,West Indies v Canada,O2749,"partial, re-fetch no better",584,"inn1: 294/300 balls, 286/303 runs PARTIAL; inn2: 277/284 balls, 250/254 runs PARTIAL",before: 571 legal balls
+ODI,3010,2010-07-03,Netherlands v Kenya,O3010,"partial, re-fetch no better",426,"inn1: 280/296 balls, 214/229 runs PARTIAL; inn2: 144/180 balls, 88/112 runs PARTIAL",before: 424 legal balls
+ODI,3711,2015-11-18,Hong Kong v United Arab Emirates,O3711,"partial, re-fetch no better",535,"inn1: 285/300 balls, 276/282 runs PARTIAL; inn2: 241/241 balls, 146/146 runs",before: 526 legal balls
+ODI,2814,2009-02-04,Kenya v Zimbabwe,O2814,"partial, re-fetch no better",483,"inn1: 263/293 balls, 170/199 runs PARTIAL; inn2: 211/210 balls, 203/203 runs PARTIAL",before: 474 legal balls
+ODI,2812,2009-02-01,Zimbabwe v Kenya,O2812,"partial, re-fetch no better",567,"inn1: 300/300 balls, 285/285 runs; inn2: 256/294 balls, 198/219 runs PARTIAL",before: 556 legal balls
+ODI,3271,2012-03-31,Netherlands v Afghanistan,O3271,"partial, re-fetch no better",575,"inn1: 288/300 balls, 250/256 runs PARTIAL; inn2: 278/278 balls, 259/259 runs",before: 566 legal balls
+ODI,1537,2000-01-10,India v Pakistan,O1537,"partial, re-fetch no better",501,"inn1: 211/293 balls, 139/195 runs PARTIAL; inn2: 270/294 balls, 182/196 runs PARTIAL",before: 481 legal balls
+ODI,3020,2010-07-09,Kenya v Canada,O3020,"partial, re-fetch no better",444,"inn1: 267/272 balls, 149/153 runs PARTIAL; inn2: 168/215 balls, 102/154 runs PARTIAL",before: 435 legal balls
+ODI,1550,2000-01-28,Pakistan v India,O1550,"partial, re-fetch no better",464,"inn1: 270/300 balls, 229/261 runs PARTIAL; inn2: 174/276 balls, 101/157 runs PARTIAL",before: 444 legal balls
+ODI,2831,2009-04-01,Kenya v Netherlands,O2831,"re-fetched, still partial",580,"inn1: 296/300 balls, 243/247 runs PARTIAL; inn2: 266/278 balls, 242/248 runs PARTIAL",before: 472 legal balls
+ODI,3560,2014-12-02,United Arab Emirates v Afghanistan,O3560,"partial, re-fetch no better",577,"inn1: 264/300 balls, 229/273 runs PARTIAL; inn2: 298/298 balls, 276/276 runs",before: 562 legal balls
+ODI,1547,2000-01-25,India v Pakistan,O1547,"partial, re-fetch no better",504,"inn1: 276/300 balls, 245/267 runs PARTIAL; inn2: 214/268 balls, 173/219 runs PARTIAL",before: 490 legal balls
+ODI,1469,1999-05-30,Sri Lanka v Kenya,O1469,"re-fetched, still partial",558,"inn1: 266/300 balls, 259/275 runs PARTIAL; inn2: 276/300 balls, 207/230 runs PARTIAL",before: 453 legal balls
+ODI,2956,2010-02-16,Netherlands v Kenya,O2956,"partial, re-fetch no better",472,"inn1: 246/300 balls, 185/219 runs PARTIAL; inn2: 208/209 balls, 221/221 runs PARTIAL",before: 454 legal balls
+ODI,2861,2009-07-12,Ireland v Kenya,O2861,"partial, re-fetch no better",497,"inn1: 210/300 balls, 175/256 runs PARTIAL; inn2: 276/276 balls, 240/240 runs",before: 486 legal balls
+ODI,1638,2000-10-13,India v South Africa,O1638,"partial, re-fetch no better",484,"inn1: 245/300 balls, 231/295 runs PARTIAL; inn2: 222/246 balls, 175/200 runs PARTIAL",before: 467 legal balls
+ODI,2958,2010-02-18,Netherlands v Kenya,O2958,"partial, re-fetch no better",432,"inn1: 231/292 balls, 167/200 runs PARTIAL; inn2: 191/192 balls, 120/120 runs PARTIAL",before: 422 legal balls
+ODI,3022,2010-07-10,Kenya v Canada,O3022,"partial, re-fetch no better",511,"inn1: 270/300 balls, 181/190 runs PARTIAL; inn2: 236/296 balls, 168/194 runs PARTIAL",before: 506 legal balls
+ODI,3938,2017-12-08,Hong Kong v Papua New Guinea,O3938,"partial, re-fetch no better",463,"inn1: 198/300 balls, 245/323 runs PARTIAL; inn2: 254/254 balls, 230/230 runs",before: 452 legal balls
+ODI,1552,2000-01-30,India v Australia,O1552,"partial, re-fetch no better",502,"inn1: 250/300 balls, 175/226 runs PARTIAL; inn2: 225/297 balls, 190/230 runs PARTIAL",before: 475 legal balls
+player,5700,,India,,new player from ESPN,,Rituraj Singh,

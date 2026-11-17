@@ -10,6 +10,7 @@ team in the same matches, with the same surname and matching initials. Anything 
 Report: data/reports/players_merged.csv
 """
 import csv
+import difflib
 import re
 import sqlite3
 import sys
@@ -113,6 +114,41 @@ def main():
             own += 1
         else:
             unsure.append((s, name, team, 0, [players[p][0] for p, _ in cands][:4]))
+    # pass 2: spelling slips ('Shewag' for Sehwag). In each match, a stray name on the balls whose team's scorecard
+    # has exactly one player not seen on the balls, with a similar name -> one vote. Joined only if every match agrees.
+    planned = {s for s, _, _ in plan}
+    card_ids = defaultdict(set)
+    for t in ("batting", "bowling", "played"):
+        if t in T:
+            for mid, pid in con.execute(f"SELECT DISTINCT x.match_id, x.player_id FROM {t} x JOIN matches m "
+                                        f"ON m.match_id = x.match_id AND x.source = m.card_source"):
+                card_ids[mid].add(pid)
+    ball_ids = defaultdict(set)
+    for mid, a, b, c in con.execute("SELECT DISTINCT x.match_id, x.batter_id, x.bowler_id, x.non_striker_id FROM balls x "
+                                    "JOIN matches m ON m.match_id = x.match_id AND x.source = m.ball_source"):
+        ball_ids[mid].update(v for v in (a, b, c) if v is not None)
+    votes2 = defaultdict(Counter)
+    for mid, onballs in ball_ids.items():
+        card = card_ids.get(mid)
+        if not card:
+            continue
+        for team in {players[p][1] for p in onballs - card if p in players}:
+            extra = [p for p in onballs - card if p in players and players[p][1] == team and p not in real and p not in planned]
+            lost = [p for p in card - onballs if p in players and players[p][1] == team]
+            if len(extra) == 1 and len(lost) == 1:
+                a, b = clean(players[extra[0]][0])[1], clean(players[lost[0]][0])[1]
+                if difflib.SequenceMatcher(None, a, b).ratio() >= 0.6:
+                    votes2[extra[0]][lost[0]] += 1
+    for s_, v in votes2.items():
+        if len(v) == 1:
+            tgt, n = next(iter(v.items()))
+            ms = [m for m in where.get(s_, ()) if card_ids.get(m)]
+            if not compatible(clean(players[s_][0])[0], clean(players[tgt][0])[0]) or \
+                    any(tgt not in card_ids[m] or tgt in ball_ids.get(m, ()) for m in ms):
+                continue    # initials disagree, or in some match he wasn't playing / both names are on the balls
+            plan.append((s_, tgt, f"spelling slip: the only {players[tgt][0]} missing from the balls in {n} match(es)"))
+    unsure = [u for u in unsure if u[0] not in {x for x, _, _ in plan}]
+
     if not dry:
         for s, tgt, why in plan:
             for t, cols in T.items():

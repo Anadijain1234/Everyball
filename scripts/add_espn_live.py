@@ -4,6 +4,7 @@ database, for every Test and ODI that has NO ball-by-ball yet. Nothing that is a
 
   python scripts/add_espn_live.py data/raw/espn_full            # check + add (writes data/everyball.db)
   python scripts/add_espn_live.py data/raw/espn_full --dry-run  # only report what would be added
+  python scripts/add_espn_live.py data/raw/espn_redo2 --replace-partial   # swap in re-fetched partial matches if better
 
 For every innings it checks ESPN's balls against ESPN's own scorecard (legal balls and runs):
   complete  -> balls marked sure = 1
@@ -134,6 +135,7 @@ class Players:
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     dry = "--dry-run" in sys.argv
+    replace = "--replace-partial" in sys.argv   # for the re-fetched partial matches (espn_full_commentary_redo2)
     folder = args[0] if args else str(ROOT / "data" / "raw" / "espn_full")
     db = Path(args[1]) if len(args) > 1 else DB
     if not db.exists():
@@ -150,7 +152,14 @@ def main():
             out.append([r["format"], r["number"], r.get("start_date"), r.get("teams"), "", "not in our match list", "", "", ""])
             continue
         mid, have = match_of[key]
-        if have:
+        old_legal = None
+        if have == SRC and replace:     # a partial ESPN-live match: take the fresh download only if it is better
+            old_legal, old_sure = con.execute("SELECT SUM(legal), MIN(sure) FROM balls WHERE match_id = ? AND source = ?",
+                                              (mid, SRC)).fetchone()
+            if old_sure == 1:
+                tally["already complete"] += 1
+                continue
+        elif have:
             tally[f"already has ball-by-ball ({have})"] += 1
             continue
         plist = r.get("players") or {}
@@ -175,6 +184,24 @@ def main():
                              b["legal"], b["wicket"], b["kind"], players.get(b["out"], plist, bat_team),
                              1 if complete else 0, SRC))
         whole = all("PARTIAL" not in s for s in status)
+        if old_legal is not None:
+            new_legal = sum(x[11] for x in rows)
+            if not whole and new_legal <= (old_legal or 0):
+                tally["re-fetched, no better than before (kept old)"] += 1
+                out.append([r["format"], r["number"], r.get("start_date"), r.get("teams"), mid, "partial, re-fetch no better",
+                            len(rows), "; ".join(status), f"before: {old_legal} legal balls"])
+                continue
+            if not dry:
+                con.execute("DELETE FROM balls WHERE match_id = ? AND source = ?", (mid, SRC))
+            tally["re-fetched: now complete" if whole else "re-fetched: better but still partial"] += 1
+            out.append([r["format"], r["number"], r.get("start_date"), r.get("teams"), mid,
+                        "re-fetched, complete" if whole else "re-fetched, still partial", len(rows), "; ".join(status),
+                        f"before: {old_legal} legal balls"])
+            if not dry:
+                con.executemany("INSERT INTO balls (match_id, inn, seq, over_no, ball, bowler_id, batter_id, non_striker_id, "
+                                "bat_runs, extras, extra_type, legal, wicket, kind, out_id, sure, source) "
+                                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+            continue
         tally["added, complete" if whole else "added, partial"] += 1
         years[(r.get("start_date") or "")[:3] + "0s"] += 1
         out.append([r["format"], r["number"], r.get("start_date"), r.get("teams"), mid,
@@ -185,8 +212,9 @@ def main():
                             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
             con.execute("UPDATE matches SET ball_source = ?, sources = COALESCE(sources || ',', '') || ? "
                         "WHERE match_id = ? AND ball_source IS NULL", (SRC, SRC, mid))
-    REPORT.parent.mkdir(parents=True, exist_ok=True)
-    with open(REPORT, "w", newline="", encoding="utf-8") as fh:
+    report = REPORT.with_name("espn_live_refetch.csv") if replace else REPORT
+    report.parent.mkdir(parents=True, exist_ok=True)
+    with open(report, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["format", "number", "date", "teams", "match_id", "result", "balls", "innings check", "note"])
         w.writerows(out)
@@ -208,7 +236,7 @@ def main():
     for f in ("Test", "ODI"):
         n, b = con.execute("SELECT COUNT(*), SUM(ball_source IS NOT NULL) FROM matches WHERE format = ?", (f,)).fetchone()
         print(f"  {f}s with ball-by-ball now: {b} of {n} ({100 * b / n:.1f}%)")
-    print(f"  report: {REPORT.relative_to(ROOT)}")
+    print(f"  report: {report.relative_to(ROOT)}")
     con.close()
 
 

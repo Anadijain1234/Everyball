@@ -268,8 +268,9 @@
         <div class="tile"><div class="k">Longest dot run</div><div class="v">${n(d.longest_dot_streak)}</div><div class="s">balls in a row</div></div>
       </div>
       <div class="section" style="margin-top:20px">
-        <div class="row" style="justify-content:space-between"><b class="small">Faced each other in ${n(d.matches_with_balls)} of ${n(met)} matches they both played${d.matches_never_faced ? ` · played together but never faced in ${n(d.matches_never_faced)}` : ""}${d.matches_no_balls ? ` · no ball-by-ball for ${n(d.matches_no_balls)}` : ""}</b>
-          <span class="small muted">${n(cov, 0)}%</span></div>
+        <div class="row" style="justify-content:space-between"><b class="small">${esc(d.bowler)} bowled to ${esc(d.batter)} in ${n(d.matches_with_balls)} of the ${n(met)} matches they both played</b>
+          <span class="small muted">${n(cov, 0)}% checked</span></div>
+        <div class="small muted" style="margin-top:4px">${d.matches_never_faced ? `Never bowled to him in ${n(d.matches_never_faced)} · ` : ""}${d.matches_no_balls ? `no ball-by-ball for ${n(d.matches_no_balls)}, so there could be more` : "✓ every one of these matches checked ball by ball"}</div>
         <div class="meter" style="margin-top:6px"><i style="width:${cov}%"></i></div>
       </div>
       <div class="section" style="margin-top:20px">

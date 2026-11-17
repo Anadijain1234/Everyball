@@ -86,6 +86,12 @@ Not used: the Z-Library Wisden PDF (unofficial copy; only a bought copy may be u
   -> one); 51 look-alikes left unjoined and listed in data/reports/players_merged.csv. Duel page now says "faced each
   other in X of Y; played together but never faced in Z; no ball-by-ball for W". render.yaml: health check removed
   (Anadi runs his own 10-minute pinger).
+- [x] **Stage 1b (17 Nov 2026)**: the 182 partial matches fetched again (scripts/browser/everyball_espn_redo2.js, page by
+  page + every missing over asked for separately): ESPN returned the same balls for 180 (so the gaps are ESPN's own,
+  not our download); 2 got better. 148 are only 0-1 ball / a few runs off ESPN's scorecard (kept). 34 still have real
+  gaps -> solver (gap-filling mode) later, marked "rebuilt". Spelling slips joined by scorecard check (Shewag ->
+  V Sehwag etc., 6 records). Duel page: "X bowled to Y in A of the B matches they both played · never bowled to him
+  in C · checked ball by ball".
 - [ ] Anadi: run the one command (unzip, tests, commit, build), then try the site in the Codespace; pack + Render.
 - [ ] Later: recent matches Cricsheet doesn't have yet (19 Tests, 32 ODIs, mostly 2024-26) -> fresh Cricsheet download
   (Stage 2b weekly update); ESPN commentary vs player-v-player (612/905 innings agree) to look at.
