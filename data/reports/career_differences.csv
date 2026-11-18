@@ -1,0 +1,1124 @@
+table,match_id,inn,player_id,player,field,ours,espn
+batting,O4975,2,3238,Nazmul Hossain Shanto,runs,42,41
+batting,O4778,1,3358,HC Brook,6s,2,1
+batting,O4813,2,3565,SE Rutherford,6s,9,8
+batting,O4870,1,3707,RD Berrington,6s,6,5
+batting,T2581,4,3343,R Ngarava,balls,39,40
+batting,T2456,4,3025,BKG Mendis,6s,1,0
+batting,T2372,1,2839,DA Warner,6s,2,1
+batting,T2327,1,2938,IS Sodhi,4s,1,0
+batting,T2383,4,3268,BOP Fernando,4s,4,3
+batting,T2417,4,3268,BOP Fernando,6s,1,0
+batting,T2433,3,3168,RR Pant,6s,1,0
+batting,T2486,1,3046,Babar Azam,6s,2,1
+batting,T2166,1,2798,SPD Smith,6s,3,2
+batting,T2169,3,2780,AD Mathews,6s,2,1
+batting,T2216,3,2902,JM Bairstow,6s,1,0
+batting,T2224,1,2804,Azhar Ali,6s,3,2
+batting,T2013,4,2876,TMK Mawoyo,4s,4,5
+batting,T2013,4,2434,H Masakadza,4s,3,2
+batting,T1957,3,2619,MEK Hussey,6s,1,0
+batting,T1957,4,2739,MJ Guptill,6s,1,0
+batting,T1874,2,2646,AN Cook,4s,7,8
+batting,T1792,1,2110,RT Ponting,4s,10,11
+batting,T1795,4,1970,DR Martyn,6s,1,0
+batting,T1797,4,2144,JN Gillespie,4s,0,1
+batting,T1732,1,2137,JH Kallis,6s,1,0
+batting,T1689,3,2307,N Boje,4s,4,3
+batting,T1561,2,1923,MS Atapattu,not out,1,0
+batting,T1561,2,2213,DPMD Jayawardene,not out,1,0
+batting,T1000,1,1571,JG Wright,balls,44,38
+batting,T1000,1,1592,BA Edgar,balls,47,37
+batting,T1000,1,1680,MD Crowe,balls,25,29
+batting,T1000,1,898,JR Reid,balls,272,325
+batting,T1000,1,1478,JV Coney,balls,13,15
+batting,T1000,1,1634,IDS Smith,balls,19,13
+batting,T1000,1,1635,JG Bracewell,balls,6,15
+batting,T1000,1,1572,SL Boock,balls,49,25
+batting,T1000,2,1526,Mudassar Nazar,balls,78,75
+batting,T1000,2,4965,Q Umar,balls,113,110
+batting,T1000,2,1527,Javed Miandad,balls,210,217
+batting,T1000,2,1770,Manzoor Elahi,balls,32,31
+batting,T1000,2,1577,Abdul Qadir,balls,14,13
+batting,T1000,2,1528,Iqbal Qasim,balls,18,19
+batting,T1000,3,1571,JG Wright,balls,35,34
+batting,T1000,3,898,JR Reid,balls,52,54
+batting,T1000,3,1680,MD Crowe,balls,58,51
+batting,T1000,3,1712,JJ Crowe,balls,86,140
+batting,T1000,3,1634,IDS Smith,balls,32,28
+batting,T1000,3,1634,IDS Smith,4s,6,5
+batting,T1000,3,1733,EJ Gray,balls,15,10
+batting,T1000,3,1771,DA Stirling,balls,27,25
+batting,T1000,3,1572,SL Boock,balls,18,19
+batting,T1000,4,1526,Mudassar Nazar,balls,182,187
+batting,T1000,4,1527,Javed Miandad,balls,197,198
+batting,O3604,2,4581,RML Taylor,line,only in ours,"(9, 14, 1, 0, 0)"
+batting,O4394,2,3860,Ali Khan,line,only in ours,"(0, 4, 0, 0, 0)"
+batting,T0772,3,1436,SM Gavaskar,line,only in ours,"(0, None, None, None, 1)"
+batting,T1136,3,1738,NS Sidhu,line,only in ours,"(0, None, None, None, 1)"
+batting,T2265,2,3078,DAS Gunaratne,line,only in ours,"(0, None, None, None, 1)"
+batting,O5003,2,3587,Aayan Afzal Khan,line,only in ours,"(5, 11, 1, 0, 1)"
+batting,T0878,2,1529,Haroon Rashid,line,only in ours,"(21, 68, 4, None, 0)"
+batting,O3709,2,5374,player 79405,line,only in ours,"(1, 6, 0, 0, 0)"
+batting,T0876,4,1529,Haroon Rashid,line,only in ours,"(10, 32, 0, None, 0)"
+batting,T2435,1,3207,AY Patel,line,only in ours,"(3, 9, 0, 0, 0)"
+batting,O4841,2,3603,Jasdeep Singh,line,only in ours,"(7, 11, 1, 0, 0)"
+batting,O4617,1,3860,Ali Khan,line,only in ours,"(151, 145, 12, 6, 1)"
+batting,O4402,2,3860,Ali Khan,line,only in ours,"(59, 60, 6, 0, 0)"
+batting,O4556,1,3860,Ali Khan,line,only in ours,"(103, 84, 9, 2, 0)"
+batting,O5026,1,3601,Harmeet Singh,line,only in ours,"(24, 31, 0, 1, 0)"
+batting,T2435,3,3207,AY Patel,line,only in ours,"(28, 67, 2, 1, 1)"
+batting,O2998,1,2691,Shakib Al Hasan,line,only in ours,"(50, 38, 6, 2, 0)"
+batting,T0256,1,692,J Hardstaff jnr,line,only in ours,"(26, 79, 3, None, 0)"
+batting,O2146,2,5307,player 47953,line,only in ours,"(2, 20, 0, 0, 1)"
+batting,T1385,3,4993,Sajeewa de Silva,line,only in ours,"(11, 36, 1, 0, 1)"
+batting,T0930,2,1436,SM Gavaskar,line,only in ours,"(0, None, None, None, 1)"
+batting,T0935,2,1529,Haroon Rashid,line,only in ours,"(82, 160, 15, None, 0)"
+batting,T0936,1,1529,Haroon Rashid,line,only in ours,"(51, 106, 7, None, 0)"
+batting,O1253,1,4993,Sajeewa de Silva,line,only in ours,"(1, 3, 0, 0, 0)"
+batting,T2438,3,3207,AY Patel,line,only in ours,"(41, 26, 3, 4, 1)"
+batting,T0773,3,1212,EAS Prasanna,line,only in ours,"(0, None, None, None, 1)"
+batting,O1220,1,4993,Sajeewa de Silva,line,only in ours,"(10, 7, 1, 0, 1)"
+batting,O2718,2,5221,player 55110,line,only in ours,"(1, 3, 0, 0, 0)"
+batting,O2288,1,5337,player 10404,line,only in ours,"(0, 5, 0, 0, 0)"
+batting,O4570,1,3970,Ayan Khan,line,only in ours,"(34, 40, 3, 2, 0)"
+batting,O4363,2,3970,Ayan Khan,line,only in ours,"(6, 25, 0, 0, 0)"
+batting,T0266,1,692,J Hardstaff jnr,line,only in ours,"(169, 398, 20, None, 1)"
+batting,O4874,2,3613,Jatinder Singh,line,only in ours,"(27, 20, 2, 1, 1)"
+batting,T0923,1,1529,Haroon Rashid,line,only in ours,"(153, 241, 16, 3, 0)"
+batting,T0876,2,1529,Haroon Rashid,line,only in ours,"(6, 39, 0, None, 0)"
+batting,O2718,2,5220,player 55354,line,only in ours,"(5, 13, 0, 0, 0)"
+batting,O2146,2,5308,player 24731,line,only in ours,"(39, 124, 3, 0, 0)"
+batting,O4360,2,3970,Ayan Khan,line,only in ours,"(22, 30, 3, 0, 0)"
+batting,T1671,1,2512,SR Waugh wicket,line,only in ours,"(0, 4, 0, None, 0)"
+batting,O4592,1,3970,Ayan Khan,line,only in ours,"(27, 44, 2, 1, 0)"
+batting,O0906,1,5538,Bhupinder Singh snr,line,only in ours,"(6, 13, 0, 0, 0)"
+batting,O4879,2,3603,Jasdeep Singh,line,only in ours,"(42, 46, 6, 0, 0)"
+batting,O1599,2,2224,Arshad Khan,line,only in ours,"(2, 9, 0, 0, 0)"
+batting,O1218,2,4993,Sajeewa de Silva,line,only in ours,"(37, 49, 3, 0, 1)"
+batting,O0276,1,3852,Saad Ali,line,only in ours,"(1, 13, 0, 0, 0)"
+batting,T1395,2,2089,WPUJC Vaas,line,only in ours,"(0, None, None, None, 1)"
+batting,T2438,1,3207,AY Patel,line,only in ours,"(52, 128, 5, 1, 0)"
+bowling,O4975,2,3555,A Zampa,runs conceded,43,42
+bowling,O4805,2,4176,B Siddharth,maidens,1,2
+bowling,O4819,2,3212,Shaheen Shah Afridi,balls,47,48
+bowling,O4860,1,3657,Kaleem Sana,balls,49,48
+bowling,O4860,1,4170,Parveen Kumar,maidens,2,1
+bowling,O4860,2,3579,BM Scholtz,balls,55,54
+bowling,O4882,2,3711,MRJ Watt,balls,60,59
+bowling,O4761,2,3996,T Lungameni,balls,41,42
+bowling,O4765,1,3870,Aqib Ilyas,balls,49,48
+bowling,T2548,3,3076,MVT Fernando,balls,47,48
+bowling,T2581,4,3278,AR McBrine,balls,141,142
+bowling,T2607,1,3278,AR McBrine,balls,200,199
+bowling,T2607,1,3278,AR McBrine,maidens,4,3
+bowling,O4652,1,3932,Mahedi Hasan,balls,61,60
+bowling,O4659,1,3677,PA van Meekeren,balls,35,36
+bowling,T2587,1,2928,BA Stokes,balls,121,120
+bowling,O4555,1,3864,K Birkenstock,balls,41,42
+bowling,O4567,2,4075,D Heyliger,balls,41,42
+bowling,O4584,1,4019,Y Cariah,balls,47,48
+bowling,O4585,1,3343,R Ngarava,balls,55,54
+bowling,O4611,1,3970,Ayan Khan,balls,53,54
+bowling,O4457,2,3257,Kuldeep Yadav,balls,61,60
+bowling,O4513,1,3227,M Jansen,balls,61,60
+bowling,O4313,2,3885,HR Walsh,balls,41,42
+bowling,O4384,2,3915,DE Budge,balls,13,12
+bowling,O4422,1,3640,DS Airee,balls,61,60
+bowling,O4295,2,3755,Simi Singh,balls,58,59
+bowling,O4314,1,3157,AK Markram,balls,37,36
+bowling,O4319,1,3412,GH Dockrell,balls,19,18
+bowling,O4319,2,3180,WP Masakadza,balls,55,54
+bowling,T2468,2,3242,Shoriful Islam,balls,115,114
+bowling,O4088,1,3118,HH Pandya,balls,61,60
+bowling,O4200,1,3896,Aamir Kaleem,balls,46,47
+bowling,O4171,1,3039,CH Morris,balls,55,54
+bowling,T2343,3,2846,MA Starc,maidens,1,0
+bowling,O3984,2,3771,Ahmed Raza,balls,35,36
+bowling,T2448,2,3162,JJ Bumrah,maidens,9,8
+bowling,T2448,2,3202,SN Thakur,balls,73,72
+bowling,T2383,2,2966,Sikandar Raza,balls,257,258
+bowling,O3891,1,2838,R Ashwin,balls,61,60
+bowling,T2486,2,3329,Nauman Ali,balls,379,378
+bowling,O3782,2,3750,PKD Chase,balls,29,30
+bowling,O3349,2,2897,Sohag Gazi,balls,47,46
+bowling,O3383,2,2840,UT Yadav,balls,49,48
+bowling,O3328,1,2606,DW Steyn,balls,59,60
+bowling,O3245,2,3151,PR Stirling,balls,50,49
+bowling,O3200,1,2697,DJG Sammy,balls,52,53
+bowling,O3239,2,2565,SL Malinga,balls,59,60
+bowling,O3073,2,2616,P Utseya,balls,49,48
+bowling,O3094,2,2643,KP Pietersen,balls,37,36
+bowling,O3108,2,2730,Naeem Islam,balls,53,54
+bowling,O3111,1,4511,Khurram Chohan,balls,59,60
+bowling,O3149,1,2856,Suhrawadi Shuvo,balls,49,48
+bowling,O2974,2,2579,E Chigumbura,balls,17,18
+bowling,O2995,1,2768,Mahmudullah,balls,41,42
+bowling,O3028,2,3143,WB Rankin,balls,53,54
+bowling,O2872,1,3531,Enamul Haque jnr,balls,59,60
+bowling,O2873,2,2616,P Utseya,balls,61,60
+bowling,O2873,2,2339,RW Price,balls,61,60
+bowling,O2798,2,1928,ST Jayasuriya,balls,19,18
+bowling,O2809,2,4357,JK Kamande,balls,31,32
+bowling,O2828,2,2703,SCJ Broad,balls,23,22
+bowling,O2848,1,2724,DE Bollinger,balls,45,46
+bowling,O2710,2,2710,TG Southee,balls,61,60
+bowling,O2734,1,2697,DJG Sammy,balls,23,24
+bowling,O2739,2,4307,JAR Blain,balls,35,36
+bowling,O2766,2,2963,T Maruma,balls,59,60
+bowling,O2779,2,2580,CB Mpofu,balls,49,48
+bowling,O2642,2,2229,M Ntini,balls,53,54
+bowling,O2644,1,2698,Sohail Tanvir,balls,59,60
+bowling,O2647,2,2407,Shoaib Malik,balls,59,60
+bowling,O2663,1,2407,Shoaib Malik,balls,59,60
+bowling,O2667,2,2580,CB Mpofu,balls,61,60
+bowling,O2669,2,2337,GB Brent,balls,35,36
+bowling,O2685,1,2431,V Sehwag,balls,37,36
+bowling,T1888,4,2730,Naeem Islam,maidens,3,2
+bowling,T1896,1,2636,SR Clark,balls,119,120
+bowling,T1896,1,2687,MG Johnson,balls,151,150
+bowling,O2534,1,4315,LOB Cann,balls,29,30
+bowling,O2548,1,4363,H Osinde,balls,25,24
+bowling,O2563,2,1928,ST Jayasuriya,balls,47,48
+bowling,O2564,2,2638,Abdur Razzak,balls,57,58
+bowling,O2567,1,2588,DJ Bravo,balls,43,42
+bowling,O2589,2,2571,Mohammad Asif,balls,61,60
+bowling,O2618,1,2703,SCJ Broad,balls,61,60
+bowling,T1862,3,2294,B Lee,balls,125,124
+bowling,T1862,3,2537,A Symonds,balls,59,60
+bowling,O2415,2,4260,AJ Ireland,balls,59,60
+bowling,O2420,2,4287,JJ van der Wath,balls,49,48
+bowling,O2422,2,2572,SR Watson,balls,35,36
+bowling,O2442,2,2442,A Nel,balls,59,60
+bowling,O2456,1,4381,SKW Kelly,balls,20,18
+bowling,O2457,2,2579,E Chigumbura,balls,31,30
+bowling,O2462,1,3537,Mehrab Hossain jnr,balls,43,42
+bowling,O2501,2,2378,JEC Franklin,balls,59,60
+bowling,O2526,2,2734,CL White,balls,17,18
+bowling,O2535,1,2579,E Chigumbura,balls,35,36
+bowling,O2535,2,4275,WK McCallan,balls,53,54
+bowling,T1838,2,2418,Mashrafe Mortaza,balls,181,180
+bowling,T1838,2,2354,Mohammad Rafique,balls,209,210
+bowling,O2328,1,2264,PDRL Perera,maidens,0,1
+bowling,O2333,1,2347,Z Khan,balls,59,60
+bowling,O2334,2,2354,Mohammad Rafique,balls,19,18
+bowling,O2358,2,2540,PD Collingwood,balls,23,24
+bowling,O2361,1,2647,ID Blackwell,maidens,1,0
+bowling,O2362,1,2690,RR Powar,balls,53,54
+bowling,O2365,2,2418,Mashrafe Mortaza,balls,43,42
+bowling,O2368,1,2556,DR Smith,balls,47,48
+bowling,O2369,2,2332,CH Gayle,balls,55,56
+bowling,O2373,1,2509,NB Mahwire,balls,59,60
+bowling,O2388,2,2089,WPUJC Vaas,balls,47,48
+bowling,T1796,3,2658,Iftikhar Anjum,maidens,1,0
+bowling,T1803,2,2565,SL Malinga,balls,80,81
+bowling,T1803,2,2005,M Muralitharan,balls,151,150
+bowling,T1835,1,2287,CD Collymore,balls,149,150
+bowling,T1835,1,2697,DJG Sammy,balls,103,102
+bowling,O2254,2,2559,Manjural Islam Rana,balls,23,24
+bowling,O2276,2,2173,DL Vettori,balls,58,60
+bowling,O2288,1,2488,SB Styris,balls,59,60
+bowling,T1759,3,2378,JEC Franklin,maidens,3,2
+bowling,O2169,2,2489,JDP Oram,balls,57,58
+bowling,O2173,1,2596,MF Maharoof,maidens,2,1
+bowling,O2209,1,2572,SR Watson,balls,41,42
+bowling,O2229,2,2182,AM Bacher,maidens,1,0
+bowling,T1756,3,2257,A Flintoff,maidens,5,4
+bowling,T1761,1,2401,SE Bond,maidens,5,4
+bowling,T1778,1,2565,SL Malinga,maidens,5,4
+bowling,O2113,1,1997,GW Flower,maidens,1,0
+bowling,O2131,2,2451,DT Hondo,balls,41,42
+bowling,O2150,1,2005,M Muralitharan,maidens,0,1
+bowling,T1750,2,2605,AB de Villiers,maidens,5,6
+bowling,O1980,1,2064,HH Streak,balls,41,42
+bowling,O2008,2,2407,Shoaib Malik,balls,59,60
+bowling,O2009,2,2298,Abdul Razzaq,balls,37,36
+bowling,O2030,2,2229,M Ntini,balls,59,60
+bowling,O2032,2,2526,JM Anderson,balls,41,42
+bowling,O2040,1,2354,Mohammad Rafique,balls,61,60
+bowling,O2048,2,2548,Mohammad Hafeez,balls,41,42
+bowling,O2050,2,2298,Abdul Razzaq,balls,61,60
+bowling,O2057,1,2520,R Clarke,balls,37,36
+bowling,O2080,2,2064,HH Streak,balls,29,30
+bowling,T1697,2,2386,Danish Kaneria,maidens,5,4
+bowling,O1954,2,1769,Wasim Akram,balls,53,54
+bowling,O1957,1,2064,HH Streak,balls,53,54
+bowling,O1959,2,2148,RC Irani,balls,47,48
+bowling,O1965,2,4353,SO Tikolo,balls,29,30
+bowling,O1966,2,2451,DT Hondo,balls,53,54
+bowling,O1973,1,1852,CL Hooper,balls,37,36
+bowling,T1662,1,1918,A Kumble,maidens,17,18
+bowling,T0135,1,329,FE Woolley,maidens,8,7
+bowling,T0135,3,329,FE Woolley,maidens,10,11
+bowling,T0137,3,252,W Rhodes,maidens,3,8
+bowling,T0146,1,431,WFE Marx,maidens,1,0
+bowling,T0187,1,565,W Voce,maidens,2,1
+bowling,T0230,1,541,EW Clark,maidens,2,3
+bowling,T0230,2,5760,L Amar Singh,maidens,6,5
+bowling,T0231,2,611,H Verity,maidens,12,13
+bowling,T0232,2,646,J Langridge,maidens,3,1
+bowling,T0237,1,611,H Verity,maidens,6,7
+bowling,T0240,1,672,LG Hylton,maidens,5,4
+bowling,T0240,2,670,WE Hollies,maidens,8,7
+bowling,T0242,2,611,H Verity,maidens,19,18
+bowling,T0273,1,671,RS Grant,maidens,5,4
+bowling,T0276,2,650,L Amarnath,maidens,15,18
+bowling,T0277,1,650,L Amarnath,maidens,18,17
+bowling,T0309,2,736,DCS Compton,maidens,4,3
+bowling,T0313,3,882,RO Jenkins,maidens,1,0
+bowling,T0339,3,879,NR Chowdhury,maidens,10,11
+bowling,T0341,1,770,RR Lindwall,maidens,3,2
+bowling,T0346,1,924,MJ Hilton,maidens,13,10
+bowling,T0346,1,914,R Tattersall,maidens,5,3
+bowling,T0346,2,878,Ghulam Ahmed,maidens,16,14
+bowling,T0346,2,791,MH Mankad,maidens,16,13
+bowling,T0346,2,797,SG Shinde,maidens,5,4
+bowling,T0346,3,924,MJ Hilton,maidens,13,11
+bowling,T0346,3,840,JDB Robertson,maidens,2,1
+bowling,T0346,4,878,Ghulam Ahmed,maidens,2,1
+bowling,T0373,1,856,JH Wardle,maidens,9,8
+bowling,T0390,3,1039,PJ Loader,maidens,8,6
+bowling,T0399,3,1023,FH Tyson,maidens,1,2
+bowling,T0445,2,1103,I Meckiff,maidens,0,1
+bowling,T0449,1,1056,PS Heine,maidens,7,6
+bowling,T0449,1,903,HJ Tayfield,maidens,18,17
+bowling,T0470,1,995,RW Blair,maidens,6,5
+bowling,T0478,2,1143,R Surendranath,maidens,26,25
+bowling,T0512,2,1171,Intikhab Alam,maidens,7,6
+bowling,T0534,3,1125,ER Dexter,maidens,2,1
+bowling,T0547,1,1178,CC Griffith,maidens,3,4
+bowling,T0552,3,1269,D Wilson,maidens,11,10
+bowling,T0557,2,1057,FJ Titmus,balls,354,360
+bowling,T0557,2,1057,FJ Titmus,maidens,36,37
+bowling,T0573,3,1280,G Boycott,maidens,6,5
+bowling,T0578,3,1317,KE Palmer,maidens,2,1
+bowling,T0597,3,1253,TR Veivers,maidens,1,0
+bowling,T0604,1,1205,BR Knight,maidens,6,7
+bowling,T0618,1,1272,BS Chandrasekhar,maidens,8,9
+bowling,T0621,2,1338,BL D'Oliveira,maidens,6,7
+bowling,T0621,2,1356,RNS Hobbs,maidens,17,16
+bowling,T0662,4,1153,Mushtaq Mohammad,maidens,4,5
+bowling,T0738,4,1457,AW Greig,maidens,8,7
+bowling,T0811,2,1272,BS Chandrasekhar,maidens,5,6
+bowling,T0814,3,1501,KD Ghavri,maidens,4,3
+bowling,T0823,4,1595,DR Parry,maidens,3,4
+bowling,T0876,1,1528,Iqbal Qasim,maidens,11,12
+bowling,T0890,2,1409,Mohammad Nazir,maidens,2,1
+bowling,T0894,2,1584,AR Border,maidens,1,0
+bowling,T0987,2,1695,CG Rackemann,maidens,8,7
+bowling,T1000,1,1528,Iqbal Qasim,runs conceded,81,80
+bowling,T1000,3,1526,Mudassar Nazar,maidens,3,2
+bowling,T1000,3,1577,Abdul Qadir,maidens,4,3
+bowling,T1000,4,1635,JG Bracewell,balls,78,84
+bowling,T1000,4,1635,JG Bracewell,maidens,2,3
+bowling,T1005,1,1729,GRJ Matthews,maidens,3,2
+bowling,T1010,2,4929,Saleem Malik,maidens,1,3
+bowling,T1036,1,1507,MA Holding,maidens,0,1
+bowling,T1058,2,5135,T Gray,maidens,5,6
+bowling,T1326,1,1843,DK Morrison,maidens,3,6
+bowling,T1353,4,2146,AJ Bichel,balls,8,9
+bowling,T1427,2,2203,GR Robertson,maidens,5,4
+match,T0071,,141,SE Gregory,played,ours only,
+match,T0071,,179,J Darling,played,ours only,
+match,T0071,,219,C Hill,played,ours only,
+match,T0071,,221,JJ Kelly,played,ours only,
+match,T0071,,266,RA Duff,played,ours only,
+match,T0163,,323,W Bardsley,played,ours only,
+match,T0156,,329,FE Woolley,played,ours only,
+match,T0163,,395,HL Collins,played,ours only,
+match,T0163,,397,JM Taylor,played,ours only,
+match,T0163,,399,J Ryder,played,ours only,
+match,T0163,,400,WAS Oldfield,played,ours only,
+match,T0163,,402,AA Mailey,played,ours only,
+match,T0156,,404,EH Hendren,played,ours only,
+match,T0163,,417,TJE Andrews,played,ours only,
+match,T0156,,458,H Sutcliffe,played,ours only,
+match,T0156,,470,A Sandham R Mins,played,ours only,
+match,T0156,,471,G Duckworth,played,ours only,
+match,T0156,,473,JCW MacBryan,played,ours only,
+match,T0163,,474,WM Woodfull,played,ours only,
+match,T0163,,475,Key to Catching Positions,played,ours only,
+match,O3296,,478,JP Duminy,played,ours only,
+match,T0211,,542,CS Dempster,played,ours only,
+match,T0211,,547,ML Page,played,ours only,
+match,T0211,,550,KC James,played,ours only,
+match,T0211,,559,JE Mills,played,ours only,
+match,T0211,,561,GL Weir,played,ours only,
+match,T0211,,612,AM Matheson R Mins,played,ours only,
+match,T0256,,692,J Hardstaff jnr,played,ours only,
+match,T0266,,692,J Hardstaff jnr,played,ours only,
+match,T0266,,746,DG Bradman DNB injured,played,ours only,
+match,T0266,,747,JHW Fingleton DNB injured,played,ours only,
+match,O0306,,898,JR Reid,played,ours only,
+match,T0650,,980,Hanif Mohammad,played,ours only,
+match,O0057,,1280,G Boycott,played,ours only,
+match,O0007,,1288,V Pollard,played,ours only,
+match,T0650,,1297,Asif Iqbal,played,ours only,
+match,T0650,,1306,Shafqat Rana,played,ours only,
+match,O0308,,1342,CH Lloyd,played,ours only,
+match,T0650,,1360,Wasim Bari,played,ours only,
+match,O0007,,1367,MG Burgess,played,ours only,
+match,O0007,,1379,GM Turner,played,ours only,
+match,O0007,,1380,BF Hastings,played,ours only,
+match,T0650,,1385,Aftab Gul R Mins,played,ours only,
+match,O0007,,1390,KJ Wadsworth,played,ours only,
+match,O0273,,1408,Zaheer Abbas,played,ours only,
+match,O0161,,1417,RW Marsh,played,ours only,
+match,O0007,,1469,RE Redmond,played,ours only,
+match,O0306,,1478,JV Coney,played,ours only,
+match,O0308,,1497,IVA Richards,played,ours only,
+match,O0306,,1502,GP Howarth,played,ours only,
+match,O0269,,1510,GN Yallop,played,ours only,
+match,O0057,,1511,GA Gooch,played,ours only,
+match,O0607,,1511,GA Gooch,played,ours only,
+match,O0057,,1514,PH Edmonds,played,ours only,
+match,O0347,,1523,DW Hookes,played,ours only,
+match,O0057,,1524,JM Brearley,played,ours only,
+match,O0057,,1525,DW Randall,played,ours only,
+match,O0273,,1527,Javed Miandad,played,ours only,
+match,T1076,,1527,Javed Miandad,played,ours only,
+match,T0876,,1529,Haroon Rashid,played,ours only,
+match,T0878,,1529,Haroon Rashid,played,ours only,
+match,T0923,,1529,Haroon Rashid,played,ours only,
+match,T0935,,1529,Haroon Rashid,played,ours only,
+match,T0936,,1529,Haroon Rashid,played,ours only,
+match,O0308,,1530,HA Gomes,played,ours only,
+match,O0057,,1537,RW Tolchard,played,ours only,
+match,O0161,,1559,J Dyson,played,ours only,
+match,O0161,,1560,KJ Hughes,played,ours only,
+match,O0269,,1560,KJ Hughes,played,ours only,
+match,O0161,,1562,GM Wood,played,ours only,
+match,O0269,,1562,GM Wood,played,ours only,
+match,O0161,,1565,IW Callen,played,ours only,
+match,O0057,,1569,IT Botham,played,ours only,
+match,O0306,,1571,JG Wright,played,ours only,
+match,O0269,,1581,RM Hogg,played,ours only,
+match,O0057,,1583,DI Gower,played,ours only,
+match,O0161,,1584,AR Border,played,ours only,
+match,O0269,,1584,AR Border,played,ours only,
+match,O0347,,1584,AR Border,played,ours only,
+match,O0699,,1584,AR Border,played,ours only,
+match,O0308,,1610,DL Haynes,played,ours only,
+match,O0607,,1615,W Larkins,played,ours only,
+match,O0306,,1634,IDS Smith,played,ours only,
+match,O0594,,1640,RJ Shastri,played,ours only,
+match,T1076,,1645,Mansoor Akhtar,played,ours only,
+match,O0308,,1658,PJL Dujon,played,ours only,
+match,O0594,,1664,K Srikkanth,played,ours only,
+match,O0195,,1669,S Wettimuny,played,ours only,
+match,O0195,,1670,RL Dias,played,ours only,
+match,O0196,,1670,RL Dias,played,ours only,
+match,O0367,,1670,RL Dias,played,ours only,
+match,O0195,,1671,LRD Mendis,played,ours only,
+match,O0196,,1671,LRD Mendis,played,ours only,
+match,O0367,,1671,LRD Mendis,played,ours only,
+match,O0195,,1672,RS Madugalle,played,ours only,
+match,O0196,,1672,RS Madugalle,played,ours only,
+match,O0367,,1673,A Ranatunga,played,ours only,
+match,O0722,,1673,A Ranatunga,played,ours only,
+match,O0921,,1673,A Ranatunga,played,ours only,
+match,T1309,,1680,MD Crowe,played,ours only,
+match,T1076,,1683,Salim Yousuf,played,ours only,
+match,O0273,,1688,Ashraf Ali,played,ours only,
+match,O0607,,1691,AJ Lamb,played,ours only,
+match,O0607,,1696,EE Hemmings,played,ours only,
+match,O0269,,1697,KC Wessels,played,ours only,
+match,O0195,,1709,ERNS Fernando,played,ours only,
+match,O0196,,1709,ERNS Fernando,played,ours only,
+match,O0306,,1712,JJ Crowe,played,ours only,
+match,O0161,,1717,GM Ritchie,played,ours only,
+match,O0347,,1717,GM Ritchie,played,ours only,
+match,O0594,,1719,Maninder Singh,played,ours only,
+match,O0308,,1722,AL Logie,played,ours only,
+match,O0161,,1726,WB Phillips,played,ours only,
+match,O0269,,1726,WB Phillips,played,ours only,
+match,O0347,,1726,WB Phillips,played,ours only,
+match,O0269,,1728,JN Maguire,played,ours only,
+match,T1076,,1735,Shoaib Mohammad,played,ours only,
+match,O0594,,1738,NS Sidhu,played,ours only,
+match,O1219,,1738,NS Sidhu,played,ours only,
+match,O1268,,1738,NS Sidhu,played,ours only,
+match,T1226,,1738,NS Sidhu,played,ours only,
+match,O0308,,1739,RB Richardson,played,ours only,
+match,O0699,,1748,DM Jones,played,ours only,
+match,O0347,,1751,DC Boon,played,ours only,
+match,O0699,,1751,DC Boon,played,ours only,
+match,O0367,,1758,PA de Silva,played,ours only,
+match,O0722,,1758,PA de Silva,played,ours only,
+match,O0921,,1758,PA de Silva,played,ours only,
+match,O1087,,1758,PA de Silva,played,ours only,
+match,T1179,,1758,PA de Silva,played,ours only,
+match,O0594,,1767,M Azharuddin,played,ours only,
+match,O1219,,1767,M Azharuddin,played,ours only,
+match,O1229,,1767,M Azharuddin,played,ours only,
+match,O1268,,1767,M Azharuddin,played,ours only,
+match,O1342,,1767,M Azharuddin,played,ours only,
+match,T1226,,1767,M Azharuddin,played,ours only,
+match,O0699,,1775,GR Marsh,played,ours only,
+match,O0367,,1796,RS Mahanama,played,ours only,
+match,O0722,,1796,RS Mahanama,played,ours only,
+match,O0921,,1796,RS Mahanama,played,ours only,
+match,O1087,,1796,RS Mahanama,played,ours only,
+match,T1179,,1796,RS Mahanama,played,ours only,
+match,O0722,,1797,AP Gurusinha,played,ours only,
+match,O1087,,1797,AP Gurusinha,played,ours only,
+match,O0594,,1819,KS More,played,ours only,
+match,T1226,,1819,KS More,played,ours only,
+match,O0594,,1830,R Lamba,played,ours only,
+match,T1076,,1831,Ijaz Ahmed,played,ours only,
+match,O0196,,1833,DSBP Kuruppu,played,ours only,
+match,O0367,,1833,DSBP Kuruppu,played,ours only,
+match,O0607,,1840,DJ Capel,played,ours only,
+match,T1076,,1846,Abdul Qadir R Mins,played,ours only,
+match,T1076,,1847,Key to Catching Positions,played,ours only,
+match,O0594,,1850,SV Manjrekar,played,ours only,
+match,T1396,,1852,CL Hooper,played,ours only,
+match,T1309,,1858,MJ Greatbatch,played,ours only,
+match,O0699,,1862,IA Healy,played,ours only,
+match,O0607,,1872,RA Smith,played,ours only,
+match,T1396,,1882,IR Bishop,played,ours only,
+match,O0722,,1888,HP Tillakaratne,played,ours only,
+match,O0921,,1888,HP Tillakaratne,played,ours only,
+match,O1087,,1888,HP Tillakaratne,played,ours only,
+match,T1179,,1888,HP Tillakaratne,played,ours only,
+match,O1219,,1900,SR Tendulkar,played,ours only,
+match,O1268,,1900,SR Tendulkar,played,ours only,
+match,O1342,,1900,SR Tendulkar,played,ours only,
+match,O2514,,1900,SR Tendulkar,played,ours only,
+match,O2901,,1900,SR Tendulkar,played,ours only,
+match,T1226,,1900,SR Tendulkar,played,ours only,
+match,O0607,,1911,AJ Stewart,played,ours only,
+match,O0607,,1914,CC Lewis,played,ours only,
+match,O1219,,1918,A Kumble,played,ours only,
+match,O1425,,1921,AC Parore,played,ours only,
+match,O1563,,1921,AC Parore,played,ours only,
+match,O1641,,1921,AC Parore,played,ours only,
+match,O2351,,1923,MS Atapattu,played,ours only,
+match,O0722,,1927,UC Hathurusinghe,played,ours only,
+match,O0722,,1928,ST Jayasuriya,played,ours only,
+match,O0921,,1928,ST Jayasuriya,played,ours only,
+match,O1087,,1928,ST Jayasuriya,played,ours only,
+match,O2405,,1928,ST Jayasuriya,played,ours only,
+match,T1179,,1928,ST Jayasuriya,played,ours only,
+match,T1502,,1932,Moin Khan,played,ours only,
+match,O1495,,1933,BC Lara,played,ours only,
+match,O1609,,1933,BC Lara,played,ours only,
+match,O1839,,1933,BC Lara,played,ours only,
+match,O0722,,1943,KIW Wijegunawardene,played,ours only,
+match,O0722,,1954,GP Wickramasinghe,played,ours only,
+match,T1179,,1955,A Ranatunga R Mins,played,ours only,
+match,O1609,,1959,JC Adams,played,ours only,
+match,T1396,,1959,JC Adams,played,ours only,
+match,T1396,,1961,D Williams,played,ours only,
+match,T1312,,1964,AC Hudson,played,ours only,
+match,T1312,,1969,DJ Richardson,played,ours only,
+match,T1502,,1978,Inzamam-ul-Haq,played,ours only,
+match,T1226,,1986,VG Kambli,played,ours only,
+match,T1226,,1987,PK Amre,played,ours only,
+match,T1226,,1988,RK Chauhan,played,ours only,
+match,O0848,,1997,GW Flower,played,ours only,
+match,O1980,,1997,GW Flower,played,ours only,
+match,O2031,,1997,GW Flower,played,ours only,
+match,O0848,,1998,ADR Campbell,played,ours only,
+match,O0848,,1999,DL Houghton,played,ours only,
+match,O0848,,2000,A Flower,played,ours only,
+match,O1980,,2000,A Flower,played,ours only,
+match,O1087,,2002,RS Kaluwitharana,played,ours only,
+match,O1087,,2005,M Muralitharan,played,ours only,
+match,O2405,,2005,M Muralitharan,played,ours only,
+match,T1312,,2014,JN Rhodes,played,ours only,
+match,O1219,,2018,A Jadeja,played,ours only,
+match,O1229,,2018,A Jadeja,played,ours only,
+match,O1268,,2018,A Jadeja,played,ours only,
+match,O1342,,2018,A Jadeja,played,ours only,
+match,T1312,,2020,DJ Cullinan,played,ours only,
+match,O1268,,2047,NR Mongia,played,ours only,
+match,O1342,,2047,NR Mongia,played,ours only,
+match,O0722,,2048,RS Kalpage,played,ours only,
+match,O0921,,2048,RS Kalpage,played,ours only,
+match,O0921,,2050,PB Dassanayake,played,ours only,
+match,T1226,,2051,A Kumble R Min,played,ours only,
+match,O0921,,2055,HDPK Dharmasena,played,ours only,
+match,O1425,,2056,SP Fleming,played,ours only,
+match,O1563,,2056,SP Fleming,played,ours only,
+match,O1641,,2056,SP Fleming,played,ours only,
+match,O2051,,2056,SP Fleming,played,ours only,
+match,O2292,,2056,SP Fleming,played,ours only,
+match,T1309,,2056,SP Fleming,played,ours only,
+match,T1793,,2056,SP Fleming,played,ours only,
+match,O0848,,2061,SG Peall,played,ours only,
+match,O0848,,2062,JA Rennie,played,ours only,
+match,O1980,,2063,GJ Whittall,played,ours only,
+match,O0848,,2065,MH Dekker,played,ours only,
+match,O2656,,2069,ML Hayden,played,ours only,
+match,O1495,,2071,S Chanderpaul,played,ours only,
+match,O1839,,2071,S Chanderpaul,played,ours only,
+match,O2603,,2071,S Chanderpaul,played,ours only,
+match,T1396,,2071,S Chanderpaul,played,ours only,
+match,T1907,,2071,S Chanderpaul,played,ours only,
+match,T1396,,2072,SC Williams,played,ours only,
+match,O0921,,2088,S Ranatunga,played,ours only,
+match,O1495,,2096,SL Campbell,played,ours only,
+match,O1609,,2096,SL Campbell,played,ours only,
+match,T1396,,2096,SL Campbell,played,ours only,
+match,O2091,,2107,SV Carlisle,played,ours only,
+match,O0848,,2109,IP Butchart,played,ours only,
+match,O2656,,2110,RT Ponting,played,ours only,
+match,O3119,,2110,RT Ponting,played,ours only,
+match,T1309,,2125,LK Germon,played,ours only,
+match,T1309,,2126,AC Parore R Mins,played,ours only,
+match,O1425,,2127,RG Twose,played,ours only,
+match,O1563,,2127,RG Twose,played,ours only,
+match,O1641,,2127,RG Twose,played,ours only,
+match,T1309,,2127,RG Twose,played,ours only,
+match,O1563,,2128,CM Spearman,played,ours only,
+match,O2292,,2129,NJ Astle,played,ours only,
+match,O1980,,2133,CB Wishart,played,ours only,
+match,T1312,,2135,AA Donald R Min,played,ours only,
+match,O2007,,2138,PR Adams,played,ours only,
+match,O1219,,2154,SC Ganguly,played,ours only,
+match,O1268,,2154,SC Ganguly,played,ours only,
+match,O1342,,2154,SC Ganguly,played,ours only,
+match,O2159,,2154,SC Ganguly,played,ours only,
+match,O2514,,2154,SC Ganguly,played,ours only,
+match,O2656,,2160,GB Hogg,played,ours only,
+match,O2159,,2162,VVS Laxman,played,ours only,
+match,O2007,,2163,HH Gibbs,played,ours only,
+match,O2517,,2163,HH Gibbs,played,ours only,
+match,O2351,,2166,RP Arnold,played,ours only,
+match,O2292,,2173,DL Vettori,played,ours only,
+match,O3088,,2173,DL Vettori,played,ours only,
+match,O1425,,2174,MJ Horne,played,ours only,
+match,O0848,,2192,AC Waller,played,ours only,
+match,O1563,,2193,CD McMillan,played,ours only,
+match,O1641,,2193,CD McMillan,played,ours only,
+match,O2051,,2193,CD McMillan,played,ours only,
+match,O2292,,2193,CD McMillan,played,ours only,
+match,O2855,,2209,Harbhajan Singh,played,ours only,
+match,O1229,,2212,NM Kulkarni,played,ours only,
+match,O2351,,2213,DPMD Jayawardene,played,ours only,
+match,O2405,,2213,DPMD Jayawardene,played,ours only,
+match,O2672,,2213,DPMD Jayawardene,played,ours only,
+match,O3092,,2213,DPMD Jayawardene,played,ours only,
+match,O3274,,2213,DPMD Jayawardene,played,ours only,
+match,O3580,,2213,DPMD Jayawardene,played,ours only,
+match,T1982,,2213,DPMD Jayawardene,played,ours only,
+match,O2007,,2222,MV Boucher,played,ours only,
+match,O2517,,2222,MV Boucher,played,ours only,
+match,T1502,,2232,Mohammad Yousuf,played,ours only,
+match,T1396,,2235,BC Lara R Min,played,ours only,
+match,T1396,,2236,NAM McLean,played,ours only,
+match,T1379,,2241,EZ Matambanadzo,played,ours only,
+match,T1379,,2242,BC Strang,played,ours only,
+match,T1379,,2243,AG Huckle,played,ours only,
+match,T1379,,2244,PA Strang,played,ours only,
+match,T1379,,2245,GW Flower,played,ours only,
+match,O2761,,2257,A Flintoff,played,ours only,
+match,T1502,,2273,Imran Nazir,played,ours only,
+match,O1495,,2279,RD Jacobs,played,ours only,
+match,O1609,,2279,RD Jacobs,played,ours only,
+match,O1839,,2279,RD Jacobs,played,ours only,
+match,O2656,,2291,AC Gilchrist,played,ours only,
+match,O1268,,2295,HH Kanitkar,played,ours only,
+match,O2121,,2301,CMW Read,played,ours only,
+match,O2159,,2310,M Kaif,played,ours only,
+match,O1495,,2318,RL Powell,played,ours only,
+match,O1609,,2318,RL Powell,played,ours only,
+match,T1502,,2319,Younis Khan,played,ours only,
+match,O2351,,2321,TM Dilshan,played,ours only,
+match,O2405,,2321,TM Dilshan,played,ours only,
+match,O3274,,2321,TM Dilshan,played,ours only,
+match,O3580,,2321,TM Dilshan,played,ours only,
+match,O3718,,2321,TM Dilshan,played,ours only,
+match,O2121,,2326,MP Vaughan,played,ours only,
+match,T1483,,2329,AD Mullally R Mins,played,ours only,
+match,O2007,,2331,HH Dippenaar,played,ours only,
+match,O2603,,2332,CH Gayle,played,ours only,
+match,O4156,,2332,CH Gayle,played,ours only,
+match,T1907,,2332,CH Gayle,played,ours only,
+match,O1609,,2333,WW Hinds,played,ours only,
+match,O1839,,2333,WW Hinds,played,ours only,
+match,O1839,,2334,RR Sarwan,played,ours only,
+match,T1907,,2334,RR Sarwan,played,ours only,
+match,O2603,,2341,MN Samuels,played,ours only,
+match,O3913,,2341,MN Samuels,played,ours only,
+match,O1219,,2358,SS Karim,played,ours only,
+match,O1229,,2358,SS Karim,played,ours only,
+match,O2121,,2360,ME Trescothick,played,ours only,
+match,O1268,,2364,SV Bahutule,played,ours only,
+match,O2351,,2368,KC Sangakkara,played,ours only,
+match,O2405,,2368,KC Sangakkara,played,ours only,
+match,O2672,,2368,KC Sangakkara,played,ours only,
+match,O3092,,2368,KC Sangakkara,played,ours only,
+match,O3274,,2368,KC Sangakkara,played,ours only,
+match,O3580,,2368,KC Sangakkara,played,ours only,
+match,T1982,,2368,KC Sangakkara,played,ours only,
+match,O2405,,2369,CRD Fernando,played,ours only,
+match,T1982,,2371,HAPW Jayawardene,played,ours only,
+match,T1502,,2372,Saeed Anwar R Mins,played,ours only,
+match,O2007,,2373,ND McKenzie,played,ours only,
+match,O3308,,2378,JEC Franklin,played,ours only,
+match,O1980,,2384,DA Marillier,played,ours only,
+match,O2031,,2384,DA Marillier,played,ours only,
+match,O2292,,2389,HJH Marshall,played,ours only,
+match,T1793,,2389,HJH Marshall,played,ours only,
+match,O1980,,2393,AM Blignaut,played,ours only,
+match,O1980,,2398,DD Ebrahim,played,ours only,
+match,O2031,,2398,DD Ebrahim,played,ours only,
+match,O2091,,2398,DD Ebrahim,played,ours only,
+match,O2051,,2402,L Vincent,played,ours only,
+match,O2292,,2402,L Vincent,played,ours only,
+match,O3351,,2409,Mohammad Ashraful,played,ours only,
+match,O3092,,2410,TT Samaraweera,played,ours only,
+match,T1982,,2410,TT Samaraweera,played,ours only,
+match,O2514,,2431,V Sehwag,played,ours only,
+match,O2936,,2431,V Sehwag,played,ours only,
+match,T1907,,2441,RO Hinds,played,ours only,
+match,O2517,,2443,AG Prince,played,ours only,
+match,O2007,,2444,GC Smith,played,ours only,
+match,O3296,,2444,GC Smith,played,ours only,
+match,O1980,,2452,T Taibu,played,ours only,
+match,O2031,,2452,T Taibu,played,ours only,
+match,O2091,,2452,T Taibu,played,ours only,
+match,T1623,,2454,SP Jones hurt,played,ours only,
+match,O2761,,2456,SJ Harmison,played,ours only,
+match,T1629,,2457,CEW Silverwood hurt,played,ours only,
+match,O2007,,2464,JA Rudolph,played,ours only,
+match,O3296,,2465,RJ Peterson,played,ours only,
+match,T1907,,2471,DBL Powell,played,ours only,
+match,T1605,,2476,M Muralitharan hurt,played,ours only,
+match,O3088,,2488,SB Styris,played,ours only,
+match,O2603,,2503,DS Smith,played,ours only,
+match,T1907,,2503,DS Smith,played,ours only,
+match,T1671,,2512,SR Waugh wicket,played,ours only,
+match,O2121,,2520,R Clarke,played,ours only,
+match,T1667,,2525,Mashrafe Mortaza hurt,played,ours only,
+match,O2159,,2536,Yuvraj Singh,played,ours only,
+match,O2855,,2536,Yuvraj Singh,played,ours only,
+match,O3444,,2536,Yuvraj Singh,played,ours only,
+match,O2656,,2537,A Symonds,played,ours only,
+match,O2121,,2540,PD Collingwood,played,ours only,
+match,O2761,,2540,PD Collingwood,played,ours only,
+match,O2051,,2546,BB McCullum,played,ours only,
+match,O2292,,2546,BB McCullum,played,ours only,
+match,O2786,,2546,BB McCullum,played,ours only,
+match,O2822,,2546,BB McCullum,played,ours only,
+match,O3088,,2546,BB McCullum,played,ours only,
+match,O3308,,2546,BB McCullum,played,ours only,
+match,O3538,,2546,BB McCullum,played,ours only,
+match,T1793,,2546,BB McCullum,played,ours only,
+match,O2091,,2561,V Sibanda,played,ours only,
+match,O2031,,2562,S Matsikenyeri,played,ours only,
+match,O2656,,2568,MJ Clarke,played,ours only,
+match,O3119,,2568,MJ Clarke,played,ours only,
+match,O3279,,2568,MJ Clarke,played,ours only,
+match,O3279,,2572,SR Watson,played,ours only,
+match,O3414,,2572,SR Watson,played,ours only,
+match,O2855,,2574,G Gambhir,played,ours only,
+match,O2901,,2574,G Gambhir,played,ours only,
+match,O2936,,2574,G Gambhir,played,ours only,
+match,O2514,,2575,KD Karthik,played,ours only,
+match,O2855,,2575,KD Karthik,played,ours only,
+match,O2936,,2575,KD Karthik,played,ours only,
+match,O4321,,2583,BRM Taylor,played,ours only,
+match,O2121,,2586,AJ Strauss,played,ours only,
+match,O2761,,2590,IR Bell,played,ours only,
+match,O3296,,2595,HM Amla,played,ours only,
+match,T2174,,2595,HM Amla,played,ours only,
+match,O2405,,2596,MF Maharoof,played,ours only,
+match,O2517,,2605,AB de Villiers,played,ours only,
+match,O3296,,2605,AB de Villiers,played,ours only,
+match,T1737,,2608,CK Langeveldt off Cremer,played,ours only,
+match,O2656,,2619,MEK Hussey,played,ours only,
+match,O2603,,2622,D Ramdin,played,ours only,
+match,T1907,,2622,D Ramdin,played,ours only,
+match,O3351,,2638,Abdur Razzak,played,ours only,
+match,O2351,,2640,WU Tharanga,played,ours only,
+match,O2405,,2640,WU Tharanga,played,ours only,
+match,O2672,,2640,WU Tharanga,played,ours only,
+match,O3092,,2640,WU Tharanga,played,ours only,
+match,O3274,,2640,WU Tharanga,played,ours only,
+match,O3807,,2640,WU Tharanga,played,ours only,
+match,O4052,,2640,WU Tharanga,played,ours only,
+match,O3351,,2641,Mushfiqur Rahim,played,ours only,
+match,O3499,,2641,Mushfiqur Rahim,played,ours only,
+match,O3856,,2641,Mushfiqur Rahim,played,ours only,
+match,O2761,,2643,KP Pietersen,played,ours only,
+match,O2656,,2644,SW Tait,played,ours only,
+match,O2121,,2647,ID Blackwell,played,ours only,
+match,O2514,,2649,MS Dhoni,played,ours only,
+match,O2855,,2649,MS Dhoni,played,ours only,
+match,O2901,,2649,MS Dhoni,played,ours only,
+match,O2936,,2649,MS Dhoni,played,ours only,
+match,O3444,,2649,MS Dhoni,played,ours only,
+match,O2761,,2654,OA Shah,played,ours only,
+match,O2603,,2661,RS Morton,played,ours only,
+match,O2786,,2664,JM How,played,ours only,
+match,O3088,,2664,JM How,played,ours only,
+match,T1793,,2664,JM How,played,ours only,
+match,T1793,,2665,PG Fulton,played,ours only,
+match,T1793,,2667,Key to Catching Positions,played,ours only,
+match,O2855,,2668,RP Singh,played,ours only,
+match,O2405,,2679,CK Kapugedera,played,ours only,
+match,O3718,,2679,CK Kapugedera,played,ours only,
+match,O1222,,2682,LPC Silva,played,ours only,
+match,O1223,,2682,LPC Silva,played,ours only,
+match,O1224,,2682,LPC Silva,played,ours only,
+match,O1247,,2682,LPC Silva,played,ours only,
+match,O1251,,2682,LPC Silva,played,ours only,
+match,O2672,,2682,LPC Silva,played,ours only,
+match,T1833,,2692,RP Singh leg cramp,played,ours only,
+match,O3499,,2693,Tamim Iqbal,played,ours only,
+match,O3856,,2693,Tamim Iqbal,played,ours only,
+match,O4650,,2693,Tamim Iqbal,played,ours only,
+match,O2761,,2695,MJ Prior,played,ours only,
+match,O2603,,2697,DJG Sammy,played,ours only,
+match,O2786,,2707,LRPL Taylor,played,ours only,
+match,O2822,,2707,LRPL Taylor,played,ours only,
+match,O3037,,2707,LRPL Taylor,played,ours only,
+match,O3088,,2707,LRPL Taylor,played,ours only,
+match,O3308,,2707,LRPL Taylor,played,ours only,
+match,O2786,,2711,GD Elliott,played,ours only,
+match,O2822,,2711,GD Elliott,played,ours only,
+match,O3037,,2711,GD Elliott,played,ours only,
+match,T1907,,2714,SJ Benn,played,ours only,
+match,O2786,,2717,JD Ryder,played,ours only,
+match,O3088,,2717,JD Ryder,played,ours only,
+match,O3119,,2718,BJ Haddin,played,ours only,
+match,O3592,,2718,BJ Haddin,played,ours only,
+match,O2786,,2720,DR Flynn,played,ours only,
+match,O3037,,2732,GJ Hopkins,played,ours only,
+match,O3119,,2734,CL White,played,ours only,
+match,T2218,,2736,M Vijay,played,ours only,
+match,O2822,,2739,MJ Guptill,played,ours only,
+match,O3088,,2739,MJ Guptill,played,ours only,
+match,O3538,,2739,MJ Guptill,played,ours only,
+match,T1907,,2741,BP Nash,played,ours only,
+match,T1982,,2742,NT Paranavitana,played,ours only,
+match,T1907,,2754,CH Gayle R Mins,played,ours only,
+match,O3351,,2768,Mahmudullah,played,ours only,
+match,O3856,,2768,Mahmudullah,played,ours only,
+match,O3351,,2775,Jahurul Islam,played,ours only,
+match,O3718,,2780,AD Mathews,played,ours only,
+match,O3296,,2781,WD Parnell,played,ours only,
+match,T2218,,2783,WP Saha,played,ours only,
+match,O3037,,2788,BJ Watling,played,ours only,
+match,O3308,,2788,BJ Watling,played,ours only,
+match,O3037,,2789,PJ Ingram,played,ours only,
+match,O3296,,2792,R McLaren,played,ours only,
+match,O3279,,2797,XJ Doherty,played,ours only,
+match,O3279,,2798,SPD Smith,played,ours only,
+match,O3592,,2798,SPD Smith,played,ours only,
+match,O3750,,2798,SPD Smith,played,ours only,
+match,O4130,,2801,EJG Morgan,played,ours only,
+match,O4238,,2801,EJG Morgan,played,ours only,
+match,O4298,,2801,EJG Morgan,played,ours only,
+match,O2936,,2809,SK Raina,played,ours only,
+match,T2218,,2811,CA Pujara,played,ours only,
+match,O3308,,2812,KS Williamson,played,ours only,
+match,O4487,,2812,KS Williamson,played,ours only,
+match,O3088,,2813,HK Bennett,played,ours only,
+match,O4156,,2817,DM Bravo,played,ours only,
+match,T1982,,2823,TM Dilshan R Mins,played,ours only,
+match,O3279,,2839,DA Warner,played,ours only,
+match,O3592,,2839,DA Warner,played,ours only,
+match,O3414,,2841,SE Marsh,played,ours only,
+match,O2901,,2844,V Kohli,played,ours only,
+match,O2936,,2844,V Kohli,played,ours only,
+match,O4196,,2844,V Kohli,played,ours only,
+match,T2218,,2844,V Kohli,played,ours only,
+match,O3538,,2847,DG Brownlie,played,ours only,
+match,O3351,,2852,Nasir Hossain,played,ours only,
+match,O3895,,2855,KOA Powell,played,ours only,
+match,O3274,,2860,NLTC Perera,played,ours only,
+match,O4052,,2860,NLTC Perera,played,ours only,
+match,O3274,,2861,HDRL Thirimanne,played,ours only,
+match,O3580,,2861,HDRL Thirimanne,played,ours only,
+match,O3718,,2861,HDRL Thirimanne,played,ours only,
+match,O3274,,2866,LD Chandimal,played,ours only,
+match,O3718,,2866,LD Chandimal,played,ours only,
+match,O4052,,2866,LD Chandimal,played,ours only,
+match,O2761,,2867,SR Patel,played,ours only,
+match,O4321,,2879,RW Chakabva,played,ours only,
+match,O4321,,2886,CR Ervine,played,ours only,
+match,O3279,,2889,MS Wade,played,ours only,
+match,O3414,,2889,MS Wade,played,ours only,
+match,O3750,,2889,MS Wade,played,ours only,
+match,O3580,,2890,FDM Karunaratne,played,ours only,
+match,O3296,,2894,F du Plessis,played,ours only,
+match,T2174,,2894,F du Plessis,played,ours only,
+match,O3296,,2896,D Elgar,played,ours only,
+match,O3351,,2897,Sohag Gazi,played,ours only,
+match,O3650,,2901,JWA Taylor,played,ours only,
+match,T2183,,2901,JWA Taylor,played,ours only,
+match,O3650,,2902,JM Bairstow,played,ours only,
+match,O4130,,2902,JM Bairstow,played,ours only,
+match,O4238,,2902,JM Bairstow,played,ours only,
+match,O4298,,2902,JM Bairstow,played,ours only,
+match,O4437,,2902,JM Bairstow,played,ours only,
+match,O2936,,2905,RA Jadeja,played,ours only,
+match,O3592,,2908,GJ Maxwell,played,ours only,
+match,O3750,,2908,GJ Maxwell,played,ours only,
+match,O3444,,2909,S Dhawan,played,ours only,
+match,O4196,,2909,S Dhawan,played,ours only,
+match,T2218,,2910,AM Rahane,played,ours only,
+match,O4298,,2912,JE Root,played,ours only,
+match,O4437,,2912,JE Root,played,ours only,
+match,O3351,,2914,Mominul Haque,played,ours only,
+match,O3351,,2915,Anamul Haque,played,ours only,
+match,O3499,,2915,Anamul Haque,played,ours only,
+match,O3414,,2927,GJ Bailey,played,ours only,
+match,O3592,,2927,GJ Bailey,played,ours only,
+match,O3750,,2927,GJ Bailey,played,ours only,
+match,O3750,,2940,JP Faulkner,played,ours only,
+match,O2855,,2946,RG Sharma,played,ours only,
+match,O3444,,2946,RG Sharma,played,ours only,
+match,O4196,,2946,RG Sharma,played,ours only,
+match,T2218,,2946,RG Sharma,played,ours only,
+match,O3538,,2948,TWM Latham,played,ours only,
+match,O4487,,2948,TWM Latham,played,ours only,
+match,O3750,,2968,MR Marsh,played,ours only,
+match,O3750,,2969,JR Hazlewood,played,ours only,
+match,T2218,,2971,KL Rahul,played,ours only,
+match,O4298,,2982,MM Ali,played,ours only,
+match,O4130,,2984,JC Buttler,played,ours only,
+match,O4437,,2984,JC Buttler,played,ours only,
+match,O4156,,2997,JO Holder,played,ours only,
+match,O4301,,2998,T Bavuma,played,ours only,
+match,T2174,,2998,T Bavuma,played,ours only,
+match,O4156,,3008,CR Brathwaite,played,ours only,
+match,O3895,,3010,SD Hope,played,ours only,
+match,O3913,,3010,SD Hope,played,ours only,
+match,O4156,,3010,SD Hope,played,ours only,
+match,O3856,,3012,Soumya Sarkar,played,ours only,
+match,O4650,,3013,Liton Das,played,ours only,
+match,O3538,,3018,L Ronchi,played,ours only,
+match,T2174,,3020,DJ Vilas,played,ours only,
+match,O3807,,3023,MDKJ Perera,played,ours only,
+match,O4052,,3023,MDKJ Perera,played,ours only,
+match,O3807,,3025,BKG Mendis,played,ours only,
+match,O3650,,3029,AU Rashid,played,ours only,
+match,T2183,,3035,KAJ Roach,played,ours only,
+match,T2183,,3036,JO Holder,played,ours only,
+match,T2183,,3037,ST Gabriel,played,ours only,
+match,O3650,,3038,AD Hales,played,ours only,
+match,O4630,,3046,Babar Azam,played,ours only,
+match,O3856,,3056,Sabbir Rahman,played,ours only,
+match,O3650,,3058,ZS Ansari,played,ours only,
+match,O4052,,3059,MD Shanaka,played,ours only,
+match,O3650,,3060,JM Vince,played,ours only,
+match,O4130,,3060,JM Vince,played,ours only,
+match,O4630,,3062,Iftikhar Ahmed,played,ours only,
+match,O4052,,3071,DM de Silva,played,ours only,
+match,O4052,,3072,PADLR Sandakan,played,ours only,
+match,O3807,,3078,DAS Gunaratne,played,ours only,
+match,O4650,,3083,Nurul Hasan,played,ours only,
+match,O4630,,3084,Mohammad Rizwan,played,ours only,
+match,O3913,,3087,ML Cummins,played,ours only,
+match,O3895,,3088,RL Chase,played,ours only,
+match,T2218,,3095,M Vijay R Mins,played,ours only,
+match,O3913,,3115,KA Hope,played,ours only,
+match,T2301,,3124,MA Starc,played,ours only,
+match,T2301,,3125,JR Hazlewood,played,ours only,
+match,T2301,,3126,NM Lyon,played,ours only,
+match,T2301,,3127,PJ Cummins,played,ours only,
+match,T2301,,3128,MR Marsh,played,ours only,
+match,T2301,,3129,SPD Smith,played,ours only,
+match,T2301,,3130,VD Philander,played,ours only,
+match,T2301,,3131,K Rabada,played,ours only,
+match,T2301,,3132,M Morkel,played,ours only,
+match,T2301,,3133,KA Maharaj,played,ours only,
+match,T2301,,3134,T Bavuma,played,ours only,
+match,O4156,,3136,SO Hetmyer,played,ours only,
+match,O4630,,3144,Imam-ul-Haq,played,ours only,
+match,O4101,,3150,KJ O'Brien,played,ours only,
+match,O3866,,3151,PR Stirling,played,ours only,
+match,O4101,,3151,PR Stirling,played,ours only,
+match,O4510,,3151,PR Stirling,played,ours only,
+match,O4542,,3151,PR Stirling,played,ours only,
+match,O4656,,3151,PR Stirling,played,ours only,
+match,O4709,,3151,PR Stirling,played,ours only,
+match,O4875,,3151,PR Stirling,played,ours only,
+match,O3866,,3153,WTS Porterfield,played,ours only,
+match,O4101,,3153,WTS Porterfield,played,ours only,
+match,O3866,,3154,A Balbirnie,played,ours only,
+match,O4101,,3154,A Balbirnie,played,ours only,
+match,O4542,,3154,A Balbirnie,played,ours only,
+match,O4656,,3154,A Balbirnie,played,ours only,
+match,O4709,,3154,A Balbirnie,played,ours only,
+match,O4875,,3154,A Balbirnie,played,ours only,
+match,O3866,,3155,NJ O'Brien,played,ours only,
+match,O3866,,3156,GC Wilson,played,ours only,
+match,O4301,,3157,AK Markram,played,ours only,
+match,O4196,,3168,RR Pant,played,ours only,
+match,O3414,,3170,AJ Finch,played,ours only,
+match,O3592,,3170,AJ Finch,played,ours only,
+match,O3750,,3170,AJ Finch,played,ours only,
+match,O4630,,3209,Fakhar Zaman,played,ours only,
+match,O4301,,3226,K Verreynne,played,ours only,
+match,O3750,,3231,SM Boland,played,ours only,
+match,O4650,,3237,Tanzid Hasan,played,ours only,
+match,O4650,,3239,Towhid Hridoy,played,ours only,
+match,O3750,,3252,UT Khawaja,played,ours only,
+match,O3807,,3259,N Dickwella,played,ours only,
+match,O4052,,3259,N Dickwella,played,ours only,
+match,O3718,,3260,MD Gunathilaka,played,ours only,
+match,O4809,,3264,S Samarawickrama,played,ours only,
+match,O3650,,3273,JJ Roy,played,ours only,
+match,O4238,,3273,JJ Roy,played,ours only,
+match,O4298,,3273,JJ Roy,played,ours only,
+match,O4437,,3273,JJ Roy,played,ours only,
+match,O4130,,3274,JL Denly,played,ours only,
+match,O4238,,3274,JL Denly,played,ours only,
+match,O3499,,3280,Mohammad Mithun,played,ours only,
+match,O4487,,3286,GD Phillips,played,ours only,
+match,O4301,,3287,HE van der Dussen,played,ours only,
+match,O4487,,3297,DJ Mitchell,played,ours only,
+match,O4487,,3334,DP Conway,played,ours only,
+match,O4321,,3341,M Shumba,played,ours only,
+match,O4298,,3349,SW Billings,played,ours only,
+match,O4196,,3364,SS Iyer,played,ours only,
+match,O3807,,3370,JDF Vandersay,played,ours only,
+match,O4809,,3382,KNM Fernando,played,ours only,
+match,O4510,,3394,HT Tector,played,ours only,
+match,O4656,,3394,HT Tector,played,ours only,
+match,O4709,,3394,HT Tector,played,ours only,
+match,O4875,,3394,HT Tector,played,ours only,
+match,O4510,,3395,L Tucker,played,ours only,
+match,O4542,,3395,L Tucker,played,ours only,
+match,O4656,,3395,L Tucker,played,ours only,
+match,O4709,,3395,L Tucker,played,ours only,
+match,O4875,,3395,L Tucker,played,ours only,
+match,O4709,,3396,C Campher,played,ours only,
+match,O4510,,3410,M Commins,played,ours only,
+match,O4510,,3412,GH Dockrell,played,ours only,
+match,O4542,,3412,GH Dockrell,played,ours only,
+match,O4709,,3412,GH Dockrell,played,ours only,
+match,O4875,,3511,C Carmichael,played,ours only,
+match,O4510,,3514,ST Doheny,played,ours only,
+match,O4542,,3514,ST Doheny,played,ours only,
+match,O1219,,3532,R Dravid,played,ours only,
+match,O1229,,3532,R Dravid,played,ours only,
+match,O2159,,3532,R Dravid,played,ours only,
+match,O2514,,3532,R Dravid,played,ours only,
+match,O2901,,3532,R Dravid,played,ours only,
+match,O4238,,3546,T Banton,played,ours only,
+match,O4809,,3548,J Liyanage,played,ours only,
+match,O4301,,3551,DA Miller,played,ours only,
+match,O5025,,3582,T Suri,played,ours only,
+match,O5025,,3583,Adeeb Usmani,played,ours only,
+match,O5025,,3584,AD Nath,played,ours only,
+match,O5025,,3585,Harpreet Singh,played,ours only,
+match,O5025,,3586,R Chopra,played,ours only,
+match,O5025,,3587,Aayan Afzal Khan,played,ours only,
+match,O5025,,3588,Shoaib Khan,played,ours only,
+match,O5025,,3589,Ali Naseer,played,ours only,
+match,O5025,,3590,Basil Hameed,played,ours only,
+match,O4335,,3613,Jatinder Singh,played,ours only,
+match,O4979,,3624,YS Samra,played,ours only,
+match,O4979,,3625,A Johnson,played,ours only,
+match,O4979,,3628,H Thaker,played,ours only,
+match,O4979,,3630,S Movva,played,ours only,
+match,O4979,,3634,Sukhjinder Singh,played,ours only,
+match,O4809,,3654,WIA Fernando,played,ours only,
+match,O3759,,3703,KJ Coetzer,played,ours only,
+match,O3759,,3704,CD Wallace,played,ours only,
+match,O3759,,3706,MH Cross,played,ours only,
+match,O4796,,3706,MH Cross,played,ours only,
+match,O4947,,3706,MH Cross,played,ours only,
+match,O3759,,3707,RD Berrington,played,ours only,
+match,O4796,,3707,RD Berrington,played,ours only,
+match,O4947,,3707,RD Berrington,played,ours only,
+match,O3759,,3708,PL Mommsen,played,ours only,
+match,O4796,,3711,MRJ Watt,played,ours only,
+match,O4796,,3714,MA Leask,played,ours only,
+match,O4196,,3717,KM Jadhav,played,ours only,
+match,O3895,,3745,E Lewis,played,ours only,
+match,O3913,,3745,E Lewis,played,ours only,
+match,O3895,,3746,JN Mohammed,played,ours only,
+match,O3913,,3746,JN Mohammed,played,ours only,
+match,O3913,,3748,AR Nurse,played,ours only,
+match,O4156,,3748,AR Nurse,played,ours only,
+match,O3913,,3753,R Powell,played,ours only,
+match,O3913,,3754,KOK Williams,played,ours only,
+match,O4947,,3779,HG Munsey,played,ours only,
+match,O4796,,3780,BTJ Wheal,played,ours only,
+match,O4101,,3801,SW Poynter,played,ours only,
+match,O4796,,3802,MA Jones,played,ours only,
+match,O4156,,3824,N Pooran,played,ours only,
+match,O3580,,3826,BMAJ Mendis,played,ours only,
+match,O0276,,3852,Saad Ali,played,ours only,
+match,O4301,,3881,JN Malan,played,ours only,
+match,O4510,,3900,GJ Delany,played,ours only,
+match,O4335,,3919,Naseem Khushi,played,ours only,
+match,O4437,,3936,PD Salt,played,ours only,
+match,O4335,,3970,Ayan Khan,played,ours only,
+match,O4335,,3974,KH Prajapati,played,ours only,
+match,O4487,,4001,FH Allen,played,ours only,
+match,O4809,,4028,MNK Fernando,played,ours only,
+match,O4796,,4046,J Jarvis,played,ours only,
+match,O4979,,4055,Pargat Singh,played,ours only,
+match,O4979,,4056,M Spoors,played,ours only,
+match,O4979,,4058,NR Kirton,played,ours only,
+match,O4979,,4060,Saad Bin Zafar,played,ours only,
+match,O4796,,4121,ARI Umeed,played,ours only,
+match,O4796,,4124,C Tear,played,ours only,
+match,O4947,,4128,FDW McCreath,played,ours only,
+match,O2656,,4284,JR Hopes,played,ours only,
+match,O2514,,4291,RV Uthappa,played,ours only,
+match,O2602,,4320,B Zuiderent,played,ours only,
+match,O2602,,4322,AN Kervezee,played,ours only,
+match,O2602,,4325,ES Szwarczynski,played,ours only,
+match,O2602,,4327,PW Borren,played,ours only,
+match,O2602,,4330,J Smits,played,ours only,
+match,O2753,,4350,MA Ouma,played,ours only,
+match,O2877,,4350,MA Ouma,played,ours only,
+match,O2877,,4351,DO Obuya,played,ours only,
+match,O1061,,4353,SO Tikolo,played,ours only,
+match,O2753,,4353,SO Tikolo,played,ours only,
+match,O2877,,4353,SO Tikolo,played,ours only,
+match,O2877,,4355,CO Obuya,played,ours only,
+match,O2753,,4357,JK Kamande,played,ours only,
+match,O2877,,4357,JK Kamande,played,ours only,
+match,O2753,,4360,HA Varaiya,played,ours only,
+match,O2753,,4364,AO Suji,played,ours only,
+match,O1061,,4371,KO Otieno,played,ours only,
+match,O2753,,4371,KO Otieno,played,ours only,
+match,O1061,,4372,HS Modi,played,ours only,
+match,O2753,,4373,NN Odhiambo,played,ours only,
+match,O2761,,4378,LJ Wright,played,ours only,
+match,O2602,,4387,TN de Grooth,played,ours only,
+match,O2602,,4421,AF Buurman,played,ours only,
+match,O2753,,4434,AA Obanda,played,ours only,
+match,O2877,,4434,AA Obanda,played,ours only,
+match,O3119,,4448,DJ Hussey,played,ours only,
+match,O3279,,4448,DJ Hussey,played,ours only,
+match,O2753,,4462,RR Patel,played,ours only,
+match,O2855,,4488,YK Pathan,played,ours only,
+match,O2822,,4503,PD McGlashan,played,ours only,
+match,O2855,,4506,AM Nayar,played,ours only,
+match,O3279,,4558,PJ Forrest,played,ours only,
+match,O3274,,4569,S Weerakoon,played,ours only,
+match,O2159,,4605,RS Gavaskar,played,ours only,
+match,O1061,,4623,MO Odumbe,played,ours only,
+match,O1061,,4625,AY Karim,played,ours only,
+match,O1641,,4671,CJ Nevin,played,ours only,
+match,T1076,,4929,Saleem Malik,played,ours only,
+match,O0269,,4958,Steve Smith,played,ours only,
+match,O0195,,4964,GD Alwis,played,ours only,
+match,O1219,,4978,Robin Singh,played,ours only,
+match,O1268,,4978,Robin Singh,played,ours only,
+match,O0607,,5006,Jack Russell,played,ours only,
+match,O1061,,5025,D Chudasama,played,ours only,
+match,O2718,,5220,player 55354,played,ours only,
+match,O2718,,5221,player 55110,played,ours only,
+match,O2146,,5307,player 47953,played,ours only,
+match,O2146,,5308,player 24731,played,ours only,
+match,O2288,,5337,player 10404,played,ours only,
+match,O1061,,5347,Tariq Iqbal,played,ours only,
+match,O3709,,5374,player 79405,played,ours only,
+match,O0904,,5538,Bhupinder Singh snr,played,ours only,
+match,O0906,,5538,Bhupinder Singh snr,played,ours only,
+match,O1220,,5639,Salahuddin Ahmed.,played,ours only,
+match,O0273,,5740,Saadat Ali,played,ours only,
+match,O0273,,5742,Sajid Ali,played,ours only,

@@ -46,6 +46,13 @@ def pack():
     con.execute("PRAGMA journal_mode=DELETE")
     con.execute("DELETE FROM commentary")
     con.execute("DELETE FROM build_log")
+    # the home page's coverage numbers, counted once here instead of on every visit
+    import queries as Q
+    con.execute("DROP TABLE IF EXISTS coverage_cache")
+    con.execute("CREATE TABLE coverage_cache (json TEXT)")
+    con.row_factory = sqlite3.Row
+    con.execute("INSERT INTO coverage_cache VALUES (?)", (json.dumps(Q.coverage(con, fresh=True)),))
+    con.row_factory = None
     con.commit()
     con.execute("VACUUM")
     counts = {t: con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]

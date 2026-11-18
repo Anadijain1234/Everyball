@@ -25,7 +25,9 @@ log = []
 def say(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); log.append(s)
 
-PRI = {"cricsheet": 0, "espn": 1, "davis": 2, "kaggle": 3, "book": 4}
+# 18 Nov 2026: ESPN's own scorecards ('espn_live', every match since 1877) vote; the Wisden book is dropped (Anadi).
+PRI = {"cricsheet": 0, "espn_live": 1, "espn": 2, "davis": 3, "kaggle": 4}
+DROPPED = {"book", "gold"}       # 'gold' = this script's own output published for the website (publish_gold.py)
 name = {r[0]: r[1] for r in q("select player_id, name from players")}
 meta = {r[0]: {"fmt": r[1], "ball": r[2], "card": r[3], "bpo": r[4] or 6, "date": r[5], "no": r[6]}
         for r in q("select match_id, format, ball_source, card_source, balls_per_over, start_date, number from matches")}
@@ -109,7 +111,7 @@ say(f"    book scorecards: {sum(1 for s,_ in book_status.values() if s=='verifie
 say("2/8 Choosing every batting field by vote ...")
 bat = collections.defaultdict(list)
 for r in braw:
-    if r[17] == "book" and book_status.get(r[0], ("",))[0] == "ignored": continue
+    if r[17] in DROPPED: continue
     bat[(r[0], r[1], r[3])].append(r)
 FIELDS = {"runs": 9, "balls": 10, "minutes": 11, "fours": 12, "sixes": 13, "not_out": 14, "bowler_id": 7}
 gold_bat, disagree = [], []
@@ -149,7 +151,7 @@ gb = {(g[0], g[1], g[3]): g for g in gold_bat}
 say("3/8 Checking whether each innings' ball-by-ball adds up ...")
 icard = collections.defaultdict(list)
 for mid, inn, team, runs, wk, ov, ex, dec, src in q("select match_id, inn, team, runs, wickets, overs, extras, declared, source from innings"):
-    if src == "book" and book_status.get(mid, ("",))[0] == "ignored": continue
+    if src in DROPPED: continue
     icard[(mid, inn)].append((src, team, runs, wk, ov, ex, dec))
 bbtot = {}
 for mid, inn, src, runs, legal, unsure, n in q("""select match_id, inn, source, sum(coalesce(bat_runs,0)+coalesce(extras,0)),
@@ -249,7 +251,7 @@ for mid, inn, ov, bo, legal, r, ex, et, src in q("select match_id, inn, over_no,
 bb_md = collections.Counter()
 for (mid, inn, ov), (lb, ch, bs) in ovr.items():
     if lb >= meta[mid]["bpo"] and ch == 0 and len(bs) == 1: bb_md[(mid, inn, next(iter(bs)))] += 1
-MPRI = {"espn": 0, "davis": 1, "kaggle": 2, "book": 3, "cricsheet": 4}
+MPRI = {"espn_live": 0, "espn": 1, "davis": 2, "kaggle": 3, "cricsheet": 4}
 def vote_maidens(vals, key):
     vals = [(s_, v) for s_, v in vals if v is not None]
     if len({v for _, v in vals}) <= 1 or key not in bb_bowl:
@@ -265,7 +267,7 @@ def balls_from_overs(ov, bpo):
     m_ = re.match(r"^(\d+)(?:\.(\d))?$", str(ov).strip()) if ov is not None else None
     return int(m_.group(1)) * bpo + int(m_.group(2) or 0) if m_ else None
 for r in q("select match_id, inn, player_id, team, overs, balls, maidens, runs, wickets, source from bowling"):
-    if r[9] == "book" and book_status.get(r[0], ("",))[0] == "ignored": continue
+    if r[9] in DROPPED: continue
     r = list(r)
     fo = balls_from_overs(r[4], meta.get(r[0], {}).get("bpo", 6))
     if fo is not None and r[5] != fo:
@@ -327,6 +329,10 @@ for g in gold_bat:
 for g in gold_bowl:
     mid, pid = g[0], g[2]; f = meta[mid]["fmt"]; c = ps[(pid, f)]; mts[(pid, f)].add(mid)
     c["balls_bowled"] += g[4] or 0; c["maidens"] += g[5] or 0; c["runs_conceded"] += g[6] or 0; c["wickets"] += g[7] or 0
+# matches: the whole XI counts (a player who neither batted nor bowled still played the match)
+for mid, pid, src in q("select match_id, player_id, source from played"):
+    if src in DROPPED or mid not in meta or pid is None: continue
+    f = meta[mid]["fmt"]; ps[(pid, f)]; mts[(pid, f)].add(mid)
 con.execute("drop table if exists player_stats_gold")
 con.execute("""create table player_stats_gold (player_id int, format text, matches int, innings int, runs int, not_outs int,
   average real, hundreds int, fifties int, ducks int, high int, balls_faced int, balls_bowled int, maidens int,
@@ -363,6 +369,11 @@ s = stat("SK Warne", "Test"); chk("Warne Test wickets", s["wickets"], 708); chk(
 s = stat("A Kumble", "Test"); chk("Kumble Test wickets", s["wickets"], 619); chk("Kumble Test maidens", s["maidens"], 1576)
 s = stat("GD McGrath", "Test"); chk("McGrath Test wickets", s["wickets"], 563); chk("McGrath Test balls", s["balls_bowled"], 29248); chk("McGrath Test maidens", s["maidens"], 1470)
 s = stat("JH Kallis", "Test"); chk("Kallis Test runs", s["runs"], 13289); chk("Kallis Test wickets", s["wickets"], 292)
+def matches(nm, f):
+    return sum((q("select matches from player_stats_gold where player_id=? and format=?", pid, f) or [(0,)])[0][0] or 0 for pid in byname[nm])
+chk("Tendulkar Test matches", matches("SR Tendulkar", "Test"), 200); chk("Tendulkar ODI matches", matches("SR Tendulkar", "ODI"), 463)
+chk("McGrath ODI matches", matches("GD McGrath", "ODI"), 250); chk("Kallis Test matches", matches("JH Kallis", "Test"), 166)
+chk("Border Test matches", matches("AR Border", "Test"), 156); chk("Bradman Test matches", matches("DG Bradman", "Test"), 52)
 hi = q("select max(b.runs) from batting_gold b where b.player_id in (%s)" % ",".join(map(str, byname["BC Lara"]))); chk("Lara highest Test score", hi[0][0], 400)
 con.execute("drop table if exists official_check")
 con.execute("create table official_check (question text, ours text, official text, status text)")

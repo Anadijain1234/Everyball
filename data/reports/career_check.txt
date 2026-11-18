@@ -1,0 +1,52 @@
+1. BATTING lines compared with ESPN: 183086
+   runs      183085 agree,     1 differ (99.999%)
+   balls     161199 agree,    25 differ (99.984%)
+   4s        172664 agree,     9 differ (99.995%)
+   6s        182611 agree,    16 differ (99.991%)
+   not out   183084 agree,     2 differ (99.999%)
+   lines ESPN has that we lack: 0; lines we have in ESPN matches that ESPN lacks: 47
+2. BOWLING lines compared with ESPN: 111493
+   balls          111362 agree,   131 differ (99.883%)
+   maidens        111407 agree,    86 differ (99.923%)
+   runs conceded  111491 agree,     2 differ (99.998%)
+   wickets        111493 agree,     0 differ (100.000%)
+   lines ESPN has that we lack: 0
+3. PLAYER-MATCHES: in our XI but not ESPN's 804; in ESPN's XI but not ours 0
+   matches ESPN has a scorecard/XI for: 7696 of our 7704
+4. CAREERS (player x format) compared: 6464; differ on matches 549, runs 14, wickets 7
+   Ali Khan ODI runs: ours 333, ESPN 20
+   AY Patel Test runs: ours 343, ESPN 219
+   Ayan Khan ODI runs: ours 1161, ESPN 1072
+   Shakib Al Hasan ODI runs: ours 7620, ESPN 7570
+   Jasdeep Singh ODI runs: ours 357, ESPN 308
+   Sajeewa de Silva ODI runs: ours 87, ESPN 39
+   Jatinder Singh ODI runs: ours 2389, ESPN 2362
+   Harmeet Singh ODI runs: ours 440, ESPN 416
+   Sajeewa de Silva Test runs: ours 76, ESPN 65
+   RML Taylor ODI runs: ours 163, ESPN 154
+   AY Patel Test wickets: ours 100, ESPN 91
+   WU Tharanga ODI matches: ours 235, ESPN 227
+   PR Stirling ODI matches: ours 177, ESPN 169
+   BB McCullum ODI matches: ours 260, ESPN 252
+   SP Fleming ODI matches: ours 280, ESPN 273
+5. TWENTY RANDOM CAREERS, every line:
+   W Larkins: 51/51 lines exactly equal to ESPN; matches differing 1
+   Salim Altaf: 70/78 lines exactly equal to ESPN; matches differing 0
+   JC Tongue: 60/60 lines exactly equal to ESPN; matches differing 0
+   J Botha: 141/141 lines exactly equal to ESPN; matches differing 0
+   A Kuruvilla: 62/62 lines exactly equal to ESPN; matches differing 0
+   CPH Ramanayake: 150/150 lines exactly equal to ESPN; matches differing 0
+   Tahir Naqqash: 105/106 lines exactly equal to ESPN; matches differing 0
+   Sarfraz Ahmed: 187/187 lines exactly equal to ESPN; matches differing 0
+   OJ Pope: 113/113 lines exactly equal to ESPN; matches differing 0
+   ST Finn: 210/210 lines exactly equal to ESPN; matches differing 0
+   DR Doshi: 111/113 lines exactly equal to ESPN; matches differing 0
+   Raqibul Hasan: 76/76 lines exactly equal to ESPN; matches differing 0
+   AR Caddick: 291/291 lines exactly equal to ESPN; matches differing 0
+   Iftikhar Anjum: 96/97 lines exactly equal to ESPN; matches differing 0
+   Moin Khan: 287/287 lines exactly equal to ESPN; matches differing 1
+   ALF de Mel: 140/153 lines exactly equal to ESPN; matches differing 0
+   ARC Fraser: 208/208 lines exactly equal to ESPN; matches differing 0
+   SK Patel: 31/31 lines exactly equal to ESPN; matches differing 0
+   DAJ Holford: 62/74 lines exactly equal to ESPN; matches differing 0
+   RC Irani: 68/69 lines exactly equal to ESPN; matches differing 0

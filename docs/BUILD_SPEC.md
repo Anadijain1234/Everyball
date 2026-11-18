@@ -106,6 +106,13 @@ in `Downloads\ESPN full commentary\`. The download scripts: `scripts/browser/eve
 (must be copied from the laptop into the repo) and `scripts/browser/everyball_espn_redo.js`.
 
 ### 2.7 To add (new)
+- **ESPN match notes, close of play and awards (NOT in the full download; checked 13 Nov).** Each match page's
+  `content.notes` holds facts like "GD McGrath first 3 overs were all maidens (remaining 5 overs conceded 48 runs at
+  9.6 RPO)", "SR Tendulkar was stumped off a wide", "SK Warne conceded 10 runs in his 1st over" (ODI #1065);
+  `content.closeOfPlay` = day-by-day scores for Tests; `content.matchPlayerAwards` = player of the match/series.
+  One request per match (7,692; a few minutes within the 5,000/min limit): extend the redo browser script to fetch
+  them for every match -> tables `match_notes` (match_id, group, text, source) and `close_of_play`. The old archive
+  scorecards also carry match flow ("India 100 off 22.5 overs", "NS Sidhu 50 off 82 balls"): read those too.
 - **Measured weather** for every match day since 1940 (Open-Meteo historical archive, ERA5 reanalysis; free).
 - **ESPN live match report stories** (`match.reportStoryId` / `reportStory`; Stage 3 pitch tags).
 - Grounds with coordinates (from ESPN ground objects + a one-time geocode list).
@@ -245,35 +252,66 @@ removed; records with rows but no id are listed in the report. Known leftovers (
 - Facts to keep in mind: text on 12% of balls in 2000-04 (ESPN wrote only notable balls), 62% 1990s, 80% 2005-09,
   96%+ from 2010; 13,710 between-ball pieces discuss line/length/what to bowl.
 
-## 9. Labels (cricket factors) - never overwrite, always say where they came from
-**From ESPN fields (exact):** line, length (2015+, ~90%), shot type + control (2000+, ~85-90%), wagon (real when not 0),
-dismissal type, timestamp (2020+).
-**Exact text rules (code), each with a test list of examples:**
-- speed: `(\d{2,3}(?:\.\d)?)\s?(kph|km/h|kmph|mph)` (mph converted, both kept);
-- angle: `\b(over|around|round) the wicket\b` (carried forward to the bowler's next balls until changed);
-- slips/field: `\b(one|two|three|four|five|\d) slips?\b`, gully, short leg, silly point, leg slip, sweeper, deep
-  square, fine leg, third man, long on/off, "packed off side", "leg-side field";
-- match state: drinks, lunch, tea, stumps, innings break, rain, bad light, floodlights, new ball taken;
-- DRS: review, "umpire's call", "struck down", "overturned", "stays";
-- milestone: fifty, hundred, five-for;
-- dismissal fielding position: fielder name from the dismissal text ("c Smith b Cummins") + position from the
-  commentary ("taken at second slip", "top edge to fine leg") -> label `dismissal_position` (rule first, AI for the rest),
-  so the Ask box can answer "where does X get out most?" (position, line, length, shot, bowling type).
-**AI labels (meaning; Stage 3 method):** the AI labels a sample, a small model learns from it and labels the rest;
-accuracy measured on **Anadi's 500 hand-labelled lines**; a keyword method is the baseline to beat; a label is
-used only if it beats the baseline. Each AI label has a confidence. Taxonomy (allowed values fixed in advance):
-- delivery: line/length (for pre-2015 balls), pace/spin, variation (bouncer, yorker, slower ball, cutter, knuckle,
-  googly, doosra, carrom, arm ball, flipper), movement (inswing, outswing, reverse, seam in, seam away, turn in,
-  turn away, drift), bounce (extra, low, uneven, skid);
-- shot: front/back foot, edge (inside/outside/top), beaten, left alone, mistimed, appeal;
-- conditions: pitch (green, dry, cracks, turning, two-paced, flat, footmarks, variable bounce), weather (overcast,
-  sunny, humid, hot, rain, bad light), dew, wind (direction relative to the pitch/batter, strength), ball (new, old,
-  reverse, soft, changed);
-- tactics: bowling plan (outside off, packed off side, short-ball plan, wide yorkers, leg theory, attack the stumps),
-  batting intent (attack, defend, rotate), field intent (attacking/defensive);
-- insight: a piece that explains why something works (e.g. wind to leg + right-hander -> bowl outside off, pack the
-  off side).
-"Not mentioned" = unknown, never "no".
+## 9. Labels (cricket factors): five layers, detailed (agreed 13 Nov)
+Rules for every label: never overwrite anything; say where it came from (method: espn / rule / ai / weather /
+computed) with a confidence for AI; fixed allowed values decided in advance; "not mentioned" = unknown, never "no".
+
+**Illustrative example of one fully labelled ball (NOT a real ball):** Bumrah to Smith, 32.4, day 2 morning:
+fast, 143 kph (said), back of a length, 5th stump, wobble seam, nipped away late, extra bounce, wide of the crease,
+over the wicket, ball 31 overs old | back foot, defensive push, intent defend, outside edge, carried to 2nd slip,
+chance dropped by Khawaja (hard) | 7th dot in a row, 23 balls since his last boundary, partnership 48 off 131, Smith
+61 off 140 (set) | 5th over of his 3rd spell, spell 5-2-9-1 | 3 slips, gully, short leg, leg side packed | plan: 3
+away-movers then held its line | overcast, humid, 21 C measured, breeze towards fine leg, green tinge, cracks opening.
+
+**Layer 1: every ball**
+- Delivery: line (ESPN 5 kinds + finer: 4th stump, 5th stump, corridor of uncertainty, at the body, down leg, wide);
+  length (yorker, half-volley, full, good, back of a length, short, bouncer, full toss); pace band (express 145+,
+  fast 140-145, fast-medium, medium, slow; spin: slow/quick through the air); speed kph when said (exact rule);
+  variation (bouncer, yorker, wide yorker, slower ball: off-cutter, leg-cutter, back of the hand, knuckle;
+  cross-seam, wobble seam, googly, doosra, carrom, arm ball, flipper, slider, top-spinner, quicker one); movement
+  (inswing, outswing, late swing, reverse in/out, seam in, seam away, nip-back, turn in/away, sharp turn, drift, dip);
+  bounce (steep, extra, low, shooter, uneven, skid); release (wide of the crease, close to the stumps); angle
+  (over/around, carried forward); ball age (overs since the new ball; second new ball).
+- Batter: footwork (front foot, back foot, stepping out, backing away, on the walk, crease-bound); intent (attack,
+  defend, rotate, leave); contact (middled, inside edge, outside edge, top edge, bottom edge, gloved, padded, played
+  and missed, beaten, mistimed); shot (ESPN 40 types) and direction (wagon zone + named region); outcome (dot, runs,
+  boundary, wicket, chance).
+- Chances and fielding: dropped catch (fielder, position, difficulty easy/medium/hard), missed stumping, missed
+  run-out, misfield, great catch, boundary save, overthrows.
+- Umpiring: appeal type, decision, DRS review, outcome (struck down / upheld / umpire's call), ball-tracking details
+  (pitched outside leg, impact outside, umpire's call on hitting).
+- Pressure state (computed from the balls): dots in a row, balls since last boundary, partnership balls/runs, new
+  batter (<10 balls), required rate and rate pressure, wickets in last 5 overs, phase.
+- Batter state (computed): balls faced, runs, set or not, minutes batted, milestone near (90s, 40s).
+- Bowler state (computed): spell number, over of spell, ball of over, spell figures, overs in the day.
+
+**Layer 2: every dismissal** - mode, fielder, position (2nd slip, gully, leg gully, fine leg, deep square...),
+shot played, delivery labels, and the **setup** = labels of the 3-6 balls before it (same bowler and the other end).
+
+**Layer 3: every over / spell** - plan (short-ball, outside off, stump to stump, wide line, leg trap, bodyline-style,
+round the wicket to left-handers), field (slips count, catchers, deep fielders, ring, leg-side packed / off-side
+packed), angle, maiden, pressure build-up, change of ends.
+
+**Layer 4: every session / day** - pitch state (green, dry, cracks, footmarks, two-paced, variable bounce, flat,
+turning from day N), weather (overcast, sunny, humid, hot, rain breaks, bad light), dew (evening), wind (direction
+relative to the pitch and to a right-hander, strength, "breeze from the X End"), light (floodlights), ball changes,
+the over where reverse swing started, session result.
+
+**Layer 5: every match / player** - toss decision and the reason given, pre-match pitch report, conditions number
+(spin-friendly, seam-friendly, difficulty), measured weather, short-boundary side, altitude, ground; per player
+(derived): weakness map, scoring map, dismissal map, style fingerprint (section 21).
+
+**Insight triples:** every tactical line becomes (condition -> plan -> outcome), e.g. (wind to leg + right-hander ->
+bowl outside off, pack the off side -> scoring dried up). Stored in `insights` (match_id, inn, over, condition, plan,
+outcome, text id, confidence). The duel and conditions models learn from them.
+
+**How labels are made:** ESPN fields first (exact); exact text rules second (code, each rule with a test list):
+speed `(\d{2,3}(?:\.\d)?)\s?(kph|km/h|kmph|mph)`; angle `\b(over|around|round) the wicket\b`; slips
+`\b(one|two|three|four|five|\d) slips?\b`, gully, short leg, silly point, leg slip, sweeper, deep square, fine leg,
+third man, long on/off; match state (drinks, lunch, tea, stumps, innings break, rain, bad light, new ball); DRS
+words; milestones; dismissal fielder from "c X b Y". AI third (meaning): the AI labels a sample, a small model
+learns and labels the rest; accuracy measured on Anadi's 500 hand-labelled lines; a keyword method is the baseline;
+a label is used only if it beats the baseline. Text input = ALL commentary (ball lines + between-ball text).
 
 ## 10. Weather and grounds
 - grounds: from ESPN ground objects (name, town, country) + coordinates (one-time list; check each by hand-free
@@ -336,7 +374,9 @@ via Sarvam `mayura:v1`; 6 questions/min and 60/day per visitor; same question = 
 
 ## 15. The model (Stage 3-4; trained on Kaggle's free GPU/CPU)
 **Training data (clean subset; nothing deleted to get it):** balls from Cricsheet, Davis balls with sure = 1 (98.6%),
-ESPN innings that add up; labels from ESPN (line/length 2015+, shot 2000+) as targets; ball lines as input text;
+ESPN innings that add up; labels from ESPN (line/length 2015+, shot 2000+) as targets; **ALL commentary text is
+input (Anadi, 13 Nov)**: the ball's own line for that ball, and the between-ball text ("he has been bowling short of a
+length outside off all morning", plans, field and angle changes) for the spell/over/session around it;
 angle/field changes as features for following balls; insights, pitch/weather/dew/wind labels and measured weather
 feed the conditions model; reader comments and promo are used too, tagged (the model can weigh them). Every change to the data or the model is kept
 only if it scores better on the **fixed hidden test set** (chosen once, e.g. a set of complete series 2015-2024, never
@@ -349,7 +389,14 @@ trained on).
    adjusted for conditions, era, home/away, ball age, phase, pressure; Bayesian hierarchical, so small duels borrow
    strength and move only when the real duel clearly differs; output a range ("Dravid won, 21-41"); verdict =
    actual v expected.
-4. **Estimates where no ball-by-ball exists** (Gavaskar v Imran, Border v Hadlee, 1971-98 ODIs): from scorecards,
+4. **Estimates where no ball-by-ball exists = constraint reconstruction (Anadi's "mesh", 13 Nov).** Every known fact is a
+   constraint: each batter's runs/balls/4s/6s, each bowler's overs/runs/maidens/wickets, fall of wickets (score and
+   over), partnerships, match-flow notes ("50 off 43 balls", "India 100 off 22.5 overs"), spell notes ("McGrath's first
+   3 overs were maidens, the next 5 cost 48"), who was at the crease when, transcript facts ("clipped McGrath for
+   three"). The model samples many ball sequences that satisfy ALL constraints, weighted by each player's real
+   tendencies (learned from the ball-by-ball era), and reports ranges ("Sachin v McGrath in this match: X-Y balls,
+   A-B runs"), always labelled estimate. More constraints -> narrower ranges. Tested by hiding the ball-by-ball of
+   modern matches, keeping only their scorecards + notes, reconstructing, and comparing. Methods named before:**Estimates where no ball-by-ball exists** (Gavaskar v Imran, Border v Hadlee, 1971-98 ODIs): from scorecards,
    who got out to whom, fall of wickets, partnerships, when each batter got out, each player's style from their real
    data (IPF / Bayesian MCMC / Markov + multinomial), tested on hidden modern matches; always labelled estimate.
 5. Wicket predictor (chance of a wicket on this ball), pressure meter, bunny finder, "struggles where".
@@ -400,3 +447,47 @@ scorecards); ESPN v our database matched exactly in 14 of 15 shared matches (ODI
 ## 20. Open items
 Test #1541 ball-by-ball (none found); Kaggle licence note; 100 test questions (Anadi); 500 hand-labelled lines
 (Anadi, Stage 3); ESPN confirmation for the weekly update; ESPN live report stories download; T20s: not doing.
+
+## 21. Big ideas (12 accepted by Anadi 13 Nov, + no. 13 "Restore from TV") - built after the database; estimates always labelled
+1. **Time machine** ("Bradman v Bumrah"): simulate any two players from any era, ball by ball, with the duel model +
+   era adjustment; always labelled "simulation", with ranges.
+2. **Captain's notebook:** pick batter, ground, weather, time of day -> the bowling plans that historically worked
+   best against him in those conditions, with the evidence (balls, commentary lines, insight triples).
+3. **Setup detector:** find classic setups automatically (e.g. 3 away-movers then one in) and rank bowlers by how
+   often their setups produced a wicket or a chance (McGrath, Anderson expected near the top).
+4. **Drama index:** an excitement curve per match from commentary words, win probability and pressure; a
+   data-driven "greatest matches ever".
+5. **Myth-buster research:** does humidity cause swing? does dew help chasers? does the toss matter here? Measured
+   weather + 25 years of "it's swinging" lines test cricket's beliefs (paper material).
+6. **What if DRS existed (before 2008):** find old lines like "looked plumb", "big inside edge", "missing leg" and
+   estimate overturned decisions and who lost most; labelled estimate.
+7. **Era translator:** a player's numbers translated into another era's terms (e.g. Gavaskar's 1970s average v
+   today's bowling and pitches), adjusted for conditions and bowler quality; labelled estimate.
+8. **Find the next Dravid:** a style fingerprint per player from all labels (scoring map, weaknesses, footwork,
+   tempo) -> most similar players across eras; later domestic scouting.
+9. **Draw-your-own pitch map:** on the phone, draw a zone on the pitch -> every ball there to a batter (or by a
+   bowler), with stats and the commentary of each ball.
+10. **Clutch index:** how each player changes under pressure (dots in a row, chases, last session, finals); who rises
+   and who shrinks, with ranges.
+11. **Commentator time machine:** plain-English questions over all 73 million words ("what did commentators say when
+   Sachin got his 100th hundred?"), answered with the real lines and links to the balls.
+12. **Changing commentary styles:** how cricket's language changed 2001-2026, and each commentator's style (hype,
+   calm, technical), from `match.liveCommentator` + the text.
+13. **Restore from TV (Anadi, 13 Nov):** old matches with no ball-by-ball but a full match video on YouTube
+   (first pilot: 1996 World Cup, India v Australia, Mumbai, ODI #1065, Sachin 90 off 84, stumped).
+   (a) Anadi copies the YouTube transcript (auto-captions of the TV commentary, with timestamps) into a .txt;
+   (b) an AI reads it in chunks and pulls out events ("McGrath to Tendulkar", "cut for four", "single", "no run",
+   wicket, change of bowler, end of over); (c) a solver fits those events into a ball-by-ball sequence that must match
+   the scorecard exactly (each batter's runs/balls/4s/6s, each bowler's overs/runs/wickets, fall of wickets, extras);
+   balls the commentary does not pin down are marked "uncertain" and Anadi checks only those on the video;
+   (d) stored as source `tv_reconstruction` with a confidence per ball, never mixed silently with recorded data.
+   Limits: captions mishear names, TV commentators do not call every ball, edited videos skip balls (then: notes only,
+   no ball-by-ball). Keep transcripts private (the broadcaster's words); publish only the ball facts. If the pilot works,
+   this can restore many 1990s ODIs (1,494 ODIs have no ball-by-ball). After version 1 ships.
+   **Tested 13 Nov on a real transcript (YouTube auto-captions of this match, ~33,700 words):** no timestamps, no
+   ball count, names misheard ("Waugh" never appears; heard as "War"; "Warne" as "Warn"), commentators call
+   boundaries, threes, wickets, bowling changes and some bowler figures, but not every ball. So a transcript alone
+   gives **partial facts with ranges** (e.g. which bowler Sachin hit for each boundary), not exact ball-by-ball.
+   Exact ball-by-ball needs **video AI**: count every delivery from the broadcast pictures (bowler run-up / camera
+   pattern), read the score graphics when shown, and use the audio + scorecard to fill runs. Possible in principle,
+   hard on 1996 footage: a Stage 4 research project (a strong paper topic), not part of version 1.

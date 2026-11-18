@@ -12,3 +12,11 @@ data/build.log
 samples_for_claude/
 samples_for_claude.zip
 for_claude_*.zip
+
+# model files (big / not for GitHub: model file goes to the release raw-data)
+data/model_export/
+data/model/
+# solver side-by-side copies (merged into fix_<job>.csv)
+data/reports/fix_*_s*.csv
+# zips dropped into the Codespace
+everyball-*.zip

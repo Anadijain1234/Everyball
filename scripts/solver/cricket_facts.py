@@ -250,7 +250,8 @@ def strike_problems(dl, facts):
                 # batters do not run on a catch: if they had crossed (old Laws), the survivor faces next
                 surv = n if d["out"] == s else s
                 cand = [(q, surv)] if era["caught_new_on_strike"] else [(q, surv), (surv, q)]
-            elif how in ("run out", "obstructing the field"):
+            elif how in ("run out", "obstructing the field") or d["out"] != s or not how:
+                # non-striker out, or how-out not written: the new batter may come in at either end
                 surv = n if d["out"] == s else s
                 cand = [(q, surv), (surv, q)]
             else:

@@ -1,0 +1,47 @@
+0/8 balls-per-over corrected in 25 matches
+1/8 Checking which Wisden-book scorecards sit on the right match ...
+    book scorecards: 604 verified, 30 ignored (wrong match), 8 unchecked (no Davis to compare)
+2/8 Choosing every batting field by vote ...
+    183144 batter-innings; single source 1474; bowled with detail: 1788
+3/8 Checking whether each innings' ball-by-ball adds up ...
+    innings with ball-by-ball: 15309; complete (runs AND balls add up) 13453; partial by source: {'davis': 1159, 'cricsheet': 97, 'espn_live': 240, 'espn': 360}
+4/8 Filling dismissal kinds and rebalancing strike where the rules fix the batter totals ...
+    dismissal kinds filled: 46161; complete innings with wrong batter attribution: 875
+    strike rebalanced (every batter now matches the scorecard): 78 innings; still unsure (flagged): 797
+5/8 Choosing bowling fields (scorecards vote; complete ball-by-ball breaks ties) ...
+    balls column fixed from the overs figure in 140 rows
+    111570 bowler-innings; ball-by-ball broke a tie on balls 144, only source 0
+6/8 Writing the disagreement list ...
+    batting.balls: 4115, batting.bowler_id: 115, batting.fours: 1043, batting.kind: 160, batting.minutes: 7265, batting.not_out: 24, batting.runs: 50, batting.sixes: 192, bowling.balls: 302, bowling.balls_bbb_v_card: 341, bowling.balls_unit: 140, bowling.maidens: 2207, bowling.runs: 49, bowling.wickets: 12
+7/8 Career figures from the gold tables ...
+    6521 player-format rows
+8/8 Hard questions v the official record ...
+    OK   Tendulkar Test runs: 15921 (official 15921)
+    OK   Tendulkar Test hundreds: 51 (official 51)
+    OK   Bradman Test runs: 6996 (official 6996)
+    OK   Bradman Test average: 99.94 (official 99.94)
+    OK   Gavaskar Test runs: 10122 (official 10122)
+    OK   Gavaskar Test hundreds: 34 (official 34)
+    OK   Walsh Test ducks: 43 (official 43)
+    OK   Tendulkar ODI runs: 18426 (official 18426)
+    OK   Tendulkar ODI hundreds: 49 (official 49)
+    OK   Muralitharan Test wickets: 800 (official 800)
+    DIFF Muralitharan Test balls: 44040 (official 44039)
+    OK   Muralitharan Test maidens: 1794 (official 1794)
+    OK   Warne Test wickets: 708 (official 708)
+    OK   Warne Test maidens: 1761 (official 1761)
+    OK   Kumble Test wickets: 619 (official 619)
+    DIFF Kumble Test maidens: 1575 (official 1576)
+    OK   McGrath Test wickets: 563 (official 563)
+    OK   McGrath Test balls: 29248 (official 29248)
+    OK   McGrath Test maidens: 1470 (official 1470)
+    OK   Kallis Test runs: 13289 (official 13289)
+    OK   Kallis Test wickets: 292 (official 292)
+    OK   Tendulkar Test matches: 200 (official 200)
+    OK   Tendulkar ODI matches: 463 (official 463)
+    OK   McGrath ODI matches: 250 (official 250)
+    OK   Kallis Test matches: 166 (official 166)
+    OK   Border Test matches: 156 (official 156)
+    OK   Bradman Test matches: 52 (official 52)
+    OK   Lara highest Test score: 400 (official 400)
+Done in 53 s. Gold tables added; nothing deleted.

@@ -2,6 +2,7 @@
 Ready-made questions, shared by the command line (scripts/ask.py) and the website (app/).
 Every function returns plain data (dicts and lists), so the same numbers appear everywhere.
 """
+import json
 import sqlite3
 
 import common as C
@@ -230,9 +231,12 @@ def player_page(con, pid, fmt=None):
             continue
         outs = (b["i"] or 0) - (b["no"] or 0)
         best = w["best"]
+        # matches played = the whole XI (also games where he neither batted nor bowled), from player_stats
+        ps = con.execute("SELECT matches FROM player_stats WHERE player_id = ? AND format = ?", (pid, f)).fetchone()
+        played = ps[0] if ps and ps[0] else b["m"]
         formats.append({
             "format": f,
-            "batting": {"matches": b["m"], "innings": b["i"], "runs": b["r"], "not_outs": b["no"], "highest": b["hs"],
+            "batting": {"matches": played, "innings": b["i"], "runs": b["r"], "not_outs": b["no"], "highest": b["hs"],
                         "average": round(b["r"] / outs, 2) if outs > 0 and b["r"] is not None else None,
                         "hundreds": b["h"], "fifties": b["f"], "fours": b["fours"], "sixes": b["sixes"],
                         "strike_rate": round(100 * b["rb"] / b["bf"], 1) if b["bf"] else None},
@@ -277,8 +281,17 @@ def player_page(con, pid, fmt=None):
             "dismissed_by": got_him, "dismissed": he_got, "faced_most": faced, "bowled_to_most": bowled_to}
 
 
-def coverage(con):
-    """How much we have: matches per format and decade, how many ball by ball, and ESPN's own count if known."""
+def coverage(con, fresh=False):
+    """How much we have: matches per format and decade, how many ball by ball, and ESPN's own count if known.
+    The website reads the copy worked out when the database was packed (coverage_cache): counting 8 million balls
+    on every visit is too slow for Render's free CPU (the home page sat on "Counting...")."""
+    if not fresh:
+        try:
+            row = con.execute("SELECT json FROM coverage_cache").fetchone()
+            if row:
+                return json.loads(row[0])
+        except Exception:
+            pass
     out = {"formats": [], "decades": []}
     for f in ("Test", "ODI"):
         n, b = con.execute("SELECT COUNT(*), SUM(ball_source IS NOT NULL) FROM matches WHERE format = ?", (f,)).fetchone()
