@@ -1,17 +1,18 @@
 {
- "sha256": "0c61c37ff282b0b7a25da32ca5ef11e0e8ac8f6a76abe13096677e801376492c",
- "bytes": 895045632,
+ "sha256": "d02a0571b79cbc25769acb07894d8dab4e8aa1925f04b57305e4528fcb22ce27",
+ "bytes": 922230784,
  "parts": [
   "everyball.db.xz.001",
-  "everyball.db.xz.002"
+  "everyball.db.xz.002",
+  "everyball.db.xz.003"
  ],
- "built": "2026-11-18 06:56",
+ "built": "2026-11-18 13:15",
  "counts": {
   "matches": 7704,
   "players": 5203,
   "batting": 671776,
   "bowling": 409892,
-  "balls": 7837683,
+  "balls": 8130967,
   "pvp": 29638
  }
 }
